@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deteksi Serangan — Praktikum MK44</title>
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171; --tn:#64748b;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626; --tn:#64748b;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+#ver{cursor:default;user-select:none;display:inline-block;padding:4px 2px;touch-action:manipulation}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 14px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:860px){.grid2,.grid4{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-family:var(--mono);font-size:11.5px}
+tr.atk td{background:rgba(248,113,113,.07)}
+tr.hit td:first-child{box-shadow:inset 3px 0 0 var(--tp)}
+.scroll{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;font-family:system-ui}
+.pill.tp{background:rgba(74,222,128,.15);color:var(--tp)}
+.pill.fp{background:rgba(251,191,36,.15);color:var(--fp)}
+.pill.fn{background:rgba(248,113,113,.15);color:var(--fn)}
+.pill.tn{background:rgba(100,116,139,.15);color:var(--tn)}
+textarea{width:100%;background:var(--code-bg);color:var(--code-text);border:1px solid var(--line);border-radius:6px;padding:11px;font-family:var(--mono);font-size:12.5px;line-height:1.6;resize:vertical;min-height:150px}
+textarea:focus{outline:none;border-color:var(--hover)}
+select,input[type=text],input[type=password]{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+button.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit}
+button.act:hover{opacity:.85}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+.metric{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:13px;text-align:center}
+.metric .v{font-size:25px;font-weight:700;letter-spacing:-.02em}
+.metric .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden;font-size:12px}
+.cm>div{background:var(--panel2);padding:11px}
+.cm .hd{color:var(--muted);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.cm .n{font-size:21px;font-weight:700;font-family:var(--mono)}
+.bar{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.hint{background:rgba(251,191,36,.07);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:rgba(74,222,128,.07);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.err{background:rgba(248,113,113,.08);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0;font-family:var(--mono);font-size:11.5px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--code-text)}
+.msn{border:1px solid var(--line);border-radius:7px;padding:12px;margin-bottom:9px;background:var(--panel2)}
+.msn.done{border-color:var(--tp);background:rgba(74,222,128,.05)}
+.msn b{font-size:13px}
+.msn p{font-size:12px;margin:4px 0 0}
+.tgt{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:5px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.ref{font-size:12px}
+.ref td{font-family:system-ui;font-size:12px}
+.ref code{font-size:11px}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+.lst b{color:var(--text)}
+.steps{list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--row);font-size:13px;color:var(--muted)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(st);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps b{color:var(--text)}
+.steps .sec{display:inline-block;margin-top:8px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+.geser{display:none;font-size:12px;color:var(--muted);margin:0 0 6px}
+@media(max-width:640px){
+  .geser{display:block}
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{padding:10px 12px}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Keamanan Siber</a>
+    <h1>Simulator Deteksi Serangan</h1>
+    <div class="sub">MK44 Keamanan Siber · Pertemuan 5 · Sub-CPMK723 — Program Studi Teknologi Informasi, Fakultas Teknik dan Informatika, Universitas Pendidikan Nasional</div>
+  </div>
+  <button class="sec" id="btn-tema"></button>
+</header>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai di Sini</button>
+  <button data-t="log">1 · Penjelajah Log</button>
+  <button data-t="rule">2 · Penyunting Aturan</button>
+  <button data-t="hasil">3 · Hasil &amp; Metrik</button>
+  <button data-t="laju">4 · Laju Dasar</button>
+  <button data-t="korelasi">5 · Korelasi</button>
+  <button data-t="kumpul">6 · Pengumpulan</button>
+  <button data-t="bantuan">? · Acuan Sintaksis</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Praktikum Pertemuan 5</div>
+    <h2>Aturan Deteksi dan Analisis Alert</h2>
+    <p>Menulis dan menilai aturan IDS untuk menemukan serangan yang tersembunyi di antara log aktivitas normal. Bacalah halaman ini sampai habis sebelum mulai.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Masalah</h2>
+    <p>Setiap hari sistem organisasi mencatat ribuan sampai jutaan baris log. Serangan sungguhan hanya segelintir dan sering mirip aktivitas wajar. Puluhan percobaan masuk dari penyerang terlihat serupa dengan pengguna yang lupa kata sandi, dan pemindaian jalur terlihat serupa dengan tautan lama yang rusak.</p>
+    <p>Aturan deteksi yang <b>terlalu longgar</b> membanjiri analis dengan alarm palsu. Lama-kelamaan alert diabaikan, dan serangan sungguhan ikut terlewat. Aturan yang <b>terlalu ketat</b> membuat serangan lolos tanpa alert sama sekali. Sebagian serangan bahkan baru terlihat bila log dari beberapa sumber dihubungkan.</p>
+    <p>Pertanyaannya: bagaimana menyusun aturan deteksi yang menangkap serangan tanpa menenggelamkan analis dalam alarm palsu, dan bagaimana mengukur bahwa aturan itu memang baik?</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Tujuan Praktikum</h2>
+    <p>Setelah praktikum ini Anda diharapkan mampu:</p>
+    <ol class="lst">
+      <li>Membaca dan menafsirkan log sistem untuk menemukan pola serangan.</li>
+      <li>Menyusun aturan deteksi IDS/IPS dasar.</li>
+      <li>Membedakan <i>true positive</i> dan <i>false positive</i>, serta menilai aturan dengan presisi dan recall.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Manfaat</h2>
+    <ul class="lst">
+      <li><b>Berlatih alur kerja analis SOC</b>: membaca log, merumuskan pola, menulis aturan, lalu mengevaluasinya.</li>
+      <li><b>Bekal memakai IDS sungguhan.</b> Sintaksis aturan di sini meniru Suricata/Snort, sehingga polanya langsung terpakai saat bertemu alat aslinya.</li>
+      <li><b>Mampu menilai sistem deteksi dengan ukuran yang tepat</b>, yaitu presisi dan recall, dan tidak tertipu angka akurasi yang tampak tinggi.</li>
+      <li><b>Aman dan tanpa instalasi.</b> Semua berjalan di peramban dengan data simulasi, tanpa serangan sungguhan.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Skenario</h2>
+    <p>Anda bekerja sebagai <b>analis keamanan</b> di pusat pemantauan keamanan (SOC) sebuah kampus. Anda menerima log selama tiga hari, 1–3 Oktober 2026, dari dua sumber:</p>
+    <ul class="lst">
+      <li><b>Log autentikasi</b>: catatan setiap percobaan masuk ke layanan SSH, web, dan VPN. Isinya siapa yang masuk, dari alamat mana, dari negara mana, dan berhasil atau gagal.</li>
+      <li><b>Log server web</b>: catatan setiap permintaan ke situs kampus. Isinya jalur yang diminta, parameter kueri, dan kode respons server.</li>
+    </ul>
+    <p>Sebagian besar isinya aktivitas normal mahasiswa dan staf, termasuk orang yang salah mengetik kata sandi atau membuka tautan yang sudah tidak ada. Di antaranya tersembunyi <b>beberapa serangan</b>. Label serangan tidak ditampilkan, jadi Anda harus mengenalinya dari polanya.</p>
+    <p>Tugas Anda: menulis <b>aturan deteksi</b> yang memunculkan alert untuk serangan tersebut tanpa membanjiri tim dengan alarm palsu.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Konsep yang Perlu Dipahami</h2>
+    <h3>IDS dan aturan deteksi</h3>
+    <p><i>Intrusion Detection System</i> (IDS) memeriksa setiap peristiwa dan memunculkan <b>alert</b> bila peristiwa itu cocok dengan sebuah <b>aturan</b>. Aturan berisi syarat, misalnya "layanan SSH <i>dan</i> status gagal". <i>Intrusion Prevention System</i> (IPS) memakai aturan serupa tetapi langsung memblokir, sehingga kesalahannya lebih mahal: pengguna sah ikut terblokir. Simulator ini berperan sebagai IDS, dengan sintaksis aturan yang meniru Suricata/Snort.</p>
+
+    <h3>Empat kemungkinan hasil</h3>
+    <table class="ref" style="margin-bottom:10px">
+      <tr><th></th><th>Benar-benar serangan</th><th>Bukan serangan</th></tr>
+      <tr><td><b>Alert muncul</b></td><td><span class="pill tp">TP</span> True positive: serangan tertangkap</td><td><span class="pill fp">FP</span> False positive: alarm palsu</td></tr>
+      <tr><td><b>Tidak ada alert</b></td><td><span class="pill fn">FN</span> False negative: serangan lolos</td><td><span class="pill tn">TN</span> True negative: aktivitas normal dibiarkan</td></tr>
+    </table>
+
+    <h3>Presisi dan recall</h3>
+<pre>Presisi = TP ÷ (TP + FP)   → dari semua alert, berapa yang benar?
+Recall  = TP ÷ (TP + FN)   → dari semua serangan, berapa yang tertangkap?</pre>
+    <p style="margin-top:9px">Keduanya saling tarik. Aturan yang terlalu longgar menangkap semua serangan (recall tinggi) tetapi penuh alarm palsu (presisi rendah). Aturan yang terlalu ketat justru sebaliknya. Tugas Anda adalah mencari titik keseimbangannya.</p>
+
+    <h3>Ambang batas (threshold)</h3>
+    <p>Sekali gagal masuk itu wajar, tetapi puluhan kali dalam beberapa menit dari alamat yang sama tidak. Ambang batas membuat alert baru muncul bila suatu kejadian berulang sejumlah tertentu dalam jangka waktu tertentu dari kunci yang sama. Konsekuensinya, kejadian-kejadian pertama sebelum ambang tercapai tidak memicu alert.</p>
+
+    <h3>Akurasi bisa menyesatkan</h3>
+    <p>Serangan jauh lebih jarang daripada aktivitas normal, sehingga sistem yang hampir tak berguna pun tetap tampak "akurat". Karena itu praktikum ini menilai dengan presisi dan recall, bukan akurasi. Tab 4 memperagakan hal ini.</p>
+
+    <h3>Korelasi</h3>
+    <p>Sebagian serangan baru terlihat bila peristiwa dari sumber log yang berbeda dihubungkan, misalnya alamat sumber yang sama muncul di log autentikasi dan log web. Tab 5 melatih hal ini.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Langkah Praktikum</h2>
+    <ol class="steps">
+      <li><b>Amati log.</b> Pilih sumber log, klik <b>Ringkasan per IP</b>, lalu ketik alamat yang mencurigakan di kotak saring. Catat polanya: layanan apa, akun siapa, seberapa rapat waktunya, kueri apa, dan kode respons apa.<br><button class="sec" data-go="log">Buka Tab 1 →</button></li>
+      <li><b>Lakukan pemanasan.</b> Klik <b>Contoh: semua kegagalan</b>, lalu <b>Jalankan Aturan</b>, dan perhatikan presisinya. Kembali ke Tab 2, klik <b>Contoh: dengan ambang batas</b>, jalankan, lalu bandingkan. Apa yang naik, apa yang turun, dan mengapa?<br><button class="sec" data-go="rule">Buka Tab 2 →</button></li>
+      <li><b>Tulis aturan sendiri.</b> Tulis aturan untuk setiap jenis serangan yang Anda temukan di langkah 1. Daftar bidang dan operator ada di tab Acuan Sintaksis.<br><button class="sec" data-go="bantuan">Buka Acuan Sintaksis →</button></li>
+      <li><b>Baca hasilnya.</b> Tab 3 terbuka otomatis setelah aturan dijalankan. Pilih <b>FP saja</b> untuk melihat peristiwa normal yang ikut tertandai, dan <b>FN saja</b> untuk melihat serangan yang lolos. Dari situ tentukan bagian aturan yang perlu diperketat atau dilonggarkan.</li>
+      <li><b>Perbaiki dan ulangi</b> langkah 3–4 sampai keempat misi di bagian bawah Tab 2 berwarna hijau (✓).</li>
+      <li><b>Pelajari laju dasar.</b> Geser nilainya dan amati mengapa tingkat kesalahan 1% tetap berarti ribuan alarm palsu per hari.<br><button class="sec" data-go="laju">Buka Tab 4 →</button></li>
+      <li><b>Hubungkan peristiwa.</b> Centang peristiwa yang membentuk satu rangkaian serangan, lalu periksa jawaban Anda.<br><button class="sec" data-go="korelasi">Buka Tab 5 →</button></li>
+      <li><b>Kumpulkan hasil.</b> Ambil tangkapan layar, jawab pertanyaan analisis, lalu susun laporan sesuai petunjuk di Tab 6. <b>Baca Tab 6 sebelum mulai</b>, karena ada ketentuan penulisan aturan yang harus diikuti sejak awal.<br><button class="sec" data-go="kumpul">Buka Tab 6 →</button></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>7. Perhatikan Sebelum Mulai</h2>
+    <ul class="lst">
+      <li><b>Semua aturan ditulis dalam satu kotak.</b> Saat mengerjakan misi berikutnya, jangan hapus aturan sebelumnya. Tambahkan aturan baru di bawahnya.</li>
+      <li><b>Presisi misi dihitung dari seluruh aturan sekaligus.</b> Satu aturan yang terlalu longgar dapat menggagalkan semua misi, termasuk yang sebelumnya sudah lulus.</li>
+      <li><b>Tombol contoh menimpa isi kotak aturan</b>, dan memuat ulang halaman juga menghapusnya. Simpan salinan aturan Anda di aplikasi catatan.</li>
+    </ul>
+    <div class="ok">Praktikum dinyatakan selesai bila keempat misi lulus, rangkaian di Tab 5 terjawab tepat, dan laporan sudah dikumpulkan sesuai petunjuk di Tab 6.</div>
+    <button class="act" data-go="log">Mulai dari Tab 1 →</button>
+  </div>
+</div>
+
+<!-- ========== TAB 1 ========== -->
+<div class="tab" id="t-log">
+  <div class="card">
+    <h2>Penjelajah Log</h2>
+    <p>Dataset berisi log autentikasi dan log server web dari satu organisasi selama periode pengamatan. Sebagian peristiwa merupakan serangan, sebagian lagi aktivitas normal. <b>Label serangan disembunyikan</b> — Anda harus mengenalinya dari polanya sendiri.</p>
+    <div class="row">
+      <select id="f-src"><option value="auth">Log Autentikasi</option><option value="web">Log Server Web</option></select>
+      <input type="text" id="f-q" placeholder="Saring: IP, pengguna, jalur…" style="flex:1;min-width:180px">
+      <button class="sec" id="btn-stat">Ringkasan per IP</button>
+    </div>
+    <div id="stat"></div>
+    <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+    <div class="scroll"><table id="tbl-log"></table></div>
+    <div class="hint" id="cnt"></div>
+  </div>
+</div>
+
+<!-- ========== TAB 2 ========== -->
+<div class="tab" id="t-rule">
+  <div class="card">
+    <h2>Penyunting Aturan Deteksi</h2>
+    <p>Tulis aturan dengan sintaksis mirip Suricata. Satu aturan per blok. Lihat tab <b>Acuan Sintaksis</b> untuk daftar bidang yang tersedia.</p>
+    <div class="row">
+      <button class="sec" data-ex="1">Contoh: semua kegagalan</button>
+      <button class="sec" data-ex="2">Contoh: dengan ambang batas</button>
+      <button class="sec" data-ex="3">Contoh: injeksi SQL</button>
+      <button class="sec" data-ex="0">Kosongkan</button>
+    </div>
+    <textarea id="rules" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:11px">
+      <button class="act" id="btn-run">Jalankan Aturan</button>
+      <span id="parse" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div id="perr"></div>
+  </div>
+
+  <div class="card">
+    <h2>Misi Praktikum</h2>
+    <p>Empat misi berikut dinilai otomatis. Target harus tercapai bersamaan — menaikkan recall dengan mengorbankan presisi tidak dihitung lulus.</p>
+    <div id="misi"></div>
+  </div>
+</div>
+
+<!-- ========== TAB 3 ========== -->
+<div class="tab" id="t-hasil">
+  <div class="card">
+    <h2>Matriks Kebingungan</h2>
+    <div class="cm" id="cm"></div>
+    <div class="hint">Satu peristiwa dihitung <b>satu kali</b>. Peristiwa serangan yang tidak memicu alert apa pun menjadi FN. Peristiwa normal yang memicu alert menjadi FP.</div>
+  </div>
+  <div class="card">
+    <h2>Metrik Turunan</h2>
+    <div class="grid4" id="mx"></div>
+    <div id="catatan"></div>
+  </div>
+  <div class="card">
+    <h2>Rincian per Aturan</h2>
+    <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+    <div class="scroll"><table id="tbl-rule"></table></div>
+  </div>
+  <div class="card">
+    <h2>Peristiwa Terklasifikasi</h2>
+    <div class="row">
+      <select id="f-kls"><option value="all">Semua</option><option value="TP">TP saja</option><option value="FP">FP saja</option><option value="FN">FN saja</option></select>
+      <select id="f-src2"><option value="auth">Log Autentikasi</option><option value="web">Log Server Web</option></select>
+    </div>
+    <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+    <div class="scroll"><table id="tbl-kls"></table></div>
+  </div>
+</div>
+
+<!-- ========== TAB 4 ========== -->
+<div class="tab" id="t-laju">
+  <div class="card">
+    <h2>Simulator Kekeliruan Laju Dasar</h2>
+    <p>Geser nilainya dan amati apa yang terjadi pada presisi. Inilah sebab mengapa tingkat kesalahan positif yang tampak kecil tetap menghasilkan alarm palsu dalam jumlah membanjiri.</p>
+    <div class="grid2">
+      <div>
+        <label style="font-size:12.5px">Total peristiwa per hari: <b id="v1">1.000.000</b></label>
+        <input type="range" id="s1" min="4" max="7" step="0.1" value="6">
+        <label style="font-size:12.5px;display:block;margin-top:14px">Jumlah serangan nyata: <b id="v2">10</b></label>
+        <input type="range" id="s2" min="1" max="200" step="1" value="10">
+      </div>
+      <div>
+        <label style="font-size:12.5px">Recall sistem: <b id="v3">99%</b></label>
+        <input type="range" id="s3" min="50" max="100" step="1" value="99">
+        <label style="font-size:12.5px;display:block;margin-top:14px">Tingkat kesalahan positif: <b id="v4">1%</b></label>
+        <input type="range" id="s4" min="0.01" max="5" step="0.01" value="1">
+      </div>
+    </div>
+    <div class="grid4" style="margin-top:18px" id="lj"></div>
+    <div id="lj-note"></div>
+  </div>
+  <div class="card">
+    <h2>Perbandingan Akurasi dan Presisi</h2>
+    <div class="grid2" id="lj2"></div>
+    <div class="hint">Perhatikan betapa tingginya <b>akurasi</b> meski sistemnya nyaris tidak berguna. Inilah sebab akurasi menyesatkan dalam konteks keamanan: peristiwa yang dicari terlalu jarang.</div>
+  </div>
+</div>
+
+<!-- ========== TAB 5 ========== -->
+<div class="tab" id="t-korelasi">
+  <div class="card">
+    <h2>Latihan Korelasi Lintas Sumber</h2>
+    <p>Tiap peristiwa di bawah ini wajar bila berdiri sendiri. Centang peristiwa yang menurut Anda membentuk satu rangkaian kompromi, lalu periksa jawabannya.</p>
+    <div id="kor"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="act" id="btn-kor">Periksa Rangkaian</button>
+      <button class="sec" id="btn-kor2">Ulangi</button>
+    </div>
+    <div id="kor-res"></div>
+  </div>
+</div>
+
+<!-- ========== PENGUMPULAN ========== -->
+<div class="tab" id="t-kumpul">
+  <div class="card">
+    <h2>Pengumpulan Tugas</h2>
+    <p>Kumpulkan <b>satu berkas PDF</b> berisi aturan akhir, tangkapan layar, dan jawaban pertanyaan analisis. Dosen akan <b>menjalankan ulang aturan Anda</b> di simulator ini, jadi hasilnya harus sama dengan tangkapan layar yang Anda lampirkan.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Ketentuan Penulisan Aturan</h2>
+    <p>Awali pesan (<code>msg</code>) <b>setiap aturan</b> dengan NIM Anda. NIM ini akan tampak di tabel Rincian per Aturan pada tangkapan layar.</p>
+<pre>alert auth (
+  msg:"2401010001 Brute force SSH";
+  ...
+)</pre>
+    <div class="hint" style="margin-top:10px">Tangkapan layar tanpa NIM di kolom pesan dianggap tidak sah.</div>
+  </div>
+
+  <div class="card">
+    <h2>2. Tangkapan Layar yang Wajib Dilampirkan</h2>
+    <p>Ambil setelah aturan akhir Anda dijalankan. Pintasan: <code>Win + Shift + S</code> (Windows) atau <code>Cmd + Shift + 4</code> (macOS).</p>
+    <table class="ref">
+      <tr><th>Kode</th><th>Tab</th><th>Yang harus terlihat</th></tr>
+      <tr><td><b>SS1</b></td><td>1 · Penjelajah Log</td><td>Tabel <b>Ringkasan per IP</b> pada Log Autentikasi, beserta isi kotak saring dengan alamat yang Anda curigai</td></tr>
+      <tr><td><b>SS2</b></td><td>2 · Penyunting Aturan</td><td>Panel <b>Misi Praktikum</b> lengkap, keempat misi beserta angka presisi dan recall-nya</td></tr>
+      <tr><td><b>SS3</b></td><td>3 · Hasil &amp; Metrik</td><td><b>Matriks Kebingungan</b> dan <b>Metrik Turunan</b> (presisi, recall, F1, akurasi)</td></tr>
+      <tr><td><b>SS4</b></td><td>3 · Hasil &amp; Metrik</td><td>Tabel <b>Rincian per Aturan</b>, dengan NIM terlihat di kolom pesan</td></tr>
+      <tr><td><b>SS5</b></td><td>3 · Hasil &amp; Metrik</td><td><b>Peristiwa Terklasifikasi</b> dengan penyaring <b>FN saja</b></td></tr>
+      <tr><td><b>SS6</b></td><td>5 · Korelasi</td><td>Peristiwa yang Anda centang beserta hasil pemeriksaannya</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>3. Pertanyaan Analisis</h2>
+    <p>Jawab singkat, 2–5 kalimat per nomor.</p>
+    <ol class="lst">
+      <li>Untuk setiap serangan yang Anda temukan, sebutkan <b>alamat sumber</b>, <b>jenis serangan</b>, dan <b>bukti di log</b> yang membuat Anda yakin itu serangan.</li>
+      <li>Bandingkan hasil <b>Contoh: semua kegagalan</b> dengan <b>Contoh: dengan ambang batas</b> (TP, FP, presisi, recall). Mengapa hasilnya berbeda?</li>
+      <li>Berikan satu contoh peristiwa yang pernah menjadi <b>false positive</b> dalam percobaan Anda. Mengapa peristiwa itu FP dan bukan TP?</li>
+      <li>Dari SS5, pilih satu peristiwa serangan yang lolos (FN). Mengapa aturan Anda tidak menangkapnya, dan apa akibatnya bila aturan dipaksa untuk menangkapnya?</li>
+      <li>Pada Tab 4 dengan nilai bawaan (1.000.000 peristiwa, 10 serangan, recall 99%, tingkat kesalahan positif 1%), berapa alarm palsu per hari dan berapa presisinya? Mengapa akurasi menyesatkan dalam kasus ini?</li>
+      <li>Jelaskan rangkaian serangan yang Anda temukan di Tab 5 dan kesamaan apa yang menghubungkan peristiwa-peristiwanya.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>4. Susunan Laporan</h2>
+<pre>Nama berkas : P5_NIM_Nama.pdf          (contoh: P5_2401010001_Made_Adi.pdf)
+
+1. Identitas        : nama, NIM, kelas
+2. Aturan akhir     : salin seluruh isi kotak aturan sebagai TEKS, bukan gambar
+3. Tangkapan layar  : SS1–SS6, masing-masing diberi kode dan keterangan singkat
+4. Jawaban analisis : nomor 1–6</pre>
+  </div>
+
+  <div class="card">
+    <h2>5. Langkah Pengumpulan</h2>
+    <ol class="steps">
+      <li><b>Pastikan setiap aturan diawali NIM</b> di bagian <code>msg</code>, lalu jalankan aturan akhir Anda.</li>
+      <li><b>Periksa panel misi.</b> Bila belum semua misi lulus, tetap kumpulkan, lalu jelaskan di jawaban nomor 4 apa yang menghalangi.</li>
+      <li><b>Ambil tangkapan layar</b> SS1–SS6 sesuai tabel di atas.</li>
+      <li><b>Salin teks aturan</b> dari kotak aturan ke laporan. Simpan juga salinannya, karena memuat ulang halaman akan menghapus aturan.</li>
+      <li><b>Jawab pertanyaan analisis</b> nomor 1–6.</li>
+      <li><b>Simpan sebagai PDF</b> dengan nama <code>P5_NIM_Nama.pdf</code>, lalu unggah ke LMS sebelum tenggat yang ditetapkan dosen.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== BANTUAN ========== -->
+<div class="tab" id="t-bantuan">
+  <div class="card">
+    <h2>Bentuk Umum Aturan</h2>
+<pre>alert &lt;sumber&gt; (
+  msg:"Teks penjelasan";
+  &lt;bidang&gt;:&lt;nilai&gt;;
+  threshold:count N, seconds M, track &lt;kunci&gt;;
+)</pre>
+    <p><code>&lt;sumber&gt;</code> diisi <code>auth</code> atau <code>web</code>. Setiap baris opsi diakhiri titik koma. Baris diawali <code>#</code> diabaikan sebagai komentar.</p>
+  </div>
+
+  <div class="card">
+    <h2>Bidang Log Autentikasi</h2>
+    <table class="ref">
+      <tr><th>Bidang</th><th>Nilai yang mungkin</th><th>Contoh</th></tr>
+      <tr><td><code>service</code></td><td>ssh, web, vpn</td><td><code>service:ssh;</code></td></tr>
+      <tr><td><code>status</code></td><td>success, failed</td><td><code>status:failed;</code></td></tr>
+      <tr><td><code>user</code></td><td>nama akun</td><td><code>user:admin;</code></td></tr>
+      <tr><td><code>src_ip</code></td><td>alamat sumber</td><td><code>src_ip:203.0.113.45;</code></td></tr>
+      <tr><td><code>country</code></td><td>ID, SG, RU, NL…</td><td><code>country:!ID;</code></td></tr>
+      <tr><td><code>hour</code></td><td>0–23</td><td><code>hour:&lt;6;</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Bidang Log Server Web</h2>
+    <table class="ref">
+      <tr><th>Bidang</th><th>Nilai yang mungkin</th><th>Contoh</th></tr>
+      <tr><td><code>method</code></td><td>GET, POST</td><td><code>method:POST;</code></td></tr>
+      <tr><td><code>path</code></td><td>jalur yang diminta</td><td><code>path:/login;</code></td></tr>
+      <tr><td><code>query</code></td><td>parameter kueri</td><td><code>query:*UNION*;</code></td></tr>
+      <tr><td><code>status_code</code></td><td>200, 404, 500…</td><td><code>status_code:&gt;=400;</code></td></tr>
+      <tr><td><code>src_ip</code></td><td>alamat sumber</td><td><code>src_ip:192.0.2.99;</code></td></tr>
+      <tr><td><code>hour</code></td><td>0–23</td><td><code>hour:&gt;22;</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Operator</h2>
+    <table class="ref">
+      <tr><th>Bentuk</th><th>Makna</th></tr>
+      <tr><td><code>bidang:nilai</code></td><td>Sama persis</td></tr>
+      <tr><td><code>bidang:!nilai</code></td><td>Tidak sama dengan</td></tr>
+      <tr><td><code>bidang:*teks*</code></td><td>Mengandung teks, tidak peka huruf besar-kecil</td></tr>
+      <tr><td><code>bidang:&gt;N</code> <code>&gt;=N</code> <code>&lt;N</code> <code>&lt;=N</code></td><td>Perbandingan angka</td></tr>
+      <tr><td><code>bidang:a|b|c</code></td><td>Salah satu dari daftar</td></tr>
+    </table>
+    <p style="margin-top:9px">Seluruh opsi dalam satu aturan digabung dengan <b>DAN</b> — peristiwa harus memenuhi semuanya.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ambang Batas</h2>
+<pre>threshold:count 10, seconds 60, track by_src;</pre>
+    <p>Peristiwa baru dinyatakan alert bila dalam <code>seconds</code> detik terakhir terdapat sekurang-kurangnya <code>count</code> peristiwa serupa dari kunci yang sama. Kunci yang tersedia: <code>by_src</code> (per alamat sumber), <code>by_user</code> (per akun), <code>by_path</code> (per jalur).</p>
+    <div class="hint">Perhatikan konsekuensinya: peristiwa pertama sebelum ambang tercapai <b>tidak</b> memicu alert, sehingga tercatat sebagai FN. Inilah pertukaran nyata antara menekan alarm palsu dan menangkap seluruh serangan.</div>
+  </div>
+</div>
+
+<!-- ========== VERSI ========== -->
+<div class="tab" id="t-versi">
+  <div class="card" id="versi-form">
+    <h2>Informasi Versi</h2>
+    <p>Simulator Deteksi Serangan v1.0 · dataset 1–3 Oktober 2026 · berjalan sepenuhnya di peramban.</p>
+    <div class="row">
+      <input type="password" id="versi-kode" placeholder="Kode akses" autocomplete="off" style="flex:1;min-width:180px;max-width:320px">
+      <button class="sec" id="btn-versi">Periksa</button>
+    </div>
+    <div id="versi-msg"></div>
+  </div>
+  <div id="versi-isi"></div>
+</div>
+
+<footer>Simulator ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · <span id="ver">v1.0</span></footer>
+</div>
+
+<script type="application/json" id="versi-data">{"s":"YzkfL9CyCk/YZUZ1jxJJtQ==","n":"5tQhvMedyfXO2s9+","i":600000,"c":"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"}</script>
+<script>
+/* ============ PRNG ============ */
+let _s=20260405;
+function rnd(){_s=(_s*1664525+1013904223)%4294967296;return _s/4294967296}
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1))}
+function pick(a){return a[ri(0,a.length-1)]}
+
+/* ============ DATASET ============ */
+const USERS=['wayan.s','made.a','nyoman.p','ketut.d','gede.r','putu.w','kadek.l','komang.b','ayu.m','dewi.c','finance01','finance02','hrd01','admin','it.support','dosen01','dosen02','staf01','staf02','staf03'];
+const PATHS=['/','/login','/dashboard','/profil','/mata-kuliah','/nilai','/jadwal','/pengumuman','/api/data','/assets/app.js','/assets/style.css'];
+const UA_OK=['Mozilla/5.0 (Windows NT 10.0) Chrome/120','Mozilla/5.0 (Macintosh) Safari/17','Mozilla/5.0 (X11; Linux) Firefox/121','Mozilla/5.0 (Android 13) Chrome/120'];
+
+function ts(d,h,m,s){return new Date(Date.UTC(2026,9,d,h,m,s))}
+function fmt(t){const p=n=>String(n).padStart(2,'0');return `${p(t.getUTCDate())}/10 ${p(t.getUTCHours())}:${p(t.getUTCMinutes())}:${p(t.getUTCSeconds())}`}
+
+const AUTH=[],WEB=[];
+let uid=0;
+function A(t,ip,u,svc,st,c,atk,lbl){AUTH.push({id:uid++,t,ts:t.getTime()/1000,src_ip:ip,user:u,service:svc,status:st,country:c,hour:t.getUTCHours(),atk:!!atk,lbl:lbl||''})}
+function W(t,ip,m,p,q,sc,ua,atk,lbl){WEB.push({id:uid++,t,ts:t.getTime()/1000,src_ip:ip,method:m,path:p,query:q,status_code:sc,ua,hour:t.getUTCHours(),atk:!!atk,lbl:lbl||''})}
+
+/* --- normal auth --- */
+for(let d=1;d<=3;d++){
+  for(let i=0;i<85;i++){
+    const h=ri(7,18),mi=ri(0,59),se=ri(0,59);
+    const u=pick(USERS);
+    A(ts(d,h,mi,se),'10.20.'+ri(1,9)+'.'+ri(2,250),u,pick(['web','web','web','ssh','vpn']),'success','ID');
+  }
+  for(let i=0;i<14;i++){ // lupa kata sandi
+    const h=ri(7,18),mi=ri(0,59);
+    const u=pick(USERS);
+    const n=ri(1,3);
+    for(let k=0;k<n;k++) A(ts(d,h,mi,ri(0,59)),'10.20.'+ri(1,9)+'.'+ri(2,250),u,'web','failed','ID');
+  }
+}
+/* --- SERANGAN 1: brute force SSH --- */
+(function(){const ip='203.0.113.45';let s=0;
+  for(let i=0;i<38;i++){A(ts(2,2,14,s),ip,'admin','ssh','failed','NL',1,'brute-force');s+=ri(4,9)}
+  A(ts(2,2,19,30),ip,'admin','ssh','success','NL',1,'brute-force');
+})();
+/* --- SERANGAN 2: password spraying --- */
+(function(){const ip='198.51.100.77';let m=5;
+  for(let i=0;i<24;i++){const u=USERS[i%USERS.length];
+    A(ts(3,4,m,ri(0,59)),ip,u,'web','failed','SG',1,'spraying');
+    A(ts(3,4,m+1,ri(0,59)),ip,u,'web','failed','SG',1,'spraying');
+    m+=2; if(m>55){m=5}
+  }
+})();
+/* --- SERANGAN 3: akses jam ganjil dari luar --- */
+(function(){const ip='192.0.2.99';
+  A(ts(3,3,17,12),ip,'finance01','vpn','success','RU',1,'odd-hour');
+  A(ts(3,3,41,8),ip,'finance01','web','success','RU',1,'odd-hour');
+})();
+
+/* --- normal web --- */
+for(let d=1;d<=3;d++){
+  for(let i=0;i<78;i++){
+    const h=ri(7,19);
+    W(ts(d,h,ri(0,59),ri(0,59)),'10.20.'+ri(1,9)+'.'+ri(2,250),rnd()<.85?'GET':'POST',pick(PATHS),rnd()<.3?'id='+ri(100,999):'',pick([200,200,200,200,304,302]),pick(UA_OK));
+  }
+  for(let i=0;i<7;i++) W(ts(d,ri(7,19),ri(0,59),ri(0,59)),'10.20.'+ri(1,9)+'.'+ri(2,250),'GET','/berkas-lama-'+ri(1,40),'',404,pick(UA_OK));
+}
+/* --- SERANGAN 4: injeksi SQL (IP sama dgn brute force) --- */
+(function(){const ip='203.0.113.45';
+  const inj=["id=1' OR '1'='1","id=1 UNION SELECT null,null--","id=1; DROP TABLE users--","user=admin'--","id=1' AND SLEEP(5)--","id=-1 UNION SELECT user,pass FROM akun--","id=1' OR 1=1#","q=<script>alert(1)<\/script>"];
+  let m=22;
+  for(let i=0;i<34;i++){
+    W(ts(2,2,m,ri(0,59)),ip,rnd()<.5?'GET':'POST','/login',pick(inj),pick([500,500,403,500,200]),'sqlmap/1.7',1,'sqli');
+    m++; if(m>58)m=22;
+  }
+})();
+/* --- SERANGAN 5: pemindaian direktori --- */
+(function(){const ip='192.0.2.99';
+  const scan=['/admin','/.env','/wp-admin','/backup.zip','/config.php','/phpmyadmin','/.git/config','/server-status','/api/v1/users','/db.sql','/.htaccess','/old','/test','/debug','/console','/.svn'];
+  let s=0;
+  for(let i=0;i<26;i++){
+    W(ts(3,5,10+Math.floor(s/60),s%60),ip,'GET',scan[i%scan.length],'',pick([404,404,404,403,200]),'Mozilla/5.0 (compatible; scanner)',1,'scanning');
+    s+=ri(2,6);
+  }
+})();
+
+AUTH.sort((a,b)=>a.ts-b.ts); WEB.sort((a,b)=>a.ts-b.ts);
+const DATA={auth:AUTH,web:WEB};
+
+/* ============ PARSER ============ */
+function parseRules(txt){
+  const out=[],errs=[];
+  const clean=txt.split('\n').filter(l=>!l.trim().startsWith('#')).join('\n');
+  const re=/alert\s+(\w+)\s*\(([^)]*)\)/gi; let m,n=0;
+  while((m=re.exec(clean))){
+    n++;
+    const src=m[1].toLowerCase();
+    if(src!=='auth'&&src!=='web'){errs.push(`Aturan ${n}: sumber "${src}" tidak dikenal. Gunakan auth atau web.`);continue}
+    const r={src,n,msg:'(tanpa pesan)',conds:[],th:null};
+    m[2].split(';').map(s=>s.trim()).filter(Boolean).forEach(opt=>{
+      const i=opt.indexOf(':'); if(i<0){errs.push(`Aturan ${n}: opsi "${opt}" tidak memiliki tanda titik dua.`);return}
+      const k=opt.slice(0,i).trim().toLowerCase(), v=opt.slice(i+1).trim();
+      if(k==='msg'){r.msg=v.replace(/^["']|["']$/g,'')}
+      else if(k==='threshold'){
+        const c=/count\s+(\d+)/i.exec(v),s=/seconds\s+(\d+)/i.exec(v),t=/track\s+(by_\w+)/i.exec(v);
+        if(!c||!s){errs.push(`Aturan ${n}: threshold wajib memuat count dan seconds.`);return}
+        r.th={count:+c[1],seconds:+s[1],track:t?t[1]:'by_src'};
+      }
+      else r.conds.push({k,v});
+    });
+    if(r.conds.length===0&&!r.th) errs.push(`Aturan ${n}: tidak ada kondisi apa pun — aturan ini akan mencocokkan seluruh peristiwa.`);
+    out.push(r);
+  }
+  if(n===0&&txt.trim()) errs.push('Tidak ada aturan yang dikenali. Pastikan bentuknya: alert auth ( ... )');
+  return {rules:out,errs};
+}
+function match1(ev,c){
+  let f=ev[c.k]; if(f===undefined) return false;
+  const v=c.v;
+  if(v.startsWith('!')) return String(f).toLowerCase()!==v.slice(1).toLowerCase();
+  if(v.startsWith('*')&&v.endsWith('*')) return String(f).toLowerCase().includes(v.slice(1,-1).toLowerCase());
+  if(/^>=/.test(v)) return +f>=+v.slice(2);
+  if(/^<=/.test(v)) return +f<=+v.slice(2);
+  if(/^>/.test(v)) return +f>+v.slice(1);
+  if(/^</.test(v)) return +f<+v.slice(1);
+  if(v.includes('|')) return v.split('|').some(x=>String(f).toLowerCase()===x.trim().toLowerCase());
+  return String(f).toLowerCase()===v.toLowerCase();
+}
+const TRK={by_src:'src_ip',by_user:'user',by_path:'path'};
+function runRules(rules){
+  const hits={}; const per=rules.map(r=>({r,tp:0,fp:0,hit:0}));
+  rules.forEach((r,ri)=>{
+    const ev=DATA[r.src]; if(!ev) return;
+    const pre=ev.filter(e=>r.conds.every(c=>match1(e,c)));
+    let fin=pre;
+    if(r.th){
+      const key=TRK[r.th.track]||'src_ip';
+      fin=pre.filter(e=>{
+        const k=e[key];
+        const c=pre.filter(x=>x[key]===k&&x.ts<=e.ts&&x.ts>e.ts-r.th.seconds).length;
+        return c>=r.th.count;
+      });
+    }
+    fin.forEach(e=>{
+      if(!hits[e.id]) hits[e.id]=[];
+      hits[e.id].push(ri);
+      per[ri].hit++; e.atk?per[ri].tp++:per[ri].fp++;
+    });
+  });
+  let TP=0,FP=0,FN=0,TN=0;
+  [...AUTH,...WEB].forEach(e=>{
+    const h=!!hits[e.id];
+    e.kls = h?(e.atk?'TP':'FP'):(e.atk?'FN':'TN');
+    if(e.kls==='TP')TP++;else if(e.kls==='FP')FP++;else if(e.kls==='FN')FN++;else TN++;
+  });
+  return {TP,FP,FN,TN,per,hits};
+}
+
+/* ============ MISI ============ */
+const MISI=[
+  {id:1,nama:'Misi 1 — Brute force SSH',det:'Kenali percobaan masuk berulang pada layanan SSH dari satu alamat sumber.',lbl:'brute-force',p:.90,r:.75},
+  {id:2,nama:'Misi 2 — Password spraying',det:'Pola ini tersebar tipis di banyak akun sehingga lolos ambang batas per akun. Perhatikan jendela waktunya.',lbl:'spraying',p:.85,r:.70},
+  {id:3,nama:'Misi 3 — Injeksi SQL',det:'Kenali permintaan web yang menyisipkan perintah basis data pada parameter kueri.',lbl:'sqli',p:.90,r:.80},
+  {id:4,nama:'Misi 4 — Pemindaian direktori',det:'Satu sumber meminta banyak jalur berbeda yang sebagian besar tidak ditemukan.',lbl:'scanning',p:.85,r:.60}
+];
+function cekMisi(){
+  const all=[...AUTH,...WEB];
+  return MISI.map(m=>{
+    const tgt=all.filter(e=>e.lbl===m.lbl);
+    const tp=tgt.filter(e=>e.kls==='TP').length;
+    const rec=tgt.length?tp/tgt.length:0;
+    const fp=all.filter(e=>e.kls==='FP').length;
+    const totHit=all.filter(e=>e.kls==='TP'||e.kls==='FP').length;
+    const pre=totHit?all.filter(e=>e.kls==='TP').length/totHit:0;
+    return {...m,rec,pre,lulus:rec>=m.r&&pre>=m.p,tp,tot:tgt.length};
+  });
+}
+
+/* ============ UI ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=document.querySelector('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+}
+$$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+$$('[data-go]').forEach(b=>b.onclick=()=>goTab(b.dataset.go));
+
+function renderLog(){
+  const src=$('#f-src').value, q=$('#f-q').value.toLowerCase();
+  let ev=DATA[src];
+  if(q) ev=ev.filter(e=>JSON.stringify(e).toLowerCase().includes(q));
+  const cols=src==='auth'?['t','src_ip','user','service','status','country']:['t','src_ip','method','path','query','status_code'];
+  const hd=src==='auth'?['Waktu','Alamat Sumber','Pengguna','Layanan','Status','Negara']:['Waktu','Alamat Sumber','Metode','Jalur','Kueri','Kode'];
+  let h='<tr>'+hd.map(x=>`<th>${x}</th>`).join('')+'</tr>';
+  ev.slice(0,500).forEach(e=>{
+    h+='<tr>'+cols.map(c=>`<td>${c==='t'?fmt(e.t):String(e[c]===''?'—':e[c]).replace(/</g,'&lt;')}</td>`).join('')+'</tr>';
+  });
+  $('#tbl-log').innerHTML=h;
+  $('#cnt').innerHTML=`Menampilkan <b>${Math.min(ev.length,500)}</b> dari <b>${ev.length}</b> peristiwa yang cocok. Total dataset: ${AUTH.length} peristiwa autentikasi dan ${WEB.length} peristiwa web.`;
+}
+$('#f-src').onchange=renderLog; $('#f-q').oninput=renderLog;
+$('#btn-stat').onclick=()=>{
+  const src=$('#f-src').value, ev=DATA[src], g={};
+  ev.forEach(e=>{g[e.src_ip]=g[e.src_ip]||{n:0,f:0};g[e.src_ip].n++;
+    if(src==='auth'&&e.status==='failed')g[e.src_ip].f++;
+    if(src==='web'&&e.status_code>=400)g[e.src_ip].f++;});
+  const arr=Object.entries(g).sort((a,b)=>b[1].n-a[1].n).slice(0,12);
+  $('#stat').innerHTML='<div class="scroll" style="max-height:230px;margin-bottom:11px"><table><tr><th>Alamat Sumber</th><th>Jumlah Peristiwa</th><th>'+(src==='auth'?'Gagal':'Kode ≥400')+'</th><th>Proporsi</th></tr>'+
+    arr.map(([ip,v])=>`<tr><td>${ip}</td><td>${v.n}</td><td>${v.f}</td><td>${(v.f/v.n*100).toFixed(0)}%</td></tr>`).join('')+'</table></div>';
+};
+
+const EX={
+1:`# Aturan paling naif: tandai SEMUA kegagalan autentikasi.
+# Jalankan, lalu amati presisinya pada tab Hasil.
+alert auth (
+  msg:"Kegagalan autentikasi";
+  status:failed;
+)`,
+2:`# Aturan yang sama, kini dengan ambang batas.
+# Bandingkan presisi dan recall-nya dengan contoh sebelumnya.
+alert auth (
+  msg:"Brute force SSH";
+  service:ssh;
+  status:failed;
+  threshold:count 10, seconds 60, track by_src;
+)`,
+3:`# Deteksi injeksi SQL pada parameter kueri.
+alert web (
+  msg:"Percobaan injeksi SQL";
+  query:*UNION*;
+)
+
+alert web (
+  msg:"Percobaan injeksi SQL - OR";
+  query:*' OR *;
+)`,
+0:''};
+$$('[data-ex]').forEach(b=>b.onclick=()=>{$('#rules').value=EX[b.dataset.ex];$('#parse').textContent='';$('#perr').innerHTML=''});
+$('#rules').value=EX[1];
+
+let LAST=null;
+$('#btn-run').onclick=()=>{
+  const {rules,errs}=parseRules($('#rules').value);
+  $('#perr').innerHTML=errs.length?`<div class="err">${errs.join('<br>')}</div>`:'';
+  if(!rules.length){$('#parse').textContent='Tidak ada aturan yang dapat dijalankan.';return}
+  LAST=runRules(rules);
+  $('#parse').textContent=`${rules.length} aturan dijalankan.`;
+  renderHasil(); renderMisi();
+  goTab('hasil');
+};
+
+function renderHasil(){
+  if(!LAST)return;
+  const {TP,FP,FN,TN,per}=LAST;
+  $('#cm').innerHTML=`
+    <div class="hd"></div><div class="hd">Benar-benar Serangan</div><div class="hd">Bukan Serangan</div>
+    <div class="hd" style="display:flex;align-items:center">Sistem Memberi Alert</div>
+    <div><div class="n" style="color:var(--tp)">${TP}</div><span class="pill tp">True Positive</span></div>
+    <div><div class="n" style="color:var(--fp)">${FP}</div><span class="pill fp">False Positive</span></div>
+    <div class="hd" style="display:flex;align-items:center">Sistem Diam</div>
+    <div><div class="n" style="color:var(--fn)">${FN}</div><span class="pill fn">False Negative</span></div>
+    <div><div class="n" style="color:var(--tn)">${TN}</div><span class="pill tn">True Negative</span></div>`;
+  const pre=TP+FP?TP/(TP+FP):0, rec=TP+FN?TP/(TP+FN):0, akur=(TP+TN)/(TP+FP+FN+TN), f1=pre+rec?2*pre*rec/(pre+rec):0;
+  const M=(v,l,note)=>`<div class="metric"><div class="v">${(v*100).toFixed(1)}%</div><div class="l">${l}</div><div class="bar"><i style="width:${v*100}%"></i></div>${note?`<div style="font-size:10px;color:var(--muted);margin-top:6px">${note}</div>`:''}</div>`;
+  $('#mx').innerHTML=M(pre,'Presisi','alert yang benar')+M(rec,'Recall','serangan tertangkap')+M(f1,'F1','rerata harmonik')+M(akur,'Akurasi','menyesatkan');
+  let n='';
+  if(FP>60) n+=`<div class="hint">Aturan Anda menghasilkan <b>${FP} alarm palsu</b>. Pada operasi nyata, jumlah sebesar ini menimbulkan kelelahan alert dan membuat alert yang benar ikut terabaikan. Persempit cakupan atau tambahkan ambang batas.</div>`;
+  if(rec<.5&&TP>0) n+=`<div class="hint">Recall hanya <b>${(rec*100).toFixed(0)}%</b> — lebih dari separuh peristiwa serangan lolos tanpa terdeteksi.</div>`;
+  if(akur>.9&&pre<.3) n+=`<div class="hint">Perhatikan: akurasi <b>${(akur*100).toFixed(1)}%</b> terlihat sangat baik, padahal presisinya hanya <b>${(pre*100).toFixed(1)}%</b>. Inilah sebab akurasi menyesatkan ketika peristiwa yang dicari sangat jarang.</div>`;
+  if(pre>=.9&&rec>=.8) n+=`<div class="ok">Aturan ini tersetel baik — presisi dan recall sama-sama tinggi.</div>`;
+  $('#catatan').innerHTML=n;
+
+  $('#tbl-rule').innerHTML='<tr><th>#</th><th>Pesan</th><th>Sumber</th><th>Alert</th><th>TP</th><th>FP</th><th>Presisi Aturan</th></tr>'+
+    per.map((p,i)=>`<tr><td>${i+1}</td><td style="font-family:system-ui">${p.r.msg.replace(/</g,'&lt;')}</td><td>${p.r.src}</td><td>${p.hit}</td><td style="color:var(--tp)">${p.tp}</td><td style="color:var(--fp)">${p.fp}</td><td>${p.hit?(p.tp/p.hit*100).toFixed(0)+'%':'—'}</td></tr>`).join('');
+  renderKls();
+}
+function renderKls(){
+  if(!LAST)return;
+  const k=$('#f-kls').value, src=$('#f-src2').value;
+  let ev=DATA[src].filter(e=>k==='all'?e.kls!=='TN':e.kls===k);
+  const cols=src==='auth'?['t','src_ip','user','service','status']:['t','src_ip','method','path','query','status_code'];
+  const hd=src==='auth'?['Waktu','Sumber','Pengguna','Layanan','Status']:['Waktu','Sumber','Metode','Jalur','Kueri','Kode'];
+  $('#tbl-kls').innerHTML='<tr><th>Kelas</th>'+hd.map(x=>`<th>${x}</th>`).join('')+'</tr>'+
+    ev.slice(0,400).map(e=>`<tr><td><span class="pill ${e.kls.toLowerCase()}">${e.kls}</span></td>`+cols.map(c=>`<td>${c==='t'?fmt(e.t):String(e[c]===''?'—':e[c]).replace(/</g,'&lt;')}</td>`).join('')+'</tr>').join('');
+}
+$('#f-kls').onchange=renderKls; $('#f-src2').onchange=renderKls;
+
+function renderMisi(){
+  const r=LAST?cekMisi():MISI.map(m=>({...m,rec:0,pre:0,lulus:false,tp:0,tot:0}));
+  $('#misi').innerHTML=r.map(m=>`<div class="msn ${m.lulus?'done':''}">
+    <b>${m.lulus?'✓ ':''}${m.nama}</b>
+    <p>${m.det}</p>
+    <div class="tgt">Target: presisi ≥ ${(m.p*100)}% &amp; recall ≥ ${(m.r*100)}% &nbsp;|&nbsp; Tercapai: presisi ${(m.pre*100).toFixed(0)}%, recall ${(m.rec*100).toFixed(0)}% (${m.tp}/${m.tot} peristiwa)</div>
+  </div>`).join('');
+}
+
+/* ===== laju dasar ===== */
+function laju(){
+  const tot=Math.round(Math.pow(10,+$('#s1').value)), atk=+$('#s2').value, rec=+$('#s3').value/100, fpr=+$('#s4').value/100;
+  const norm=tot-atk, TP=Math.round(atk*rec), FP=Math.round(norm*fpr), FN=atk-TP, TN=norm-FP;
+  const pre=TP+FP?TP/(TP+FP):0, akur=(TP+TN)/tot;
+  $('#v1').textContent=tot.toLocaleString('id-ID'); $('#v2').textContent=atk;
+  $('#v3').textContent=(rec*100).toFixed(0)+'%'; $('#v4').textContent=(fpr*100).toFixed(2)+'%';
+  const B=(v,l,c)=>`<div class="metric"><div class="v" style="color:${c||'inherit'}">${v}</div><div class="l">${l}</div></div>`;
+  $('#lj').innerHTML=B(TP.toLocaleString('id-ID'),'Alert Benar (TP)','var(--tp)')+B(FP.toLocaleString('id-ID'),'Alarm Palsu (FP)','var(--fp)')+B(FN.toLocaleString('id-ID'),'Serangan Lolos (FN)','var(--fn)')+B((TP+FP).toLocaleString('id-ID'),'Total Alert Harian');
+  $('#lj2').innerHTML=`<div class="metric"><div class="v" style="color:var(--fn)">${(pre*100).toFixed(2)}%</div><div class="l">Presisi — alert yang benar</div></div>
+    <div class="metric"><div class="v" style="color:var(--tp)">${(akur*100).toFixed(3)}%</div><div class="l">Akurasi — tampak sangat baik</div></div>`;
+  let n='';
+  if(pre<.05&&TP+FP>100) n=`<div class="hint">Dari <b>${(TP+FP).toLocaleString('id-ID')}</b> alert yang muncul setiap hari, hanya <b>${TP}</b> yang benar-benar serangan. Seorang analis harus memeriksa ribuan alarm untuk menemukan segelintir yang nyata — inilah akar kelelahan alert.</div>`;
+  else if(pre>.5) n=`<div class="ok">Presisi di atas 50% — pada tingkat ini alert layak ditindaklanjuti satu per satu.</div>`;
+  $('#lj-note').innerHTML=n;
+}
+['s1','s2','s3','s4'].forEach(id=>$('#'+id).oninput=laju);
+
+/* ===== korelasi ===== */
+const KOR=[
+ {t:'08:14',e:'Pengguna finance01 berhasil masuk dari 10.20.3.44 (Indonesia)',a:0},
+ {t:'02:14',e:'38 kegagalan masuk SSH untuk akun admin dari 203.0.113.45',a:1},
+ {t:'02:19',e:'Satu keberhasilan masuk SSH akun admin dari 203.0.113.45',a:1},
+ {t:'09:02',e:'Pengguna dosen01 gagal masuk 2 kali, lalu berhasil',a:0},
+ {t:'02:22',e:'34 permintaan POST ke /login dari 203.0.113.45 dengan parameter kueri tak lazim',a:1},
+ {t:'11:30',e:'Pencadangan terjadwal mengunggah 2 GB ke penyimpanan luar',a:0},
+ {t:'02:48',e:'Akses ke /api/v1/users dari 203.0.113.45 mengembalikan 12.000 baris data',a:1},
+ {t:'14:05',e:'Pengguna hrd01 mengakses berkas yang belum pernah dibukanya',a:0}
+];
+function renderKor(){
+  $('#kor').innerHTML=KOR.map((k,i)=>`<label style="display:flex;gap:9px;align-items:flex-start;padding:9px;border-bottom:1px solid var(--row);cursor:pointer">
+    <input type="checkbox" data-k="${i}" style="margin-top:3px">
+    <span><code>${k.t}</code> &nbsp;${k.e}</span></label>`).join('');
+  $('#kor-res').innerHTML='';
+}
+$('#btn-kor').onclick=()=>{
+  const sel=$$('#kor input:checked').map(x=>+x.dataset.k);
+  const benar=KOR.map((k,i)=>k.a?i:-1).filter(i=>i>=0);
+  const tepat=benar.filter(i=>sel.includes(i)).length, salah=sel.filter(i=>!benar.includes(i)).length;
+  let h;
+  if(tepat===benar.length&&salah===0) h=`<div class="ok"><b>Tepat.</b> Keempat peristiwa itu membentuk satu rangkaian: brute force SSH berhasil pada pukul 02:19, dilanjutkan injeksi SQL pada aplikasi web, lalu pengambilan data massal. Seluruhnya berasal dari alamat sumber yang sama, 203.0.113.45. Tidak satu pun layak memicu alert bila berdiri sendiri — hanya korelasi yang mengungkap polanya.</div>`;
+  else h=`<div class="hint">Anda menandai <b>${tepat}</b> dari ${benar.length} peristiwa yang benar${salah?`, dan <b>${salah}</b> peristiwa normal ikut tertandai`:''}. Petunjuk: perhatikan <b>alamat sumber</b> dan <b>rentang waktunya</b>. Peristiwa yang berangkai biasanya berbagi satu kesamaan yang tidak terlihat bila dibaca satu per satu.</div>`;
+  $('#kor-res').innerHTML=h;
+};
+$('#btn-kor2').onclick=renderKor;
+
+/* ===== versi ===== */
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function periksaVersi(){
+  const msg=$('#versi-msg'), pw=$('#versi-kode').value;
+  if(!pw) return;
+  if(!window.crypto||!crypto.subtle){msg.innerHTML='<div class="err">Peramban ini tidak didukung. Gunakan Chrome, Edge, atau Firefox versi terbaru.</div>';return}
+  msg.innerHTML='<div class="hint">Memeriksa…</div>';
+  try{
+    const d=JSON.parse($('#versi-data').textContent);
+    const bahan=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.i,hash:'SHA-256'},bahan,{name:'AES-GCM',length:256},false,['decrypt']);
+    const isi=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.n)},k,b64(d.c));
+    $('#versi-isi').innerHTML=new TextDecoder().decode(isi);
+    $('#versi-form').style.display='none';
+  }catch(e){msg.innerHTML='<div class="err">Kode tidak dikenali.</div>'}
+  $('#versi-kode').value='';
+}
+$('#btn-versi').onclick=periksaVersi;
+$('#versi-kode').onkeydown=e=>{if(e.key==='Enter')periksaVersi()};
+let klikVer=0,waktuVer=0;
+$('#ver').onclick=()=>{
+  const t=Date.now(); klikVer=t-waktuVer<1500?klikVer+1:1; waktuVer=t;
+  if(klikVer>=5){klikVer=0;goTab('versi')}
+};
+
+/* ===== tema ===== */
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+$('#btn-tema').onclick=()=>{
+  const t=document.documentElement.dataset.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem('tema',t)}catch(e){}
+  labelTema();
+};
+labelTema();
+
+/* init */
+renderLog(); laju(); renderMisi(); renderKor();
+</script>
+</body>
+</html>

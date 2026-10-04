@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Penelusuran Algoritma — Praktikum Modul 5</title>
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.nimbar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.nimbar .muted{color:var(--muted)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 14px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-size:12.5px}
+.ref td{font-size:12.5px}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--code-text)}
+select,input[type=text],input[type=password]{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+button.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit}
+button.act:hover{opacity:.85}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:11px 0}
+.hint{background:color-mix(in srgb,var(--fp) 8%,transparent);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:color-mix(in srgb,var(--tp) 8%,transparent);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.gagal{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.err{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10.5px;font-weight:600}
+.pill.y{background:color-mix(in srgb,var(--tp) 15%,transparent);color:var(--tp)}
+.pill.n{background:color-mix(in srgb,var(--fn) 15%,transparent);color:var(--fn)}
+.pill.b{background:var(--panel2);color:var(--muted)}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+.lst b{color:var(--text)}
+.steps{list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--row);font-size:13px;color:var(--muted)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(st);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps b{color:var(--text)}
+.steps .sec{display:inline-block;margin-top:8px}
+/* pseudocode */
+.kode{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:8px 0;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--code-text);overflow-x:auto}
+.kode .ln{display:flex;white-space:pre;padding-right:12px}
+.kode .no{width:38px;text-align:right;padding-right:12px;color:var(--muted);user-select:none;flex:none}
+.kode .ln.x{cursor:pointer}
+.kode .ln.x:hover{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.kode .ln.pil{background:color-mix(in srgb,var(--fp) 20%,transparent)}
+.uji{font-family:var(--mono);font-size:13px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:9px 12px;margin:10px 0}
+/* tabel penelusuran */
+.tr td{padding:4px 6px;vertical-align:middle}
+.tr td.lbl{font-family:var(--mono);font-size:11.5px;white-space:nowrap;color:var(--muted)}
+.tr input,.tr select{width:100%;min-width:82px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:5px 6px;font-family:var(--mono);font-size:12px}
+.tr input:disabled,.tr select:disabled{opacity:.3}
+.tr tr.benar td:first-child{box-shadow:inset 3px 0 0 var(--tp)}
+.tr tr.salah td{background:color-mix(in srgb,var(--fn) 11%,transparent)}
+.tr td.kosong{color:var(--muted);text-align:center;padding:16px;font-family:inherit}
+.tr tr.tetap td{background:var(--panel2)}
+.soal{border-top:1px solid var(--row);padding:12px 0}
+.soal:first-of-type{border-top:none}
+.soal label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.opsi label{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:13px;margin:6px 0;cursor:pointer}
+.tanda{font-size:12px;margin-left:6px}
+.tanda.y{color:var(--tp)}.tanda.n{color:var(--fn)}
+.gerbang{display:none}
+.tanpa-nim .perlu-nim{display:none}
+.tanpa-nim .gerbang{display:block}
+#ver{cursor:default;user-select:none;display:inline-block;padding:4px 2px;touch-action:manipulation}
+.geser{display:none;font-size:12px;color:var(--muted);margin:0 0 6px}
+@media(max-width:640px){
+  .geser{display:block}
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{padding:10px 12px}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+</head>
+<body class="tanpa-nim">
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Algoritma dan Dasar-Dasar Pemrograman</a>
+    <h1>Penelusuran Algoritma</h1>
+    <div class="sub">Algoritma dan Dasar-Dasar Pemrograman · Modul 5 · Sub-CPMK-612 — Program Studi Bisnis Digital, Fakultas Ekonomi dan Bisnis, Universitas Pendidikan Nasional</div>
+  </div>
+  <button class="sec" id="btn-tema"></button>
+</header>
+
+<div class="nimbar" id="nimbar"></div>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai di Sini</button>
+  <button data-t="t1">1 · Penelusuran Bercabang</button>
+  <button data-t="t2">2 · Penelusuran Berulang</button>
+  <button data-t="t3">3 · Nilai Uji</button>
+  <button data-t="t4">4 · Deteksi Kesalahan</button>
+  <button data-t="rekap">5 · Rekap &amp; Pengumpulan</button>
+  <button data-t="acuan">? · Acuan</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Praktikum Modul 5</div>
+    <h2>Penelusuran Algoritma: Validasi Logika dan Pendeteksian Kesalahan</h2>
+    <p>Menjalankan algoritma secara manual dengan tabel penelusuran untuk membuktikan kebenarannya, lalu menemukan letak kesalahan logika pada algoritma yang keluarannya tidak sesuai harapan. Bacalah halaman ini sampai habis sebelum mulai.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Masalah</h2>
+    <p>Algoritma yang bisa berjalan belum tentu benar. Kesalahan logika tidak membuat program berhenti; program tetap menghasilkan keluaran, hanya saja keliru. Sering kali keluarannya tampak wajar sehingga tidak menimbulkan kecurigaan, misalnya total omzet yang ternyata hanya sebesar transaksi terakhir.</p>
+    <p>Semakin lambat kesalahan ditemukan, semakin mahal ongkos memperbaikinya. Kesalahan yang ditemukan saat penelusuran rancangan cukup diperbaiki dalam beberapa menit. Kesalahan yang baru ketahuan setelah program dipakai bisa memakan waktu berhari-hari dan menimbulkan kerugian bisnis. Mahasiswa yang tidak dapat menelusuri hanya bisa menebak dan mengubah-ubah algoritma sampai kebetulan keluarannya benar.</p>
+    <p>Pertanyaannya: bagaimana membuktikan bahwa sebuah algoritma benar sebelum satu baris kode pun ditulis, dan bagaimana menemukan letak kesalahannya secara sistematis ketika keluarannya tidak sesuai harapan?</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Tujuan Praktikum</h2>
+    <p>Setelah praktikum ini Anda diharapkan mampu:</p>
+    <ol class="lst">
+      <li>Menyusun flowchart bercabang dan berulang sesuai aturan bisnis berjenjang.</li>
+      <li>Memvalidasi kebenaran logika melalui penelusuran tabel secara manual.</li>
+      <li>Menemukan letak kesalahan logika pada algoritma yang keluarannya tidak sesuai harapan.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Manfaat</h2>
+    <ul class="lst">
+      <li><b>Bekal untuk pemrograman Python</b> pada Pertemuan 9–15. Cara menelusuri yang sama dipakai untuk mencari kesalahan pada program.</li>
+      <li><b>Terpakai langsung di dunia kerja</b>, misalnya untuk memeriksa rumus bertingkat di lembar kerja serta kebijakan diskon, bonus, dan ongkos kirim.</li>
+      <li><b>Menghemat ongkos perbaikan</b>, karena kesalahan ditemukan pada rancangan, bukan setelah program dipakai pelanggan.</li>
+      <li><b>Bekerja sistematis, bukan menebak.</b> Anda belajar menemukan baris pertama yang menyimpang dan menggolongkan jenis kesalahannya.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Skenario</h2>
+    <p>Anda bekerja sebagai <b>analis bisnis digital</b> di sebuah perusahaan ritel daring. Tim pengembang menyerahkan beberapa rancangan algoritma untuk kebijakan bonus penjualan, rekapitulasi transaksi, potongan belanja, dan status pembayaran. Sebelum kode ditulis, Anda diminta menelusuri setiap rancangan untuk memastikan logikanya benar, serta menemukan letak kesalahan pada rancangan yang keluarannya keliru.</p>
+    <div class="hint"><b>Soal disusun dari NIM Anda.</b> Nilai uji, isi daftar transaksi, dan masukan setiap kasus berbeda untuk setiap mahasiswa. Gunakan NIM Anda sendiri. Dosen akan memeriksa laporan Anda berdasarkan NIM tersebut.</div>
+  </div>
+
+  <div class="card">
+    <h2>5. Konsep yang Perlu Dipahami</h2>
+    <h3>Penelusuran (tracing / desk checking)</h3>
+    <p>Pemeriksaan kebenaran algoritma dengan menjalankannya secara manual menggunakan nilai masukan tertentu, sambil mencatat perubahan nilai setiap besaran pada setiap langkah.</p>
+    <h3>Empat kaidah pengisian tabel</h3>
+    <ol class="lst">
+      <li><b>Kerjakan persis seperti tertulis</b>, bukan seperti yang dimaksudkan. Jangan membetulkan sambil jalan.</li>
+      <li><b>Besaran yang belum bernilai ditulis <code>?</code></b>. Bila besaran dipakai padahal masih bertanda tanya, di situlah letak kesalahannya.</li>
+      <li><b>Setiap langkah satu baris</b>, termasuk langkah pemeriksaan kondisi.</li>
+      <li><b>Setiap iterasi dicatat terpisah</b> dan diberi nomor.</li>
+    </ol>
+    <h3>Empat jenis kesalahan logika</h3>
+    <p>Kondisi tidak lengkap, urutan pemeriksaan terbalik, nilai awal keliru atau tidak ditetapkan, dan penempatan langkah di dalam atau di luar pengulangan. Rinciannya ada di tab <b>Acuan</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Langkah Praktikum</h2>
+    <ol class="steps">
+      <li><b>Masukkan NIM</b> pada kotak di bagian atas halaman, lalu klik <b>Mulai</b>.</li>
+      <li><b>Telusuri algoritma bercabang.</b> Klik baris pseudocode sesuai urutan pengerjaannya untuk menambah baris tabel, lalu isi nilai setiap besaran.<br><button class="sec" data-go="t1">Buka Tab 1 →</button></li>
+      <li><b>Telusuri algoritma berulang.</b> Isi baris nilai awal, satu baris untuk setiap iterasi, lalu keluarannya.<br><button class="sec" data-go="t2">Buka Tab 2 →</button></li>
+      <li><b>Tentukan tanda perbandingan dan nilai uji</b> dari rumusan aturan bisnis.<br><button class="sec" data-go="t3">Buka Tab 3 →</button></li>
+      <li><b>Temukan kesalahan</b> pada empat algoritma yang keluarannya tidak sesuai harapan.<br><button class="sec" data-go="t4">Buka Tab 4 →</button></li>
+      <li><b>Gambar flowchart</b> untuk algoritma Tab 1 dan Tab 2 di kertas atau di draw.io. Bagian ini dikerjakan di luar aplikasi.</li>
+      <li><b>Rekap dan kumpulkan</b> laporan sesuai petunjuk di Tab 5.<br><button class="sec" data-go="rekap">Buka Tab 5 →</button></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>7. Perhatikan Sebelum Mulai</h2>
+    <ul class="lst">
+      <li><b>Kerjakan dengan menelusuri, bukan menebak.</b> Setiap kali Anda menekan tombol <b>Periksa</b>, jumlah pemeriksaan tercatat dan ikut tampil di rekap.</li>
+      <li><b>Pekerjaan tersimpan otomatis di peramban ini</b> untuk NIM yang Anda masukkan. Bila berganti komputer atau peramban, pekerjaan dimulai dari awal.</li>
+      <li><b>Angka boleh ditulis dengan atau tanpa titik ribuan</b>, misalnya <code>750000</code> atau <code>750.000</code>.</li>
+    </ul>
+    <div class="ok">Praktikum dinyatakan selesai bila seluruh latihan di Tab 1–4 berstatus tepat, flowchart sudah digambar, dan laporan dikumpulkan sesuai petunjuk di Tab 5.</div>
+  </div>
+</div>
+
+<!-- ========== TAB 1 ========== -->
+<div class="tab" id="t-t1">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Penelusuran Algoritma Bercabang: Bonus Penjualan</h2>
+      <p>Kebijakan perusahaan: tenaga penjualan memperoleh bonus 5% dari omzet bila omzet mulai dari 20.000.000, dan 3% bila omzet mulai dari 10.000.000. Selain itu tidak memperoleh bonus. Tenaga penjualan dengan masa kerja sekurang-kurangnya 5 tahun memperoleh tambahan 1%.</p>
+      <div class="uji" id="t1-uji"></div>
+      <div class="grid2">
+        <div>
+          <h3 style="margin-top:0;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Pseudocode</h3>
+          <div class="kode" id="t1-kode"></div>
+          <div class="hint" id="t1-status" style="margin-bottom:0"></div>
+        </div>
+        <div>
+          <h3 style="margin-top:0;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Cara mengisi</h3>
+          <ol class="lst">
+            <li><b>Klik baris pseudocode</b> yang dikerjakan berikutnya. Satu baris baru akan muncul di tabel, berisi salinan nilai dari baris sebelumnya.</li>
+            <li><b>Ubah nilai besaran</b> yang berubah pada langkah itu. Besaran yang belum bernilai ditulis <code>?</code>.</li>
+            <li>Pada langkah <b>JIKA</b>, pilih kondisi <b>benar</b> atau <b>salah</b>. Pada langkah <b>TAMPILKAN</b>, isi kolom keluaran.</li>
+            <li>Baris <code>SELAIN ITU</code>, <code>AKHIR JIKA</code>, <code>MULAI</code>, dan <code>SELESAI</code> bukan langkah, jadi tidak dicatat.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Tabel Penelusuran</h2>
+      <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="wide"><table class="tr" id="t1-tabel"></table></div>
+      <div class="row">
+        <button class="act" id="t1-cek">Periksa</button>
+        <button class="sec" id="t1-hapus">Hapus baris terakhir</button>
+        <button class="sec" id="t1-kosong">Kosongkan tabel</button>
+      </div>
+      <div id="t1-hasil"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 2 ========== -->
+<div class="tab" id="t-t2">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Penelusuran Algoritma Berulang: Rekapitulasi Transaksi</h2>
+      <p>Algoritma berikut menghitung total omzet, banyaknya transaksi besar (mulai dari 500.000), dan nilai transaksi terkecil dari daftar transaksi hari ini.</p>
+      <div class="grid2">
+        <div><div class="kode" id="t2-kode"></div></div>
+        <div>
+          <ol class="lst">
+            <li>Isi baris <b>sebelum mulai</b> dengan nilai awal setiap penampung.</li>
+            <li>Klik <b>Tambah iterasi</b> untuk setiap putaran. Jumlah baris iterasi harus sama dengan jumlah data.</li>
+            <li>Pada setiap iterasi, isi <code>nilai</code>, hasil kedua kondisi, dan nilai penampung <b>setelah</b> iterasi itu selesai.</li>
+            <li>Nilai penampung dibawa dari baris sebelumnya. Kesalahan paling lazim adalah menuliskan nilai iterasi berjalan saja, bukan hasil kumulatifnya.</li>
+            <li>Terakhir, isi baris <b>keluaran</b>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Tabel Penelusuran</h2>
+      <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="wide"><table class="tr" id="t2-tabel"></table></div>
+      <div class="row">
+        <button class="act" id="t2-cek">Periksa</button>
+        <button class="sec" id="t2-tambah">+ Tambah iterasi</button>
+        <button class="sec" id="t2-hapus">Hapus iterasi terakhir</button>
+      </div>
+      <div id="t2-hasil"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 3 ========== -->
+<div class="tab" id="t-t3">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Bagian A: Kata Kunci Aturan Bisnis dan Tanda Perbandingan</h2>
+      <p>Pilih tanda perbandingan yang tepat untuk setiap rumusan kebijakan. Perhatikan kata kuncinya: "mulai dari", "lebih dari", "paling lama", "di bawah", dan seterusnya.</p>
+      <div id="t3a"></div>
+      <div class="row"><button class="act" id="t3a-cek">Periksa Bagian A</button></div>
+      <div id="t3a-hasil"></div>
+    </div>
+    <div class="card">
+      <h2>Bagian B: Pemilihan Nilai Uji</h2>
+      <p>Penelusuran hanya membuktikan algoritma benar untuk nilai yang diuji. Tentukan nilai <code>omzet</code> yang akan Anda pakai untuk menguji algoritma bonus penjualan di Tab 1 (ambang 10.000.000 dan 20.000.000).</p>
+      <div id="t3b"></div>
+      <div class="row"><button class="act" id="t3b-cek">Periksa Bagian B</button></div>
+      <div id="t3b-hasil"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 4 ========== -->
+<div class="tab" id="t-t4">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Deteksi Letak Kesalahan</h2>
+      <p>Keempat algoritma di bawah ini berjalan, tetapi keluarannya tidak sesuai kebijakan. Untuk setiap kasus, ikuti prosedur pendeteksian:</p>
+      <ol class="lst">
+        <li><b>Tetapkan keluaran yang seharusnya</b> dengan menghitung manual.</li>
+        <li><b>Telusuri</b> algoritma dengan masukan yang sama, persis seperti tertulis (kerjakan di kertas).</li>
+        <li><b>Bandingkan</b> kolom demi kolom dari atas ke bawah, lalu cari baris pertama yang menyimpang.</li>
+        <li><b>Golongkan</b> jenis kesalahannya.</li>
+        <li><b>Pilih perbaikan</b> yang tepat.</li>
+      </ol>
+    </div>
+    <div id="t4"></div>
+  </div>
+</div>
+
+<!-- ========== REKAP ========== -->
+<div class="tab" id="t-rekap">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Rekap disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Rekap Hasil</h2>
+      <div id="rekap"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Pengumpulan Tugas</h2>
+    <p>Kumpulkan <b>satu berkas PDF</b>. Dosen akan membuka soal dengan NIM Anda, jadi isi tabel dan jawaban harus sesuai dengan soal untuk NIM tersebut.</p>
+    <h3>Tangkapan layar yang wajib dilampirkan</h3>
+    <p>Pastikan kotak <b>NIM di bagian atas halaman</b> ikut terlihat pada setiap tangkapan layar. Pintasan: <code>Win + Shift + S</code> (Windows) atau <code>Cmd + Shift + 4</code> (macOS).</p>
+    <table class="ref">
+      <tr><th>Kode</th><th>Tab</th><th>Yang harus terlihat</th></tr>
+      <tr><td><b>SS1</b></td><td>1 · Penelusuran Bercabang</td><td>Nilai uji, tabel penelusuran lengkap, dan pesan hasil pemeriksaan</td></tr>
+      <tr><td><b>SS2</b></td><td>2 · Penelusuran Berulang</td><td>Tabel penelusuran lengkap dan pesan hasil pemeriksaan</td></tr>
+      <tr><td><b>SS3</b></td><td>3 · Nilai Uji</td><td>Bagian A dan B beserta hasil pemeriksaannya</td></tr>
+      <tr><td><b>SS4</b></td><td>4 · Deteksi Kesalahan</td><td>Keempat kasus beserta jawaban dan hasil pemeriksaannya (boleh lebih dari satu gambar)</td></tr>
+      <tr><td><b>SS5</b></td><td>5 · Rekap</td><td>Tabel rekap hasil</td></tr>
+    </table>
+    <h3>Flowchart</h3>
+    <ul class="lst">
+      <li><b>FC1</b>: flowchart algoritma bonus penjualan (Tab 1), bercabang berjenjang.</li>
+      <li><b>FC2</b>: flowchart algoritma rekapitulasi transaksi (Tab 2), berulang.</li>
+    </ul>
+    <p>Gambar di draw.io (app.diagrams.net) atau tulis tangan lalu difoto dengan jelas. Gunakan simbol flowchart baku (lihat tab Acuan).</p>
+    <h3>Pertanyaan analisis</h3>
+    <ol class="lst">
+      <li>Berdasarkan tabel Tab 1 Anda, langkah mana saja yang tidak dikerjakan dan mengapa? Jelaskan perbedaan percabangan berjenjang (baris 4–10) dengan percabangan terpisah (baris 11–13).</li>
+      <li>Pada Tab 2, mengapa <code>terkecil</code> diberi nilai awal 99999999, bukan 0? Apa keluaran algoritma untuk data Anda bila nilai awalnya 0?</li>
+      <li>Pilih satu kalimat aturan di Tab 3 Bagian A. Siapa yang dirugikan bila tanda perbandingannya ditulis keliru, dan pada nilai berapa?</li>
+      <li>Pilih satu kasus di Tab 4. Uraikan lima langkah prosedur pendeteksian yang Anda lakukan sampai menemukan letak kesalahannya.</li>
+    </ol>
+    <h3>Susunan laporan</h3>
+<pre>Nama berkas : P5_NIM_Nama.pdf          (contoh: P5_2401010001_Made_Adi.pdf)
+
+1. Identitas        : nama, NIM, kelas
+2. Flowchart        : FC1 dan FC2
+3. Tangkapan layar  : SS1–SS5, masing-masing diberi kode dan keterangan singkat
+4. Jawaban analisis : nomor 1–4</pre>
+    <h3>Langkah pengumpulan</h3>
+    <ol class="steps">
+      <li><b>Selesaikan Tab 1–4</b> dan pastikan statusnya di rekap. Bila ada yang belum tepat, tetap kumpulkan dan jelaskan kendalanya.</li>
+      <li><b>Ambil tangkapan layar</b> SS1–SS5 dengan NIM terlihat.</li>
+      <li><b>Gambar flowchart</b> FC1 dan FC2.</li>
+      <li><b>Jawab pertanyaan analisis</b> nomor 1–4.</li>
+      <li><b>Simpan sebagai PDF</b> dengan nama <code>P5_NIM_Nama.pdf</code>, lalu unggah ke LMS sebelum tenggat yang ditetapkan dosen.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== ACUAN ========== -->
+<div class="tab" id="t-acuan">
+  <div class="card">
+    <h2>Tabel Penelusuran</h2>
+    <p>Tabel penelusuran mencatat nilai setiap besaran setelah setiap langkah dikerjakan.</p>
+    <table class="ref">
+      <tr><th>Langkah</th><th>Besaran 1, 2, …</th><th>Kondisi</th><th>Keluaran</th></tr>
+      <tr><td>Baris pseudocode / simbol flowchart</td><td>Nilai setelah langkah selesai</td><td>Benar / salah (hanya pada percabangan)</td><td>Hanya terisi bila ada tampilan</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Percabangan Berjenjang dan Percabangan Terpisah</h2>
+    <ul class="lst">
+      <li><b>Berjenjang</b> (<code>JIKA … SELAIN ITU JIKA … SELAIN ITU</code>): hanya satu cabang yang dikerjakan. Setelah satu kondisi terpenuhi, pemeriksaan berhenti.</li>
+      <li><b>Terpisah</b> (dua blok <code>JIKA … AKHIR JIKA</code>): keduanya tetap diperiksa, apa pun hasil percabangan pertama.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Tiga Hal Wajib pada Penelusuran Pengulangan</h2>
+    <ol class="lst">
+      <li><b>Catat baris nilai awal lebih dahulu.</b> Bila penampung tidak diberi nilai awal, baris ini berisi tanda tanya.</li>
+      <li><b>Jumlah baris = jumlah iterasi.</b> Kekurangan atau kelebihan baris menandakan kesalahan pada kondisi berhenti.</li>
+      <li><b>Nilai penampung dibawa dari baris sebelumnya</b>, bukan nilai iterasi berjalan saja.</li>
+    </ol>
+    <p>Untuk pengulangan panjang: telusuri 3 iterasi pertama, 1 iterasi tengah, dan iterasi terakhir.</p>
+  </div>
+  <div class="card">
+    <h2>Pemilihan Nilai Uji</h2>
+    <table class="ref">
+      <tr><th>Jenis</th><th>Tujuan</th><th>Contoh (potongan berjenjang 500.000 / 1.000.000)</th></tr>
+      <tr><td>Nilai lazim</td><td>Memeriksa jalur yang paling sering terjadi</td><td>750.000</td></tr>
+      <tr><td>Nilai batas</td><td>Memeriksa perlakuan tepat pada ambang</td><td>500.000 dan 1.000.000</td></tr>
+      <tr><td>Tepat di bawah batas</td><td>Memeriksa sisi lain ambang</td><td>499.999 dan 999.999</td></tr>
+      <tr><td>Di luar jalur utama</td><td>Memeriksa cabang yang jarang terpakai</td><td>50.000</td></tr>
+      <tr><td>Nilai kosong atau nol</td><td>Memeriksa perilaku pada ketiadaan data</td><td>0, atau daftar kosong</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Kata Kunci Aturan Bisnis dan Tanda Perbandingan</h2>
+    <table class="ref">
+      <tr><th>Tanda</th><th>Kata kunci</th></tr>
+      <tr><td><code>&gt;=</code></td><td>"mulai dari", "sekurang-kurangnya", "minimal", "atau lebih"</td></tr>
+      <tr><td><code>&gt;</code></td><td>"lebih dari", "melebihi", "di atas"</td></tr>
+      <tr><td><code>&lt;=</code></td><td>"sampai dengan", "paling banyak", "paling lama", "maksimal", "atau kurang"</td></tr>
+      <tr><td><code>&lt;</code></td><td>"kurang dari", "di bawah"</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Empat Jenis Kesalahan Logika</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Jenis</th><th>Gejala</th><th>Perbaikan</th></tr>
+      <tr><td><b>Kondisi tidak lengkap</b></td><td>Suatu besaran tetap bertanda tanya sampai akhir penelusuran</td><td>Tambahkan cabang SELAIN ITU yang menangani seluruh sisa keadaan</td></tr>
+      <tr><td><b>Urutan pemeriksaan terbalik</b></td><td>Keluaran benar pada nilai kecil, keliru pada nilai besar</td><td>Susun pemeriksaan dari ambang tertinggi ke terendah</td></tr>
+      <tr><td><b>Nilai awal keliru atau tidak ditetapkan</b></td><td>Baris "sebelum mulai" berisi tanda tanya, atau hasil akhir menyimpang secara tetap</td><td>Tetapkan penampung dan pencacah bernilai nol sebelum pengulangan</td></tr>
+      <tr><td><b>Penempatan langkah di dalam/luar pengulangan</b></td><td>Keluaran muncul berkali-kali, atau nilai penampung selalu kembali ke nol</td><td>Pindahkan langkah tersebut ke luar (atau ke dalam) pengulangan</td></tr>
+    </table></div>
+    <p style="margin-top:9px">Pengecualian: penampung untuk pencarian nilai terkecil tidak boleh bernilai awal nol. Tetapkan dengan nilai data pertama atau bilangan yang sangat besar.</p>
+  </div>
+  <div class="card">
+    <h2>Prosedur Pendeteksian Letak Kesalahan</h2>
+    <ol class="lst">
+      <li><b>Tetapkan keluaran yang seharusnya</b> dengan menghitung manual.</li>
+      <li><b>Telusuri dengan nilai masukan yang sama</b>, apa adanya, tanpa membetulkan sambil jalan.</li>
+      <li><b>Bandingkan kolom demi kolom, dari atas ke bawah.</b> Kesalahan berada pada baris pertama yang menyimpang atau sebelumnya, bukan sesudahnya.</li>
+      <li><b>Golongkan jenis kesalahan</b> menggunakan tabel gejala di atas.</li>
+      <li><b>Perbaiki, lalu telusuri ulang seluruh nilai uji.</b> Perbaikan pada satu cabang dapat merusak cabang lain.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Simbol Flowchart</h2>
+    <table class="ref">
+      <tr><th>Simbol</th><th>Bentuk</th><th>Dipakai untuk</th></tr>
+      <tr><td>Terminal</td><td>Oval / persegi bersudut bulat</td><td>MULAI dan SELESAI</td></tr>
+      <tr><td>Masukan / keluaran</td><td>Jajar genjang</td><td>BACA dan TAMPILKAN</td></tr>
+      <tr><td>Proses</td><td>Persegi panjang</td><td>TETAPKAN dan HITUNG</td></tr>
+      <tr><td>Keputusan</td><td>Belah ketupat</td><td>JIKA dan kondisi pengulangan, dengan dua cabang: Ya / Tidak</td></tr>
+      <tr><td>Garis alir</td><td>Panah</td><td>Urutan pengerjaan, termasuk panah kembali pada pengulangan</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ========== VERSI ========== -->
+<div class="tab" id="t-versi">
+  <div class="card" id="versi-form">
+    <h2>Informasi Versi</h2>
+    <p>Praktikum Penelusuran Algoritma v1.0 · berjalan sepenuhnya di peramban.</p>
+    <div class="row">
+      <input type="password" id="versi-kode" placeholder="Kode akses" autocomplete="off" style="flex:1;min-width:180px;max-width:320px">
+      <button class="sec" id="btn-versi">Periksa</button>
+    </div>
+    <div id="versi-msg"></div>
+  </div>
+  <div id="versi-isi"></div>
+</div>
+
+<footer>Praktikum ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · <span id="ver">v1.0</span></footer>
+</div>
+
+<script type="application/json" id="versi-data">{"s":"yIRhQ4JJDDJgEA3CRvSecQ==","n":"oJdfwEg5hxJ1Xscm","i":600000,"c":"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"}</script>
+<script>
+/* ============ UTIL ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const rp=n=>typeof n==='number'?n.toLocaleString('id-ID'):n;
+function norm(v){
+  const s=String(v??'').trim().toLowerCase().replace(/^["']+|["']+$/g,'').trim();
+  const t=s.replace(/^rp\.?\s*/,'').replace(/[.\s]/g,'');
+  return /^-?\d+$/.test(t)?String(+t):s;
+}
+const bk=b=>b?'benar':'salah';
+
+/* ============ PRNG (benih dari NIM) ============ */
+let _s=1;
+function benih(t){let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}_s=h||1}
+function rnd(){_s=(Math.imul(_s,1664525)+1013904223)>>>0;return _s/4294967296}
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1))}
+function acak(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* ============ SOAL ============ */
+const KALIMAT=[
+  {t:'Gratis ongkos kirim untuk belanja mulai dari 300.000 rupiah.',v:'total_belanja',n:'300000',o:'>='},
+  {t:'Denda dikenakan bila keterlambatan pengembalian lebih dari 3 hari.',v:'hari_terlambat',n:'3',o:'>'},
+  {t:'Cicilan tanpa bunga berlaku untuk tenor paling lama 6 bulan.',v:'tenor',n:'6',o:'<='},
+  {t:'Harga pelajar berlaku bagi pembeli berusia di bawah 23 tahun.',v:'usia',n:'23',o:'<'},
+  {t:'Poin bonus diberikan kepada pelanggan dengan sekurang-kurangnya 10 transaksi.',v:'jumlah_transaksi',n:'10',o:'>='},
+  {t:'Paket hemat berlaku untuk pembelian maksimal 5 unit.',v:'jumlah_unit',n:'5',o:'<='},
+  {t:'Biaya tambahan dikenakan untuk paket dengan berat melebihi 20 kg.',v:'berat',n:'20',o:'>'},
+  {t:'Tarif subsidi berlaku untuk pemakaian kurang dari 100 kWh.',v:'pemakaian',n:'100',o:'<'}
+];
+function buatSoal(nim){
+  benih('alg5:'+nim);
+  const S={};
+  const kat=ri(0,4);
+  S.omzet=[ri(11,19)*1e6+ri(0,9)*1e5,1e7,2e7,ri(21,40)*1e6+ri(0,9)*1e5,ri(3,9)*1e6+ri(0,9)*1e5][kat];
+  S.masa=ri(1,9);
+  S.daftar=acak([5e5,ri(5,45)*1e4,ri(55,190)*1e4,ri(5,190)*1e4,ri(5,190)*1e4]);
+  S.kal=acak(KALIMAT.map((_,i)=>i)).slice(0,5);
+  S.k1=ri(11,30)*1e5;
+  S.k2=ri(4,36)*25000;
+  S.k3=acak([25e4,ri(5,24)*1e4,ri(26,90)*1e4,ri(5,90)*1e4,ri(5,90)*1e4,ri(5,90)*1e4]);
+  S.k4=[0,0,0,0,0].map(()=>ri(5,150)*1e4);
+  S.urut=[0,1,2,3].map(()=>acak([0,1,2]));
+  return S;
+}
+
+/* ----- Tab 1: bercabang ----- */
+const KODE1=['MULAI','  BACA omzet','  BACA masa_kerja','  JIKA omzet >= 20000000 MAKA','    TETAPKAN persen = 5','  SELAIN ITU JIKA omzet >= 10000000 MAKA','    TETAPKAN persen = 3','  SELAIN ITU','    TETAPKAN persen = 0','  AKHIR JIKA','  JIKA masa_kerja >= 5 MAKA','    HITUNG persen = persen + 1','  AKHIR JIKA','  HITUNG bonus = omzet * persen / 100','  TAMPILKAN bonus','SELESAI'];
+const EXEC1=[2,3,4,5,6,7,9,11,12,14,15], KOND1=[4,6,11], TAMP1=[15];
+const VAR1=['omzet','masa_kerja','persen','bonus'];
+function jejak1(S){
+  const O=S.omzet,M=S.masa,v={omzet:'?',masa_kerja:'?',persen:'?',bonus:'?'},r=[];
+  const p=(ln,k=null,out=null)=>r.push({ln,v:{...v},k,out});
+  v.omzet=O;p(2);v.masa_kerja=M;p(3);
+  if(O>=2e7){p(4,true);v.persen=5;p(5)}
+  else{p(4,false);if(O>=1e7){p(6,true);v.persen=3;p(7)}else{p(6,false);v.persen=0;p(9)}}
+  if(M>=5){p(11,true);v.persen+=1;p(12)}else p(11,false);
+  v.bonus=O*v.persen/100;p(14);p(15,null,v.bonus);
+  return r;
+}
+
+/* ----- Tab 2: berulang ----- */
+const KODE2=d=>['MULAI',`  TETAPKAN daftar = [${d.join(', ')}]`,'  TETAPKAN total_omzet = 0','  TETAPKAN jumlah_besar = 0','  TETAPKAN terkecil = 99999999','  UNTUK SETIAP nilai DALAM daftar LAKUKAN','    HITUNG total_omzet = total_omzet + nilai','    JIKA nilai >= 500000 MAKA','      HITUNG jumlah_besar = jumlah_besar + 1','    AKHIR JIKA','    JIKA nilai < terkecil MAKA','      TETAPKAN terkecil = nilai','    AKHIR JIKA','  AKHIR UNTUK','  TAMPILKAN total_omzet','  TAMPILKAN jumlah_besar','  TAMPILKAN terkecil','SELESAI'];
+const PEN2=[['t','total_omzet'],['j','jumlah_besar'],['m','terkecil']];
+function jejak2(S){
+  let t=0,j=0,m=99999999;const it=[];
+  for(const n of S.daftar){t+=n;const a=n>=5e5;if(a)j++;const b=n<m;if(b)m=n;it.push({nilai:n,a,b,t,j,m})}
+  return {awal:{t:0,j:0,m:99999999},it,out:{t,j,m}};
+}
+
+/* ----- Tab 3B: nilai uji ----- */
+const NU=[
+  {id:'lazim',l:'Nilai lazim (jenjang menengah)'},
+  {id:'b1',l:'Nilai batas 1'},{id:'b2',l:'Nilai batas 2'},
+  {id:'u1',l:'Tepat di bawah batas 1'},{id:'u2',l:'Tepat di bawah batas 2'},
+  {id:'luar',l:'Di luar jalur utama (tidak memperoleh bonus)'},
+  {id:'nol',l:'Nilai nol'}
+];
+function cekNU(x){
+  const n=k=>{const s=norm(x[k]);return /^-?\d+$/.test(s)?+s:NaN};
+  const pas=(a,b,set)=>{const A=n(a),B=n(b);return [set.includes(A),set.includes(B)&&B!==A]};
+  const [b1,b2]=pas('b1','b2',[1e7,2e7]), [u1,u2]=pas('u1','u2',[9999999,19999999]);
+  const L=n('lazim'),O=n('luar');
+  return {lazim:L>1e7&&L<19999999,b1,b2,u1,u2,luar:O>0&&O<9999999,nol:n('nol')===0};
+}
+
+/* ----- Tab 4: deteksi kesalahan ----- */
+const JENIS=['Kondisi tidak lengkap','Urutan pemeriksaan terbalik','Nilai awal keliru atau tidak ditetapkan','Penempatan langkah di dalam/luar pengulangan'];
+const KASUS=[
+  {nama:'Kasus A — Potongan Belanja',
+   kebijakan:'Potongan 15% untuk belanja mulai dari 1.000.000, potongan 10% untuk belanja mulai dari 500.000, selain itu tanpa potongan.',
+   kode:()=>['MULAI','  BACA total_belanja','  JIKA total_belanja >= 500000 MAKA','    TETAPKAN persen = 10','  SELAIN ITU JIKA total_belanja >= 1000000 MAKA','    TETAPKAN persen = 15','  SELAIN ITU','    TETAPKAN persen = 0','  AKHIR JIKA','  HITUNG potongan = total_belanja * persen / 100','  HITUNG total_bayar = total_belanja - potongan','  TAMPILKAN total_bayar','SELESAI'],
+   masuk:S=>`total_belanja = ${S.k1}`, aktual:S=>rp(S.k1-S.k1*10/100), harap:S=>S.k1-S.k1*15/100,
+   baris:[3,5], jenis:1,
+   opsi:['Tukar urutan pemeriksaan: periksa total_belanja >= 1000000 lebih dahulu, baru total_belanja >= 500000','Ganti tanda pada baris 3 menjadi total_belanja > 500000','Tambahkan cabang SELAIN ITU dengan TETAPKAN persen = 15 sebelum AKHIR JIKA']},
+  {nama:'Kasus B — Status Pembayaran',
+   kebijakan:'Bila pembayaran melebihi tagihan, status "lebih bayar". Bila pembayaran kurang dari tagihan, status "kurang bayar". Bila pembayaran sama dengan tagihan, status "lunas".',
+   kode:()=>['MULAI','  BACA tagihan','  BACA bayar','  JIKA bayar > tagihan MAKA','    TETAPKAN status = "lebih bayar"','  SELAIN ITU JIKA bayar < tagihan MAKA','    TETAPKAN status = "kurang bayar"','  AKHIR JIKA','  TAMPILKAN status','SELESAI'],
+   masuk:S=>`tagihan = ${S.k2}, bayar = ${S.k2}`, aktual:()=>'?  (status tidak pernah diberi nilai)', harap:()=>'lunas',
+   baris:[6,8], jenis:0,
+   opsi:['Tambahkan cabang SELAIN ITU dengan TETAPKAN status = "lunas" sebelum AKHIR JIKA','Ganti kondisi pada baris 4 menjadi bayar >= tagihan','Tambahkan TETAPKAN status = "lunas" sesudah TAMPILKAN status']},
+  {nama:'Kasus C — Banyaknya Transaksi Besar',
+   kebijakan:'Hitung banyaknya transaksi bernilai sekurang-kurangnya 250.000.',
+   kode:S=>['MULAI',`  TETAPKAN daftar = [${S.k3.join(', ')}]`,'  TETAPKAN jumlah = 1','  UNTUK SETIAP nilai DALAM daftar LAKUKAN','    JIKA nilai >= 250000 MAKA','      HITUNG jumlah = jumlah + 1','    AKHIR JIKA','  AKHIR UNTUK','  TAMPILKAN jumlah','SELESAI'],
+   masuk:()=>'daftar seperti tertulis pada baris 2', aktual:S=>S.k3.filter(n=>n>=25e4).length+1, harap:S=>S.k3.filter(n=>n>=25e4).length,
+   baris:[3], jenis:2,
+   opsi:['Ganti baris 3 menjadi TETAPKAN jumlah = 0','Ganti kondisi pada baris 5 menjadi nilai > 250000','Pindahkan TETAPKAN jumlah = 1 ke dalam pengulangan']},
+  {nama:'Kasus D — Total Omzet Harian',
+   kebijakan:'Hitung total omzet seluruh transaksi hari ini.',
+   kode:S=>['MULAI',`  TETAPKAN daftar = [${S.k4.join(', ')}]`,'  UNTUK SETIAP nilai DALAM daftar LAKUKAN','    TETAPKAN total = 0','    HITUNG total = total + nilai','  AKHIR UNTUK','  TAMPILKAN total','SELESAI'],
+   masuk:()=>'daftar seperti tertulis pada baris 2', aktual:S=>rp(S.k4[S.k4.length-1]), harap:S=>S.k4.reduce((a,b)=>a+b,0),
+   baris:[4], jenis:3,
+   opsi:['Pindahkan TETAPKAN total = 0 ke sebelum UNTUK SETIAP','Ganti baris 4 menjadi TETAPKAN total = nilai','Pindahkan TAMPILKAN total ke dalam pengulangan']}
+];
+
+/* ============ STATE ============ */
+let NIM=null,S=null,ST=null;
+const stBaru=()=>({t1:[],t2:{awal:{t:'',j:'',m:''},it:[],out:{t:'',j:'',m:''}},t3a:['','','','',''],t3b:{},t4:[0,1,2,3].map(()=>({out:'',ln:null,jenis:'',fix:null})),att:{},ok:{}});
+function simpan(){try{localStorage.setItem('alg5:'+NIM,JSON.stringify(ST))}catch(e){}}
+function muat(n){try{return JSON.parse(localStorage.getItem('alg5:'+n))}catch(e){return null}}
+function catat(k,ok){ST.att[k]=(ST.att[k]||0)+1;ST.ok[k]=ok;simpan();renderRekap()}
+
+/* ============ NAVIGASI & NIM ============ */
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=document.querySelector('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+}
+$$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+$$('[data-go]').forEach(b=>b.onclick=()=>goTab(b.dataset.go));
+
+function renderNim(){
+  const bar=$('#nimbar');
+  if(!NIM){
+    document.body.classList.add('tanpa-nim');
+    bar.innerHTML=`<span>Masukkan NIM untuk memulai:</span><input type="text" id="nim-in" inputmode="numeric" placeholder="contoh: 2401010001" style="width:180px"><button class="act" id="nim-ok">Mulai</button><span class="muted" id="nim-msg"></span>`;
+    const go=()=>{const v=$('#nim-in').value.trim();if(!/^\d{6,15}$/.test(v)){$('#nim-msg').textContent='NIM harus berupa 6–15 digit angka.';return}pasangNim(v)};
+    $('#nim-ok').onclick=go;$('#nim-in').onkeydown=e=>{if(e.key==='Enter')go()};
+    return;
+  }
+  document.body.classList.remove('tanpa-nim');
+  bar.innerHTML=`<span>NIM <b style="font-family:var(--mono)">${NIM}</b></span><span class="muted">Soal pada halaman ini disusun dari NIM tersebut.</span><span style="flex:1"></span><button class="sec" id="nim-ganti">Ganti NIM</button>`;
+  $('#nim-ganti').onclick=()=>{if(!confirm('Ganti NIM? Pekerjaan untuk NIM ini tetap tersimpan di peramban ini.'))return;NIM=null;try{localStorage.removeItem('alg5:nim')}catch(e){};renderNim()};
+}
+function pasangNim(n){
+  NIM=n;S=buatSoal(n);ST=muat(n)||stBaru();
+  try{localStorage.setItem('alg5:nim',n)}catch(e){}
+  renderNim();renderT1();renderT2();renderT3();renderT4();renderRekap();
+}
+
+/* ============ TAB 1 ============ */
+const kodeHTML=(baris,klik,pil)=>baris.map((t,i)=>{const n=i+1;return `<div class="ln${klik.includes(n)?' x':''}${pil===n?' pil':''}" data-ln="${n}"><span class="no">${n}</span>${esc(t)}</div>`}).join('');
+const opsiK=v=>['','benar','salah'].map(o=>`<option value="${o}"${v===o?' selected':''}>${o||'—'}</option>`).join('');
+function renderT1(){
+  $('#t1-uji').innerHTML=`Nilai uji Anda: omzet = <b>${S.omzet}</b>, masa_kerja = <b>${S.masa}</b>`;
+  $('#t1-kode').innerHTML=kodeHTML(KODE1,EXEC1);
+  $('#t1-hasil').innerHTML='';
+  tabelT1();
+}
+function tabelT1(tanda){
+  const h=['#','Langkah',...VAR1,'Kondisi','Keluaran'];
+  let s='<tr>'+h.map(x=>`<th>${x}</th>`).join('')+'</tr>';
+  ST.t1.forEach((r,i)=>{
+    const c=!tanda?'':tanda.ok||i<tanda.i?'benar':i===tanda.i?'salah':'';
+    s+=`<tr class="${c}"><td>${i+1}</td><td class="lbl">${esc(KODE1[r.ln-1].trim())}</td>`+
+      VAR1.map(x=>`<td><input data-r="${i}" data-f="${x}" value="${esc(r.v[x])}"></td>`).join('')+
+      `<td><select data-r="${i}" data-f="k"${KOND1.includes(r.ln)?'':' disabled'}>${opsiK(r.k)}</select></td>`+
+      `<td><input data-r="${i}" data-f="out" value="${esc(r.out)}"${TAMP1.includes(r.ln)?'':' disabled'}></td></tr>`;
+  });
+  if(!ST.t1.length) s+=`<tr><td colspan="${h.length}" class="kosong">Klik baris pseudocode yang dikerjakan pertama kali untuk menambah baris.</td></tr>`;
+  $('#t1-tabel').innerHTML=s;
+  const n=ST.t1.length;
+  $('#t1-status').innerHTML=n?`Tabel berisi <b>${n}</b> baris. Terakhir ditambahkan: <code>${esc(KODE1[ST.t1[n-1].ln-1].trim())}</code>`:'Tabel masih kosong. Klik baris pseudocode untuk menambah baris.';
+}
+$('#t1-kode').onclick=e=>{
+  const l=e.target.closest('.ln.x');if(!l)return;
+  const prev=ST.t1[ST.t1.length-1];
+  ST.t1.push({ln:+l.dataset.ln,v:prev?{...prev.v}:{omzet:'?',masa_kerja:'?',persen:'?',bonus:'?'},k:'',out:''});
+  simpan();tabelT1();$('#t1-hasil').innerHTML='';
+};
+$('#t1-tabel').oninput=$('#t1-tabel').onchange=e=>{
+  const el=e.target,r=ST.t1[+el.dataset.r];if(!r)return;
+  const f=el.dataset.f;if(f==='k'||f==='out')r[f]=el.value;else r.v[f]=el.value;simpan();
+};
+$('#t1-hapus').onclick=()=>{ST.t1.pop();simpan();tabelT1();$('#t1-hasil').innerHTML=''};
+$('#t1-kosong').onclick=()=>{if(ST.t1.length&&!confirm('Kosongkan seluruh tabel?'))return;ST.t1=[];simpan();tabelT1();$('#t1-hasil').innerHTML=''};
+function bandingT1(E,G){
+  for(let i=0;i<Math.max(E.length,G.length);i++){
+    const e=E[i],g=G[i];
+    if(!g) return {i,msg:`Baris 1–${i} sudah benar, tetapi penelusuran belum selesai. Masih ada langkah yang belum dicatat.`};
+    if(!e) return {i,msg:`Baris ${i+1} berlebih. Algoritma sudah selesai sebelum langkah ini.`};
+    if(e.ln!==g.ln) return {i,msg:`Baris ${i+1}: langkah ini tidak dikerjakan pada urutan tersebut. Periksa kembali hasil kondisi sebelumnya.`};
+    for(const x of VAR1) if(norm(g.v[x])!==norm(e.v[x])) return {i,msg:`Baris ${i+1}: nilai <code>${x}</code> belum tepat.`};
+    if(e.k!==null&&g.k!==bk(e.k)) return {i,msg:`Baris ${i+1}: hasil kondisi belum tepat.`};
+    if(e.out!==null&&norm(g.out)!==norm(e.out)) return {i,msg:`Baris ${i+1}: keluaran belum tepat.`};
+  }
+  return null;
+}
+$('#t1-cek').onclick=()=>{
+  const E=jejak1(S),h=bandingT1(E,ST.t1);catat('t1',!h);
+  tabelT1(h?{i:h.i}:{ok:true});
+  $('#t1-hasil').innerHTML=h?`<div class="gagal">${h.msg}</div><p style="font-size:12px">Pemeriksaan ke-${ST.att.t1}.</p>`
+    :`<div class="ok"><b>Tepat.</b> Seluruh ${E.length} baris penelusuran benar. Keluaran akhir: bonus = ${rp(E[E.length-1].out)}.</div><p style="font-size:12px">Pemeriksaan ke-${ST.att.t1}.</p>`;
+};
+
+/* ============ TAB 2 ============ */
+function renderT2(){$('#t2-kode').innerHTML=kodeHTML(KODE2(S.daftar),[]);$('#t2-hasil').innerHTML='';tabelT2()}
+function tabelT2(tanda){
+  const G=ST.t2,inp=(f,v)=>`<input data-f="${f}" value="${esc(v)}">`,sel=(f,v)=>`<select data-f="${f}">${opsiK(v)}</select>`;
+  const urut=k=>k==='out'?1e9:k;
+  const c=k=>!tanda?'':tanda.ok||urut(k)<urut(tanda.i)?'benar':k===tanda.i?'salah':'';
+  let s='<tr><th>Iterasi</th><th>nilai</th><th>nilai ≥ 500000</th><th>nilai &lt; terkecil</th><th>total_omzet</th><th>jumlah_besar</th><th>terkecil</th></tr>';
+  s+=`<tr class="tetap ${c(-1)}"><td>(sebelum mulai)</td><td>—</td><td>—</td><td>—</td>`+PEN2.map(([k])=>`<td>${inp('awal.'+k,G.awal[k])}</td>`).join('')+'</tr>';
+  G.it.forEach((r,i)=>{
+    s+=`<tr class="${c(i)}"><td>${i+1}</td><td>${inp(`it.${i}.nilai`,r.nilai)}</td><td>${sel(`it.${i}.a`,r.a)}</td><td>${sel(`it.${i}.b`,r.b)}</td>`+PEN2.map(([k])=>`<td>${inp(`it.${i}.${k}`,r[k])}</td>`).join('')+'</tr>';
+  });
+  s+=`<tr class="tetap ${c('out')}"><td>(keluaran)</td><td>—</td><td>—</td><td>—</td>`+PEN2.map(([k])=>`<td>${inp('out.'+k,G.out[k])}</td>`).join('')+'</tr>';
+  $('#t2-tabel').innerHTML=s;
+}
+$('#t2-tabel').oninput=$('#t2-tabel').onchange=e=>{
+  const p=(e.target.dataset.f||'').split('.');if(!p[0])return;
+  let o=ST.t2;for(let i=0;i<p.length-1;i++)o=o[p[i]];o[p[p.length-1]]=e.target.value;simpan();
+};
+$('#t2-tambah').onclick=()=>{
+  if(ST.t2.it.length>=10)return;
+  const prev=ST.t2.it[ST.t2.it.length-1]||ST.t2.awal;
+  ST.t2.it.push({nilai:'',a:'',b:'',t:prev.t,j:prev.j,m:prev.m});simpan();tabelT2();$('#t2-hasil').innerHTML='';
+};
+$('#t2-hapus').onclick=()=>{ST.t2.it.pop();simpan();tabelT2();$('#t2-hasil').innerHTML=''};
+function bandingT2(E,G){
+  for(const [k,n] of PEN2) if(norm(G.awal[k])!==norm(E.awal[k])) return {i:-1,msg:`Baris "sebelum mulai": nilai awal <code>${n}</code> belum tepat.`};
+  for(let i=0;i<Math.max(E.it.length,G.it.length);i++){
+    const e=E.it[i],g=G.it[i];
+    if(!g) return {i,msg:`Baru ${G.it.length} iterasi yang dicatat. Jumlah baris harus sama dengan jumlah iterasi.`};
+    if(!e) return {i,msg:`Iterasi ${i+1} berlebih. Jumlah baris harus sama dengan jumlah iterasi.`};
+    if(norm(g.nilai)!==norm(e.nilai)) return {i,msg:`Iterasi ${i+1}: <code>nilai</code> belum tepat.`};
+    if(g.a!==bk(e.a)) return {i,msg:`Iterasi ${i+1}: hasil kondisi <code>nilai ≥ 500000</code> belum tepat.`};
+    if(g.b!==bk(e.b)) return {i,msg:`Iterasi ${i+1}: hasil kondisi <code>nilai &lt; terkecil</code> belum tepat.`};
+    for(const [k,n] of PEN2) if(norm(g[k])!==norm(e[k])) return {i,msg:`Iterasi ${i+1}: nilai <code>${n}</code> belum tepat.`};
+  }
+  for(const [k,n] of PEN2) if(norm(G.out[k])!==norm(E.out[k])) return {i:'out',msg:`Baris keluaran: <code>${n}</code> belum tepat.`};
+  return null;
+}
+$('#t2-cek').onclick=()=>{
+  const E=jejak2(S),h=bandingT2(E,ST.t2);catat('t2',!h);
+  tabelT2(h?{i:h.i}:{ok:true});
+  $('#t2-hasil').innerHTML=(h?`<div class="gagal">${h.msg}</div>`:`<div class="ok"><b>Tepat.</b> Nilai awal, ${E.it.length} iterasi, dan keluaran seluruhnya benar.</div>`)+`<p style="font-size:12px">Pemeriksaan ke-${ST.att.t2}.</p>`;
+};
+
+/* ============ TAB 3 ============ */
+function renderT3(){
+  $('#t3a').innerHTML=S.kal.map((ki,i)=>{const k=KALIMAT[ki];return `<div class="soal"><label>${i+1}. ${esc(k.t)}</label>
+    <span style="font-family:var(--mono);font-size:12.5px">JIKA ${k.v} <select data-i="${i}">${['','>=','>','<=','<'].map(o=>`<option value="${esc(o)}"${ST.t3a[i]===o?' selected':''}>${o?esc(o):'pilih'}</option>`).join('')}</select> ${k.n} MAKA</span><span class="tanda" id="t3a-${i}"></span></div>`}).join('');
+  $('#t3b').innerHTML=NU.map(f=>`<div class="soal"><label>${f.l}</label><input type="text" data-f="${f.id}" value="${esc(ST.t3b[f.id]||'')}" style="width:200px"><span class="tanda" id="t3b-${f.id}"></span></div>`).join('');
+  $('#t3a-hasil').innerHTML=$('#t3b-hasil').innerHTML='';
+}
+$('#t3a').onchange=e=>{ST.t3a[+e.target.dataset.i]=e.target.value;simpan()};
+$('#t3b').oninput=e=>{ST.t3b[e.target.dataset.f]=e.target.value;simpan()};
+const tanda=(id,ok)=>{$(id).className='tanda '+(ok?'y':'n');$(id).textContent=ok?'✓ tepat':'✗ belum tepat'};
+$('#t3a-cek').onclick=()=>{
+  const r=S.kal.map((ki,i)=>ST.t3a[i]===KALIMAT[ki].o);r.forEach((ok,i)=>tanda('#t3a-'+i,ok));
+  const ok=r.every(Boolean);catat('t3a',ok);
+  $('#t3a-hasil').innerHTML=(ok?'<div class="ok"><b>Tepat.</b> Kelima tanda perbandingan sesuai rumusan kebijakan.</div>':`<div class="gagal">${r.filter(Boolean).length} dari 5 tanda sudah tepat.</div>`)+`<p style="font-size:12px">Pemeriksaan ke-${ST.att.t3a}.</p>`;
+};
+$('#t3b-cek').onclick=()=>{
+  const r=cekNU(ST.t3b);NU.forEach(f=>tanda('#t3b-'+f.id,r[f.id]));
+  const ok=NU.every(f=>r[f.id]);catat('t3b',ok);
+  $('#t3b-hasil').innerHTML=(ok?'<div class="ok"><b>Tepat.</b> Seluruh nilai uji mewakili jenisnya masing-masing.</div>':`<div class="gagal">${NU.filter(f=>r[f.id]).length} dari ${NU.length} nilai uji sudah tepat.</div>`)+`<p style="font-size:12px">Pemeriksaan ke-${ST.att.t3b}.</p>`;
+};
+
+/* ============ TAB 4 ============ */
+function renderT4(){
+  $('#t4').innerHTML=KASUS.map((K,c)=>{
+    const A=ST.t4[c],kd=K.kode(S),urut=S.urut[c];
+    return `<div class="card" data-c="${c}"><h2>${K.nama}</h2>
+    <p><b>Kebijakan:</b> ${esc(K.kebijakan)}</p>
+    <div class="grid2"><div><div class="kode" id="t4k-${c}">${kodeHTML(kd,kd.map((_,i)=>i+1).slice(1,-1),A.ln)}</div></div>
+    <div><div class="uji">Masukan: ${esc(K.masuk(S))}</div><div class="uji">Keluaran program: <b>${esc(K.aktual(S))}</b></div>
+    <div class="hint" style="margin:0">Keluaran ini tidak sesuai kebijakan.</div></div></div>
+    <div class="soal"><label>a. Keluaran yang seharusnya</label><input type="text" data-c="${c}" data-f="out" value="${esc(A.out)}" style="width:220px"><span class="tanda" id="t4a-${c}"></span></div>
+    <div class="soal"><label>b. Letak kesalahan</label><span style="font-size:13px;color:var(--muted)" id="t4l-${c}">${A.ln?`Baris ${A.ln} dipilih`:'Klik baris pada pseudocode di atas'}</span><span class="tanda" id="t4b-${c}"></span></div>
+    <div class="soal"><label>c. Jenis kesalahan</label><select data-c="${c}" data-f="jenis"><option value="">pilih jenis kesalahan</option>${JENIS.map((j,i)=>`<option value="${i}"${A.jenis===String(i)?' selected':''}>${j}</option>`).join('')}</select><span class="tanda" id="t4c-${c}"></span></div>
+    <div class="soal opsi"><label>d. Perbaikan yang tepat <span class="tanda" id="t4d-${c}"></span></label>${urut.map(o=>`<label><input type="radio" name="fix${c}" data-c="${c}" data-f="fix" value="${o}"${A.fix===o?' checked':''}> ${esc(K.opsi[o])}</label>`).join('')}</div>
+    <div class="row"><button class="act" data-cek="${c}">Periksa ${K.nama.split(' — ')[0]}</button></div><div id="t4h-${c}"></div></div>`;
+  }).join('');
+}
+$('#t4').onclick=e=>{
+  const l=e.target.closest('.ln.x');
+  if(l){const c=+l.closest('.card').dataset.c;ST.t4[c].ln=+l.dataset.ln;simpan();
+    $$(`#t4k-${c} .ln`).forEach(x=>x.classList.toggle('pil',x===l));$('#t4l-'+c).textContent=`Baris ${l.dataset.ln} dipilih`;return}
+  const b=e.target.closest('[data-cek]');if(!b)return;
+  const c=+b.dataset.cek,K=KASUS[c],A=ST.t4[c];
+  const r=[norm(A.out)===norm(K.harap(S)),K.baris.includes(A.ln),A.jenis===String(K.jenis),A.fix===0];
+  ['a','b','c','d'].forEach((x,i)=>tanda(`#t4${x}-${c}`,r[i]));
+  const ok=r.every(Boolean);catat('t4'+c,ok);
+  $('#t4h-'+c).innerHTML=(ok?'<div class="ok"><b>Tepat.</b> Keluaran, letak, jenis, dan perbaikan kesalahan seluruhnya benar.</div>':`<div class="gagal">${r.filter(Boolean).length} dari 4 jawaban sudah tepat.</div>`)+`<p style="font-size:12px">Pemeriksaan ke-${ST.att['t4'+c]}.</p>`;
+};
+$('#t4').oninput=$('#t4').onchange=e=>{
+  const el=e.target,c=el.dataset.c,f=el.dataset.f;if(c===undefined||!f)return;
+  ST.t4[+c][f]=f==='fix'?+el.value:el.value;simpan();
+};
+
+/* ============ REKAP ============ */
+const DAFTAR=[['t1','Tab 1 · Penelusuran bercabang'],['t2','Tab 2 · Penelusuran berulang'],['t3a','Tab 3 · Tanda perbandingan'],['t3b','Tab 3 · Nilai uji'],...KASUS.map((K,c)=>['t4'+c,'Tab 4 · '+K.nama])];
+function renderRekap(){
+  if(!ST)return;
+  const n=DAFTAR.filter(([k])=>ST.ok[k]).length;
+  $('#rekap').innerHTML=`<p>NIM <b style="font-family:var(--mono);color:var(--text)">${NIM}</b> · dicetak ${new Date().toLocaleString('id-ID')}</p>
+  <div class="wide"><table class="ref"><tr><th>Latihan</th><th>Status</th><th>Jumlah pemeriksaan</th></tr>`+
+  DAFTAR.map(([k,l])=>`<tr><td>${l}</td><td>${ST.ok[k]?'<span class="pill y">tepat</span>':ST.att[k]?'<span class="pill n">belum tepat</span>':'<span class="pill b">belum diperiksa</span>'}</td><td>${ST.att[k]||0}</td></tr>`).join('')+
+  `</table></div><div class="${n===DAFTAR.length?'ok':'hint'}">${n} dari ${DAFTAR.length} latihan berstatus tepat.</div>`;
+}
+
+/* ============ KUNCI PER NIM (dipakai halaman versi) ============ */
+function kunciNIM(nim){
+  const X=buatSoal(nim),j1=jejak1(X),j2=jejak2(X),f=v=>v===null?'—':typeof v==='boolean'?bk(v):rp(v);
+  let h=`<h3>Tab 1 · omzet = ${X.omzet}, masa_kerja = ${X.masa}</h3><div class="wide"><table class="ref"><tr><th>#</th><th>Langkah</th>${VAR1.map(x=>`<th>${x}</th>`).join('')}<th>Kondisi</th><th>Keluaran</th></tr>`+
+    j1.map((r,i)=>`<tr><td>${i+1}</td><td><code>${esc(KODE1[r.ln-1].trim())}</code></td>${VAR1.map(x=>`<td>${f(r.v[x])}</td>`).join('')}<td>${f(r.k)}</td><td>${f(r.out)}</td></tr>`).join('')+'</table></div>';
+  h+=`<h3>Tab 2 · daftar = [${X.daftar.join(', ')}]</h3><div class="wide"><table class="ref"><tr><th>Iterasi</th><th>nilai</th><th>≥ 500000</th><th>&lt; terkecil</th><th>total_omzet</th><th>jumlah_besar</th><th>terkecil</th></tr>
+    <tr><td>sebelum mulai</td><td>—</td><td>—</td><td>—</td><td>0</td><td>0</td><td>${rp(99999999)}</td></tr>`+
+    j2.it.map((r,i)=>`<tr><td>${i+1}</td><td>${rp(r.nilai)}</td><td>${bk(r.a)}</td><td>${bk(r.b)}</td><td>${rp(r.t)}</td><td>${r.j}</td><td>${rp(r.m)}</td></tr>`).join('')+
+    `<tr><td>keluaran</td><td>—</td><td>—</td><td>—</td><td>${rp(j2.out.t)}</td><td>${j2.out.j}</td><td>${rp(j2.out.m)}</td></tr></table></div>`;
+  h+=`<h3>Tab 3 Bagian A</h3><ol class="lst">`+X.kal.map(ki=>`<li>${esc(KALIMAT[ki].t)} → <code>${esc(KALIMAT[ki].o)}</code></li>`).join('')+'</ol>';
+  h+=`<h3>Tab 4 · keluaran yang seharusnya</h3><ul class="lst">`+KASUS.map(K=>`<li>${K.nama}: <b>${esc(rp(K.harap(X)))}</b> (keluaran program: ${esc(K.aktual(X))})</li>`).join('')+'</ul>';
+  return h;
+}
+
+/* ============ VERSI ============ */
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function periksaVersi(){
+  const msg=$('#versi-msg'), pw=$('#versi-kode').value;
+  if(!pw) return;
+  if(!window.crypto||!crypto.subtle){msg.innerHTML='<div class="err">Peramban ini tidak didukung. Gunakan Chrome, Edge, atau Firefox versi terbaru.</div>';return}
+  msg.innerHTML='<div class="hint">Memeriksa…</div>';
+  try{
+    const d=JSON.parse($('#versi-data').textContent);
+    const bahan=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.i,hash:'SHA-256'},bahan,{name:'AES-GCM',length:256},false,['decrypt']);
+    const isi=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.n)},k,b64(d.c));
+    $('#versi-isi').innerHTML=new TextDecoder().decode(isi);
+    $('#versi-form').style.display='none';
+    const kb=$('#kn-btn');
+    if(kb){const go=()=>{const n=$('#kn-nim').value.trim();$('#kn-out').innerHTML=/^\d{6,15}$/.test(n)?kunciNIM(n):'<div class="err">NIM harus berupa 6–15 digit angka.</div>'};kb.onclick=go;$('#kn-nim').onkeydown=e=>{if(e.key==='Enter')go()}}
+  }catch(e){msg.innerHTML='<div class="err">Kode tidak dikenali.</div>'}
+  $('#versi-kode').value='';
+}
+$('#btn-versi').onclick=periksaVersi;
+$('#versi-kode').onkeydown=e=>{if(e.key==='Enter')periksaVersi()};
+let klikVer=0,waktuVer=0;
+$('#ver').onclick=()=>{
+  const t=Date.now(); klikVer=t-waktuVer<1500?klikVer+1:1; waktuVer=t;
+  if(klikVer>=5){klikVer=0;goTab('versi')}
+};
+
+/* ============ TEMA ============ */
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+$('#btn-tema').onclick=()=>{
+  const t=document.documentElement.dataset.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem('tema',t)}catch(e){}
+  labelTema();
+};
+labelTema();
+
+/* init */
+(function(){let n=null;try{n=localStorage.getItem('alg5:nim')}catch(e){}if(n)pasangNim(n);else renderNim()})();
+</script>
+</body>
+</html>

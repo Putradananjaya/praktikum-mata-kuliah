@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algoritma dan Dasar-Dasar Pemrograman — Praktikum</title>
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --hover:#555;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --hover:#a1a1aa;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:26px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.intro{color:var(--muted);font-size:13.5px;margin-bottom:20px;max-width:720px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+@media(max-width:400px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;flex-direction:column}
+.card.kosong{background:none;border-style:dashed;justify-content:center;align-items:center;text-align:center;color:var(--muted);font-size:13px;min-height:180px}
+.eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.status{color:var(--tp);background:color-mix(in srgb,var(--tp) 14%,transparent);padding:1px 8px;border-radius:10px;font-size:10px;letter-spacing:.04em}
+.card h2{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+.card p{color:var(--muted);font-size:13px;margin-bottom:12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.meta span{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:2px 8px;font-size:11.5px;color:var(--muted)}
+a.act{margin-top:auto;align-self:flex-start;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:9px 18px;font-weight:600;font-size:13px;text-decoration:none}
+a.act:hover{opacity:.85}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Algoritma dan Dasar-Dasar Pemrograman</h1>
+    <div class="sub">3 SKS (2 teori + 1 praktikum) — Program Studi Bisnis Digital, Fakultas Ekonomi dan Bisnis, Universitas Pendidikan Nasional</div>
+  </div>
+  <button class="sec" id="btn-tema"></button>
+</header>
+
+<p class="intro">Daftar praktikum mata kuliah ini. Semua praktikum berjalan di peramban tanpa instalasi. Kerjakan praktikum sesuai pertemuan yang diarahkan dosen.</p>
+
+<div class="grid">
+  <!-- Salin satu blok .card untuk menambah praktikum -->
+  <div class="card">
+    <div class="eyebrow">Pertemuan 5 · Modul 5 <span class="status">Tersedia</span></div>
+    <h2>Penelusuran Algoritma: Validasi Logika dan Pendeteksian Kesalahan</h2>
+    <p>Menelusuri algoritma bercabang dan berulang dengan tabel penelusuran, memilih nilai uji, dan menemukan letak kesalahan logika pada algoritma bisnis.</p>
+    <div class="meta"><span>Tabel penelusuran</span><span>Nilai uji</span><span>Kesalahan logika</span></div>
+    <a class="act" href="penelusuran-algoritma.html">Buka praktikum →</a>
+  </div>
+  <div class="card kosong">Praktikum berikutnya akan ditambahkan di sini.</div>
+</div>
+
+<footer>Semua praktikum berjalan di peramban. Tidak ada data yang dikirim ke mana pun.</footer>
+</div>
+<script>
+const b=document.getElementById('btn-tema');
+function labelTema(){b.textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+b.onclick=()=>{
+  const t=document.documentElement.dataset.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem('tema',t)}catch(e){}
+  labelTema();
+};
+labelTema();
+</script>
+</body>
+</html>
