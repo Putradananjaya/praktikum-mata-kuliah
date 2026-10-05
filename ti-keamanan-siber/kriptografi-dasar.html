@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kriptografi Dasar — Praktikum MK44</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7' fill='%2318181b' stroke='%233f3f46'/%3E%3Cpath d='M8 10l6 6-6 6' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 22h7' stroke='%23e8e8ea' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171; --tn:#64748b;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626; --tn:#64748b;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+#ver{cursor:default;user-select:none;display:inline-block;padding:4px 2px;touch-action:manipulation}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.nimbar{position:sticky;top:0;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.nimbar label{font-weight:600}
+.nimbar input{font-family:var(--mono);width:180px;margin-left:6px}
+.nimbar .muted{color:var(--muted);font-size:12.5px}
+.nimbar .salah{color:var(--fn);font-size:12.5px}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 14px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid2>*,.grid3>*{min-width:0}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-family:var(--mono);font-size:11.5px;vertical-align:top}
+.scroll{overflow:auto;border:1px solid var(--line);border-radius:6px}
+textarea{width:100%;background:var(--code-bg);color:var(--code-text);border:1px solid var(--line);border-radius:6px;padding:11px;font-family:var(--mono);font-size:12.5px;line-height:1.6;resize:vertical;min-height:96px}
+textarea:focus{outline:none;border-color:var(--hover)}
+select,input[type=text]{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+button.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;white-space:nowrap}
+button.act:hover{opacity:.85}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+.metric{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:13px;text-align:center}
+.metric .v{font-size:25px;font-weight:700;letter-spacing:-.02em}
+.metric .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.bar{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:5px;min-width:60px}
+.bar i{display:block;height:100%;background:var(--fn)}
+.hint{background:rgba(251,191,36,.07);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:rgba(74,222,128,.07);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.err{background:rgba(248,113,113,.08);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--code-text)}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.ref{font-size:12px}
+.ref td{font-family:system-ui;font-size:12px}
+.ref code{font-size:11px}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+.lst b{color:var(--text)}
+.steps{list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--row);font-size:13px;color:var(--muted)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(st);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps b{color:var(--text)}
+.steps .sec{display:inline-block;margin-top:8px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+.geser{display:none;font-size:12px;color:var(--muted);margin:0 0 6px}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+/* Tab 1 */
+.hex{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--code-text);word-break:break-all}
+.hex span{margin-right:8px}
+mark{background:rgba(248,113,113,.28);color:inherit;border-radius:2px}
+.pad{color:var(--muted);opacity:.6}
+input[type=password]{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+.pt{white-space:pre}
+.kisi-wrap{display:flex;flex-wrap:wrap;gap:16px}
+.kisi-blok{font-size:11.5px;color:var(--muted)}
+.kisi-blok b{color:var(--text)}
+.kisi{display:grid;grid-template-columns:repeat(16,10px);gap:2px;margin-top:5px}
+.kisi i{width:10px;height:10px;border-radius:2px;background:var(--panel2);border:1px solid var(--line)}
+.kisi i.x{background:var(--fn);border-color:var(--fn)}
+.legenda{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:4px 0 12px}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;border:1px solid var(--line);background:var(--panel2)}
+.legenda i.x{background:var(--fn);border-color:var(--fn)}
+/* Tab 2 */
+.gbr{margin:0}
+.gbr canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;border:1px solid var(--line);border-radius:6px;background:var(--panel2)}
+.gbr figcaption{font-size:12px;color:var(--muted);margin-top:6px}
+.gbr figcaption b{color:var(--text)}
+button:disabled{opacity:.5;cursor:wait}
+/* Tab 3 */
+.ok b,.err b{color:var(--text)}
+.kali{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.kotak-pesan{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:var(--mono);font-size:11.5px;color:var(--code-text);word-break:break-all;margin:6px 0 10px}
+/* Tab 4 */
+.cek{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px}
+.cek input{width:16px;height:16px;accent-color:var(--fn)}
+.dh{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:12px}
+.dh>div{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:12px;min-width:0}
+.dh h3{margin-top:0!important}
+.dhv{margin-bottom:10px;font-size:12.5px}
+.dhv>span{display:block;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.dhv small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.dhv code{white-space:normal;word-break:break-word}
+.dhv.kunci code{font-weight:700}
+.kirim{font-family:var(--mono);font-size:12px;padding:7px 9px;border:1px dashed var(--line);border-radius:5px;margin-bottom:8px;background:var(--panel)}
+.kirim.cegat{border-color:var(--fn);text-decoration:line-through;color:var(--muted)}
+.mallory{border:1px solid var(--fn);background:rgba(248,113,113,.07);border-radius:6px;padding:10px;margin-top:10px}
+.mallory h3{color:var(--fn)!important}
+.alur{list-style:none;margin:0}
+.alur li{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--row);font-size:12.5px;color:var(--muted)}
+.alur li:last-child{border-bottom:none}
+.alur li>b{color:var(--text)}
+.alur .msg{display:inline-block;font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:5px;background:var(--panel2);border:1px solid var(--line);color:var(--text);margin-top:4px}
+.alur .msg.palsu{border-color:var(--fn);color:var(--fn)}
+.alur .msg.enk{color:var(--muted);letter-spacing:.04em}
+@media(max-width:860px){.dh{grid-template-columns:1fr}}
+@media(max-width:480px){.alur li{grid-template-columns:1fr;gap:2px}}
+@media(max-width:640px){
+  .geser{display:block}
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{padding:10px 12px}
+  input,select,textarea{font-size:16px!important}
+  textarea{min-height:124px}
+  h1{font-size:17px}
+  .nimbar{padding:8px 10px;gap:6px}
+  .nimbar .muted{display:none}
+  .nimbar input{width:150px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Keamanan Siber</a>
+    <h1>Praktikum Kriptografi Dasar</h1>
+    <div class="sub">MK44 Keamanan Siber · Pertemuan 6 · Sub-CPMK731 — Program Studi Teknologi Informasi, Fakultas Teknik dan Informatika, Universitas Pendidikan Nasional</div>
+  </div>
+  <button class="sec" id="btn-tema"></button>
+</header>
+
+<div class="nimbar">
+  <label>NIM <input type="text" id="nim" inputmode="numeric" autocomplete="off" placeholder="contoh: 2401010001"></label>
+  <span id="nim-msg" class="salah"></span>
+  <span class="muted">Semua data percobaan dibangkitkan dari NIM ini, sehingga hasil setiap mahasiswa berbeda.</span>
+</div>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai di Sini</button>
+  <button data-t="longsoran">1 · Efek Longsoran</button>
+  <button data-t="mode">2 · ECB vs CBC</button>
+  <button data-t="hibrida">3 · Simetris vs Asimetris</button>
+  <button data-t="dh">4 · Diffie–Hellman</button>
+  <button data-t="kumpul">5 · Pengumpulan</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Praktikum Pertemuan 6</div>
+    <h2>Kriptografi Dasar: Enkripsi Simetris dan Asimetris</h2>
+    <p>Menerapkan enkripsi simetris dan asimetris pada data uji, lalu membandingkan keduanya. Semua percobaan memakai pustaka kriptografi bawaan peramban (Web Crypto API), bukan algoritma buatan sendiri.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Tujuan Praktikum</h2>
+    <p>Setelah praktikum ini Anda diharapkan mampu:</p>
+    <ol class="lst">
+      <li>Menerapkan enkripsi simetris dan asimetris pada data uji.</li>
+      <li>Membandingkan kedua skema dari sisi kecepatan, distribusi kunci, dan kasus penggunaan.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>2. Langkah Praktikum</h2>
+    <ol class="steps">
+      <li><b>Isi NIM</b> di kolom bagian atas. Kunci, IV, gambar, dan bilangan rahasia di setiap tab dibangkitkan dari NIM tersebut.</li>
+      <li><b>Efek longsoran.</b> Ubah satu karakter plaintext dan amati berapa bit ciphertext yang ikut berubah.<br><button class="sec" data-go="longsoran">Buka Tab 1 →</button></li>
+      <li><b>ECB vs CBC.</b> Enkripsi gambar berisi NIM Anda dengan dua mode operasi dan bandingkan hasilnya.<br><button class="sec" data-go="mode">Buka Tab 2 →</button></li>
+      <li><b>Simetris vs asimetris.</b> Ukur kecepatan AES dan RSA, lalu jalankan skema hibrida yang menggabungkan keduanya.<br><button class="sec" data-go="hibrida">Buka Tab 3 →</button></li>
+      <li><b>Diffie–Hellman.</b> Ikuti pertukaran kunci lewat saluran terbuka, lalu aktifkan penyerang di tengah.<br><button class="sec" data-go="dh">Buka Tab 4 →</button></li>
+      <li><b>Kumpulkan hasil.</b> Ambil tangkapan layar dan jawab pertanyaan analisis sesuai petunjuk di Tab 5.<br><button class="sec" data-go="kumpul">Buka Tab 5 →</button></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Perhatikan Sebelum Mulai</h2>
+    <ul class="lst">
+      <li><b>NIM harus terlihat di setiap tangkapan layar.</b> Kolom NIM selalu tampil di bagian atas halaman, jadi sertakan bagian itu saat mengambil tangkapan layar.</li>
+      <li><b>Mengganti NIM menghapus hasil yang sedang tampil</b>, karena hasil itu dibangkitkan dari NIM sebelumnya.</li>
+      <li><b>Hasil berbeda untuk setiap NIM.</b> Tangkapan layar milik teman tidak akan cocok dengan NIM Anda.</li>
+    </ul>
+    <button class="act" data-go="longsoran">Mulai dari Tab 1 →</button>
+  </div>
+</div>
+
+<!-- ========== TAB 1 ========== -->
+<div class="tab" id="t-longsoran">
+  <div class="card">
+    <h2>Efek Longsoran (Avalanche Effect)</h2>
+    <p>Cipher yang baik mengubah ciphertext secara besar-besaran walaupun plaintext hanya berubah sedikit. Di sini dua kalimat yang hanya berbeda satu karakter dienkripsi dengan <b>AES-256-CBC</b> memakai kunci dan IV yang sama, lalu ciphertext-nya dibandingkan bit demi bit.</p>
+    <div class="grid2">
+      <div><span class="lbl">Teks A</span><textarea id="l-a" spellcheck="false"></textarea></div>
+      <div><span class="lbl">Teks B</span><textarea id="l-b" spellcheck="false"></textarea></div>
+    </div>
+    <p style="margin-top:10px">Anda boleh mengubah kedua teks, misalnya mengganti karakter di awal kalimat, lalu amati perbedaannya.</p>
+    <div class="row"><button class="act" id="l-go">Enkripsi dan Bandingkan</button><button class="sec" id="l-reset">Kembalikan teks bawaan</button></div>
+    <div class="hint">IV tetap dipakai di sini hanya agar hasilnya bisa dibandingkan. Dalam praktik nyata, IV wajib acak dan tidak boleh diulang (slide 36).</div>
+  </div>
+  <div id="l-out"></div>
+</div>
+
+<!-- ========== TAB 2–5 (disiapkan) ========== -->
+<div class="tab" id="t-mode">
+  <div class="card">
+    <h2>Mode Operasi: ECB vs CBC</h2>
+    <p>AES hanya mengenkripsi satu blok 16 bita. Untuk data yang lebih panjang, blok-blok itu dirangkai dengan sebuah <b>mode operasi</b>. Di sini gambar yang sama dienkripsi dengan algoritma yang sama (AES-256) dan kunci yang sama dari NIM Anda. Yang berbeda hanya mode operasinya.</p>
+    <p>Gambar berukuran 240 × 120 piksel dibangkitkan dari NIM, berisi latar polos, dua bentuk sederhana, dan tulisan NIM Anda. Setiap piksel disimpan sebagai 4 bita (merah, hijau, biru, alfa), sehingga satu blok AES memuat 4 piksel yang berdampingan. Setelah dienkripsi, bita alfa dikembalikan ke 255 agar gambar tetap tampil.</p>
+    <div class="row"><button class="act" id="m-go">Enkripsi Gambar</button></div>
+    <div class="hint"><b>Catatan tentang ECB.</b> Web Crypto API di peramban sengaja <b>tidak menyediakan mode ECB</b> karena mode ini tidak aman. Untuk percobaan ini ECB disimulasikan: setiap blok 16 bita dienkripsi terpisah dengan AES-CBC ber-IV nol, lalu diambil 16 bita pertama hasilnya, yang setara dengan AES-ECB untuk satu blok.</div>
+    <p style="margin-bottom:0"><b>Yang diharapkan:</b> tulisan NIM masih terbaca pada hasil ECB, sedangkan hasil CBC tampak seperti derau acak.</p>
+  </div>
+  <div id="m-out"></div>
+</div>
+<!-- ========== TAB 3 ========== -->
+<div class="tab" id="t-hibrida">
+  <div class="card">
+    <h2>Simetris vs Asimetris dan Skema Hibrida</h2>
+    <p><b>Kriptografi simetris</b> (AES) memakai satu kunci rahasia yang sama untuk enkripsi dan dekripsi. <b>Kriptografi asimetris</b> (RSA) memakai sepasang kunci: kunci publik untuk enkripsi dan kunci privat untuk dekripsi. Jalankan keempat langkah di bawah secara berurutan, lalu bandingkan keduanya.</p>
+  </div>
+  <div class="card">
+    <h2>Langkah 1 · Bangkitkan Kunci</h2>
+    <p>Membangkitkan satu kunci AES-GCM 256 bit dan satu pasangan kunci RSA-OAEP 2048 bit (SHA-256), lalu mengukur lama pembangkitannya.</p>
+    <div class="row"><button class="act" id="h1-go">Bangkitkan Kunci</button></div>
+    <div id="h1-out"></div>
+  </div>
+  <div class="card">
+    <h2>Langkah 2 · Uji Kecepatan</h2>
+    <p>Pesan uji sepanjang 190 bita, yaitu batas maksimum RSA-OAEP 2048 bit dengan SHA-256, dienkripsi lalu didekripsi sekurang-kurangnya 100 kali dengan masing-masing algoritma. Yang ditampilkan adalah waktu rata-rata per pesan.</p>
+    <div class="row"><button class="act" id="h2-go">Uji Kecepatan</button></div>
+    <div id="h2-out"></div>
+  </div>
+  <div class="card">
+    <h2>Langkah 3 · Coba RSA pada Pesan 1 KB</h2>
+    <p>Mencoba mengenkripsi pesan 1.024 bita langsung dengan kunci publik RSA.</p>
+    <div class="row"><button class="act" id="h3-go">Coba RSA pada Pesan 1 KB</button></div>
+    <div id="h3-out"></div>
+  </div>
+  <div class="card">
+    <h2>Langkah 4 · Jalankan Skema Hibrida</h2>
+    <p>Data acak 1 MB dienkripsi dengan kunci sesi AES-GCM yang baru dibuat. Kunci sesi itu lalu dibungkus (dienkripsi) dengan kunci publik RSA. Penerima melakukan proses sebaliknya: membuka bungkus kunci sesi dengan kunci privat RSA, lalu mendekripsi data dengan AES.</p>
+    <div class="row"><button class="act" id="h4-go">Jalankan Skema Hibrida</button></div>
+    <div id="h4-out"></div>
+  </div>
+</div>
+
+<!-- ========== TAB 4 ========== -->
+<div class="tab" id="t-dh">
+  <div class="card">
+    <h2>Diffie–Hellman dan Man-in-the-Middle</h2>
+    <p>Diffie–Hellman memungkinkan dua pihak menyepakati kunci bersama lewat saluran terbuka tanpa pernah mengirimkan kunci itu. Di sini dipakai bilangan kecil, <code>p = 1019</code> dan <code>g = 2</code>, agar setiap nilai bisa Anda hitung ulang sendiri. Bilangan rahasia Alice (<code>a</code>), Bob (<code>b</code>), dan Mallory (<code>m</code>) dibangkitkan dari NIM Anda.</p>
+    <label class="cek"><input type="checkbox" id="dh-mal"> Aktifkan Mallory (penyerang di tengah)</label>
+  </div>
+  <div id="dh-out"></div>
+  <div class="card">
+    <h2>Penutup</h2>
+    <p>Diffie–Hellman menyediakan <b>kerahasiaan</b> tetapi <b>tidak menyediakan keaslian</b>: Alice tidak dapat memastikan bahwa nilai yang ia terima benar-benar berasal dari Bob, dan sebaliknya. Pencegahannya berupa autentikasi lewat <b>sertifikat</b> dan <b>tanda tangan digital</b>, yang dibahas di Pertemuan 7.</p>
+    <div class="hint">Dalam praktik nyata, <code>p</code> berukuran 2048 bit atau lebih. Bilangan sekecil 1019 di sini hanya untuk latihan, karena rahasianya mudah ditebak dengan mencoba semua kemungkinan.</div>
+  </div>
+</div>
+
+<!-- ========== TAB 5 ========== -->
+<div class="tab" id="t-kumpul">
+  <div class="card">
+    <h2>Pengumpulan Tugas</h2>
+    <p>Kumpulkan <b>satu berkas PDF</b> berisi identitas, tangkapan layar, dan jawaban pertanyaan analisis. Hasil Tab 1, gambar Asli dan ECB di Tab 2, serta seluruh angka di Tab 4 selalu sama untuk NIM yang sama, sehingga dosen dapat <b>mencocokkannya dengan NIM Anda</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Tangkapan Layar yang Wajib Dilampirkan</h2>
+    <p><b>NIM harus terlihat di setiap tangkapan layar.</b> Sertakan kolom NIM di bagian atas halaman. Pintasan: <code>Win + Shift + S</code> (Windows) atau <code>Cmd + Shift + 4</code> (macOS).</p>
+    <table class="ref">
+      <tr><th>Kode</th><th>Tab</th><th>Yang harus terlihat</th></tr>
+      <tr><td><b>SS1</b></td><td>1 · Efek Longsoran</td><td>Tabel <b>Perbandingan per Blok</b> dan <b>Kisi Bit per Blok</b></td></tr>
+      <tr><td><b>SS2</b></td><td>2 · ECB vs CBC</td><td>Tiga gambar berdampingan: <b>Asli</b>, <b>ECB</b>, dan <b>CBC</b></td></tr>
+      <tr><td><b>SS3</b></td><td>3 · Simetris vs Asimetris</td><td>Tabel <b>uji kecepatan</b> (Langkah 2)</td></tr>
+      <tr><td><b>SS4</b></td><td>3 · Simetris vs Asimetris</td><td>Hasil <b>skema hibrida</b> beserta verifikasinya (Langkah 4)</td></tr>
+      <tr><td><b>SS5</b></td><td>4 · Diffie–Hellman</td><td>Kondisi dengan <b>Mallory aktif</b></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>2. Pertanyaan Analisis</h2>
+    <p>Jawab singkat, 2–5 kalimat per nomor, dengan merujuk angka hasil percobaan Anda.</p>
+    <ol class="lst">
+      <li>Berapa persen bit yang berubah pada blok yang terdampak? Mengapa angka sekitar 50% menandakan cipher yang baik? Mengapa blok sebelum karakter yang diubah tidak ikut berubah?</li>
+      <li>Mengapa NIM Anda masih terbaca pada hasil ECB tetapi tidak pada CBC? Mode apa yang direkomendasikan untuk data nyata, dan mengapa?</li>
+      <li>Berdasarkan hasil Anda, RSA berapa kali lebih lambat daripada AES? Mengapa RSA gagal mengenkripsi pesan 1 KB?</li>
+      <li>Jelaskan dengan kata-kata Anda sendiri bagaimana skema hibrida menggabungkan kelebihan kedua jenis kriptografi, merujuk angka hasil percobaan Anda.</li>
+      <li>Hitung ulang secara manual satu nilai dari Tab 4, misalnya <code>A = g^a mod p</code>, dan tunjukkan hasilnya sama. Mengapa Alice dan Bob tidak menyadari kehadiran Mallory, dan apa yang dibutuhkan untuk mencegahnya?</li>
+      <li>Seluruh algoritma di halaman ini dapat dilihat siapa pun lewat <i>view source</i>. Dikaitkan dengan prinsip Kerckhoffs, apa yang sebenarnya melindungi data Anda?</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Susunan Laporan</h2>
+<pre>Nama berkas : P6_NIM_Nama.pdf          (contoh: P6_2401010001_Made_Adi.pdf)
+
+1. Identitas        : nama, NIM, kelas
+2. Tangkapan layar  : SS1–SS5, masing-masing diberi kode dan keterangan singkat
+3. Jawaban analisis : nomor 1–6</pre>
+  </div>
+
+  <div class="card">
+    <h2>4. Langkah Pengumpulan</h2>
+    <ol class="steps">
+      <li><b>Pastikan NIM Anda benar</b> di kolom bagian atas sebelum menjalankan percobaan apa pun.</li>
+      <li><b>Jalankan percobaan</b> di Tab 1–4. Pada Tab 3, jalankan keempat langkah secara berurutan.</li>
+      <li><b>Ambil tangkapan layar</b> SS1–SS5 sesuai tabel di atas, dengan NIM terlihat.</li>
+      <li><b>Jawab pertanyaan analisis</b> nomor 1–6.</li>
+      <li><b>Simpan sebagai PDF</b> dengan nama <code>P6_NIM_Nama.pdf</code>, lalu unggah ke LMS sebelum tenggat yang ditetapkan dosen.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== VERSI ========== -->
+<div class="tab" id="t-versi">
+  <div class="card" id="versi-form">
+    <h2>Informasi Versi</h2>
+    <p>Praktikum Kriptografi Dasar v1.0 · berjalan sepenuhnya di peramban.</p>
+    <div class="row">
+      <input type="password" id="versi-kode" placeholder="Kode akses" autocomplete="off" style="flex:1;min-width:180px;max-width:320px">
+      <button class="sec" id="btn-versi">Periksa</button>
+    </div>
+    <div id="versi-msg"></div>
+  </div>
+  <div id="versi-isi"></div>
+</div>
+
+<footer>Praktikum ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · <span id="ver">v1.0</span></footer>
+</div>
+
+<script type="application/json" id="versi-data">{"s":"xBSl3ZDUp2ZTNsqtB9hhuw==","n":"j0SZI9nj2RaLiZL3","i":600000,"c":"SRxzS7Pksfu74SRhSEN7QBZ8cKjT9RKy8FRz4iAqJPAJaVUVipf0nIp/7Aj7+Lv5mUEByInqk03MY1dgeW/UoOWo8PCEgFVmyCGseOGLVI3HsGraa8qmIx3inYjgNOjR9+0h42XSnh3tOLu75bukw9hb4DDHvaBFjJHuCdbdz7iFPJVgvc4RYACEBfjHwP5YgO8R387EX6dqy2sHPOniWW7CY0cLTnweEdw+JN+NzfHk3Kb8R0iHAB3LUaJTdZ+LDM4zugXih00bFpsaJdRIXgQVl3WgXY9V1ymMdj36dfY1xNkNKGe77eqe2ErYUy8CFCdbe8zS53YKF72SyeMkeenoSY5T/f1bHR8Ubk6F/JcEFOQLLZ+lvXeIjk/1tU8Ws2LH4M4sIn8BdnlsFja9fAUB1iiivB6xPGr97PG0KAICHSTOR88PkKpI7wmpPlBSq/Ag3wsgC8bLfFOK3fsZYITRJUpq5y58HtP2rcfr08eDRTNZy1ggghrj+McfZFv+nIw/imU64xw3w50zU3y5IAhdFMjL2f1iiMnn7ezNBPuOFsiMhGD1FjACl2iMbApMYWH12I4havvaoCQ3PcEbn4/DNMkdx1iYSUZkvGCTT43PUp9qc6v3L33MBw4E2qv4WLsrwuIf6ZAKDQeaRdyjv3Ffwea8ZOpeQUh7TNoEc1WTHdmspfrfn00QS6b1iW9grs2Xi5olWtVCYYM8ZCwLxl/+uLj5FkEMNHMRiRwM4jdSGxo4EoWF0xXOssz1EpR+Ec182hfuPbTEP2Q7CiULhKTX6SlMcvAbcDQ0BGgWsih4F7wjHHe4f9Dak0s2uGvsGhCagVUyh6vtY/d89TBj3pzcmhAkHgF9JR8suAtUVk8Krg93W9pWOzrZh8s5ZSAKWOpoaA6HxgaCedY4eRJJWiCRu5VBhVGAjJ4Q42BcVnJrdJ+qkaO2+IBZsVom+zpeO5IiT0LdNUsy1FnHZpdTLmZWG77uLpsBZmy8D3X+9+t/j/oyrVTf3BUcr4HiwYIyx1bBJxaU9Dh5KhkwMB80j7L1WQQlZvh/oORBI8aoOXbQIOg4i64sRs6VavgdrweQtUtjRb2tEkdMdDKF7leMevGpmWrV/vCSZRjORpB9K2pzS8QYbheLByaHcS2MHdL7iJIuf3+qe+HC1Sz7/oFXCkNk6EUNf9nSdEIjGE9zJC0bpSugJy0CYGyJpJzKtgzxeMICIvOrqNeM4bq2aTg1C9490y0d2G0HQxLAaGLHAuQ/pmnIeKJL2byZyGpxqdzJgTe9aq4pz5zhc33zI45xqgluqY86ib2gCq8xyNVcLvO5n3VleQvQL4QBqGCfeKU9bKs7SarZF1UC39WT1B2OHB5Fcm0AZntEM5z7gAhszFBbLQV67adIhNZo2b05NwMKB+591c3yXHqdiXDZYjad3hJA7s2oNY8AD495xN44mjPubMi3BDKX+0fRAcain6ze2xXeAcESc4koW/ytyCe5GYFCvLnM9BH7B1k6kbNYtPSAqnuaUgsRfT9K9fQkwPoGAJu7yecXeTdXxO0CziPC+PXL/LXpD6iQmUy7LIb0iGasmMKSiBhJg4LBTr4VWO/34iZp0fAH7tz5ffhTJjWawLapJw2LqvpNK9Nl/Lzbvgen++5XWZO2O66GQ6sJ826XwLwHlHVdJ8r/dLjaSu6onO7HbVWgu3yqcBIJduek6Jj7JKItrxyh5aUDhVGKS48qz9jDm5MMwTHcfweE2Od1feCRmAmoW+PBDzcRXFBbRZdjJyxENDXtBzD3gblgV2QM5CT0K4cq9CbX5OmTYmXpzg0Uq9UA9g4gbNo7gPKMNngIWdco7ON/h1KQs0CsKhNJ7alpUX9VKxiJjIPmy7SSgfKTSBEJda6dMr+mqd+7HSz88/ZzxbKuNqPZLsMBncq3WEGrZW+dSZczVduvN0IJjlnw15z0jQTzQd7Hz0j/VAbfE3s4M6SvnHkb2KjUhLkcpgdgahYaainTWI0EmPXQHuAP9Bkqql5vmV+KxkhJ8AIE6NntjSwz2fY1kufIhz+Ax4NxDwqx17j4xj3d2Q0aTz4XdcwPaZ8U8jDHisqJF+vUi2zZjkZp/SxtLeErSizZFLkrLumpXn2Abu1X+tHjDobZQkLbEKJY7AYoAv/zWDEXKMdrWvTjCXPpow1uucLNUd6PfIVmFL0609EGwqG/XemInhA/ZFJLj123r1vO2Cn9DGBiH0iVQKa7qNH7iXSjYFxgIOGTPBcVHm1/n8AOgy8p9hB8F1FCSbDEpxDPmn2Pu1J1gnqpsLqpV0U2YDO9Zt6PB4rOw6mExDByyU1KKPftHSd9Mj2iH4TbOO8Lg9acWJ154KWeEJksyi+SxPfGE1EcDvxJvexruDHA76phH5Hg5Gpl0Y47WFYKiTWV7T40XA6deGd3kfqGbaOaH78kxeCGRdM/gjzaJvU2DzIP4/JbejyX+FyUPHvPQ8QNJ52n6f33Z37zpDBPXNQO5q6ymKOG66K9neUPee4619yYqmIcsMFrVlZVNfyNiEara3HLz2D6S5J2oe6mrw1AxexHdobpAx3iKC5xY23rr5otjEfG/uuDWte+bMTgzKIQo6M2sUPRzK8okGGdNT2CyDhyzIQutV4TMVNMw5nqi67WNpjrg1U3Fnfdc45JtJWTNIQBtte+FmKtDpr2hmSz0396SrYPpoDxUG+Ff6uS3jFHoVQbCgL6f5bxCS1IWZT3e6l4tbHT3ybtCz/D/gn6PZkNr/G4JI8JkXsATPqQfAwL79P1e6R4hOhpzJDIIoYeALjTe6HBlKKjQ6bI9Qn5QvbntkBB2R+HXnhOrMsyJ8UMSqz42G/NwZPabQnAIDtmPZSw3iaQuSyFTPLINBTGhc78gXl/w+m6xvA2m8uqE3q7c9okB+JtlyrcI+fpr6DFXlM90JFJ1kxLlkcXEesm3sVz/wyTrWmmIVXZWLumrveKjFz82obwR4hul6fplS4QR6KO+21qfNueBjb2ZRAV4396mfgdWAFGMXR9dEpNxy6VFpLURaqdAQUELz3WaNE9LfVk63amZMmKswxIpT/OtLLujudfMk/4c+0bebOVrUGNVOx/YXjh9XMaSTi0jd1mT5QOtmRlXzE6gNQIABtxBRyHd/cXLadhyrKu8rs/akOkHs1kGeSfEt7rO2TsfPrO7/H9/XHiZyKVB+o4nRc4RqjGg9FXvJiRiRfB5OQDe6XDuDmx2DWlgmqZPPc1/jOKvq0chviGMq/aWzyP/OiYAP+wB3r5tu7kKrKQ8uTDAIXK5/FwCuoRcqy78zyVhSwU/SyJRK8YGUQYzkuprA3z+jf8LpXW8RxADotk6wdg+WolGP5fjuIeIPy8gbpdqIXLTusewU2ukjUvF1OgUZ/GSPVhaJHcmOyQocTPXzbtwQ9Cyt/fU+s4QCb4wPC+6Qa1OtwvZBk7hwTTvp/csPZY9g/qcwd2eBXXV3WSRVsbgCFbDlN91nM8pQYFAIopmD7/bTXu+pcFOHVxSaEkk+fhPUx9e/wELnShl1yelE/3iKGBfFaJk/ZzICECDscglskfk1kU3QSvzrrOpX/GqhlHRTPBbo4lXzbvkmx51OOZARw/CpLuYfD0ZRT3EBoTaAzjJq0hSiD3zD/a/V878MW2QIup3SxeN+qv5edz+WhK2BLKSufTFZtAh3zEO9ilxS8Mz0F00zdELMk6B6Dv0A/uaheUAlzOUJCTaqZ+AZctUIHulOwyCagyIEhhMRH2X4Lq4oSyTYEQp/6/xNh7KOXfW3w6qjRl1i/GMSYvOqTSlpBAOIHBcMPMWlBAOj+IkFSGIA0f0dyQ8790kPey3UYUwogQPuMtSFr3xFEAUpEFxzSxLlOL+yOgSotbSOoEWqtFrQ7//rKVYTzn2SLBnRBRJB3RwcsH16X2YOaiX8WyU4KqZCPqAf0sqMfOMD+Xb0HVOyXEhbx+9aEjT37lXEAxc755SiNy8VBjJ9mrJhDCsPbqzT6N+ivdwYRdWk5GzX6m7L6sHA3uChzGFuAl18FajZemdnIxE/4o8dQ9A+mxc2dCyzVGGzi7ZZD9tBY8whyWAWaKG0Pr6SIg73RzOewVSgYcSdhYLLpcoeTfa/oN6OodkI5xaNz6tUBnA2lNgRi61Ddvme7pkXvRkEhAU9cNVvtIIK8C2XFjKPP2hzMHOTg4I8EAICrvWhYM47pHggBTluu9WzBCRbZtu85GCVAN88TElkQjqkkwBugBDceeRqr+nAH/3w1HaHdN1VPHkwdq8C4odRQ/q6/cKl+uvroftRp7dsljf78satoLAx1V6ru0C/lTjfnjvOvE2DVvt3q9zlU19i6JRclkE8oVenVoNZZt/IED5p5r1U8LjrdlNn2LUWnIiF5yPayIwoVcz1CaERJQ9fiqbPABSjbVU4dwyufohGOG6cQI/3uXASIC6D0mlf+YTOflZQKMea03qp/+zHM3OtMW1QSV2EWRNKOGq9+YcgV4bJ76C+qZb4YO9pUiYk5CBASuiaT8DbtyD9pqX0o9y6IQ6P1cSMrIobsNRhHOq0smEOr2XeJGFaiC1Erth6bGCdg+9qUnLPmgw2h6bGQpgXp/yWUf880R3gWV/5BLDRZ7I5c89+pakg6d0QfAmTmUdoXyO8dQJj/9zIrMUBbrW+zAZhvpgSVV/Y6i0nmrveF8eoEJKSVJwdlLSwPScvAwu7MA1IedMg3M7SFNIHEj4/RdkS+19TSTawQg1iG0w2gPlz90ndkO0SVNr63/OarvKfEHb1pp3XZbGsbdH5NwkW2m/QhK34AX6+1/8Q6uHEceg7opULtdO1DUbpv8y41DFOT8km7DFQWrBvahNCsngkMUQiuQSHsqa1girW2bzkbc+yhGjXvtuEoqWmxX0hOpnV9I1fvfpzPNnGRLMqzg5NyiotYqo7LuSZEm99xdBcn+mUHJ2PgTZhkIYgapT/xY3OUcz0rN6Rzx0GuZNVQnfLIM/xEqfSF/6zWekRVMaxsrBquSIIqjTYE5tqaBFSR+wG9NmW/kNfcG7suI6quCysPJJsJNP0lJTL0b63E1ZZ6RLJjH7TqL+JqFrCv7Fgmu7d+/QwvANLiN799tgUnB2etLfnoaiMP9Qe2ukc4aDNs7wuBE0uFh8eKHmOaLKcEth6qMzO0vVjQ2ErNwYm9erGNp3CVpzSW6g9CV3237hKCJNM1IJMpY0u3v9gpsyM/MB4TSvpsX57oEH56R3ZC0OcicntVE84Qre4rsKO+yX9ANRZpolz231PUAHtGmKEbpga0sGtq7WgI4oE4P1+tznNYgeoJIEGRJ0VntXgSwOMyB8GNgq5Y5lrOZBexXn5uqee/w0h5C958mW5gkoVGd7K+HM4/G4lWHTMckAjZFZGtg2wEvM+/OnlKUKGozYsotsHDJzniMFiGA+tdb1dvX+33k24M2FMwshgrZ0b3X85Ju5YAPpRI6q3f8grNfxBc3fRQiYYC/2mDw4byXUqxSOhSn7YOatIoln1RtLkcChBi1J6nTfyn0LWwEbTVzjoT3aGtkU6vz6o5DCIH7ILMypoLfwus7O81knPKihPKv6nW7JaLOxWaxjuuE1V18PqSZOBZiXH4x5VPVydpl6vsD3wNDv1DF8xnVpmOG2Enth3CEvDBWBRpuXAFWgewORjIn+LDye52fWHUNq3jNGqrYCa5of8UBuQZo8pJ/XELd5sxuQ1Sjkvyjy7UWe/e0zrT8I23c9mAxM4iqQemwPfZMCeHn7sL9d+lVCOYAfSKyFzKjV6KeSDHtRIQoi70mma+7M6UhrPgl1e7CGIcO6CwD/EwfDQyl/YfQ+C/atgHcNnB74c6CPLigxWCatmyhK1TPAjIz+5Lg8r+vOaP6mJDw3YXVPYA942cDxuBnP2MAgRyPW8wutzfEccdQq1vBgdj948hbwy+G/R7EQg4aIvrzjellpnPEf3zWgDE/cXjY+8uaya1QS2Y52ZpDteNHdidTcfh46KRgirisU8P/GaQIRC9WWYNDuscwry3jPUul4uSgbQirDrjhE21RtiEBbyFNseBrMmcsLqx/WJsKuRsSERGP+H0wy7Qv+Y7MpAxsuTNE0NZGXxqMrZ58MXzESOHkN1ixF1Sf07E66KbQU5LreoONBmjh2H/hvOhUXO4tRoI0+TP1Tr+9aUG0MJybNrukeuGQfs+2Mf38Cdn5/WLKeKTysHoNiQ3H9GkGIT8hhoZSNp99OA5h7vjkOR6IcIH6o1POXJykMbOYWH0OQrbh2rWZsfJpPWxOVHPstBOF7RsP1rdeVvjgi90rd/z8G+4H9OMNsZOtz1y5aqNK9tNj2Th5DclMFnGePdVrLVUj2ULZGQkS6qfPHyaeBsrw1/0OVw4XENYlXWeegoMN9NbSHEh/lYwlHPp4q8xyV2QRFWwAgGtixXHnLJIwbBtBUCWUJfGjTkkHxuaq9+YV7rLSAe9iwvU83+5RHidRD0TNkDnydvuJPbUjuUfTjKJuLMZMlTUGcvFxkKqQKt/8t2BMa3Lc2YGMisf0c1EnQegTd7AOebX4H2S8yH96olCKZXv1d7p3tYLXp7ZOBvsFD/vKjgB82JqRVaE0M3mLcKPrkBGRh2zEZK1NujTVjimLQ7QgzO+MFENXctehpb2rWwzRiuvSuiiRVWICT7kiY+rF7BRxFYDf033f+DV+MRRYvjxQLejPsd+el1hIr3OODXyySV1QQLgJ1hm7vPRAVqrE1BM5D+FVYnbn7ZHpWHGtOJH2ITJDTfjQTwVgU4ZspQQe+6UKcNxtltFlorKO8D07MOIw6VYnk9wo46795kONeQAd/70ET8fwRwTJlfIw3gnT/SLrVmC1snoxhKlFL5SCA8JooYXmnbIX+0PgupFEsDs7XRC4A1T19EqEIN+8/lD418yGamTaXKjeKoxs4YKLp1n6FeVJBmhnKCGWI2FN+ChwmQG2l44H07BKu6hdLVx7V7/FENhaBahd1+ruwy+/s/RUGUcgccFyVV876JChZZQoz8jNjCe71WJhLUvNG5zLs6bLdwcw0ypOMbVaT6NExdQqlUGZD3DcblGMxY14Cn/sIO12opAEcUzqZs3J5497w3GBDKHjdhadfgMpU8gg78u8hSJRfelDN/upeUjhEG0+e9cRAgvz7dOdLLs0766SY4LxZq/zu4YwBZN9T54LWNMzViVrWY2DoXc6dO5s8Sm5a/o2zWRKX60D983BOYUWtOIEfsk92koyoEkC92rf3wIoaKJgeU6NRlBLTW6giDIQTRZVzIHMyTt+1Gel/wmQrYEoEWOf+ui5Ir59rgg6ZzuQN0bRd4uQOgS4nzF+KkDIGVfRM4FajOJH0SLYTdiRJMUSKNEqAo09ymlMeSBXaTqkN+bSGAj/D454+7+aTn4m8PVSjCJq5a0fttzGoy9kvePs5tEgxmM6RVhGqS9WLMEXuNwbrSHIiTr1uXxudhSYn8V2VQNfgujbgfpdeer1D/eDorPnJfJ7SoAKSr+KfpcJUOsfYHvmh9KSmQd291Nx73keaJaGah5fPD0I1YYCie5NNvJmwHzu6VF01eRruqeAWvfcDGCVc2mFo65XDka+cGhglM+vw06/AweTJ8HrMWKCpypSkMNQqlITCqHAUi0oGGUz7fjNDoaHnwHa1ZzQiNwb0dzFC0K9l6+ib5yORQC1Pf6pJjpo+QzeltBmKKHgJkiw9B+JNO4hRDPBf1Bjrd6yB9ke3rRkekyY1fMhmnXScnr4ednwcu0hr7B7dkeyFT/I3HDalbKGGanf8UQqWJ8GvAV7jpUwdEUJxNCOeHkIo+05HlLCwhz4+6g5wf+zNEaQcX1eOM7iXtos2RNqp28laxI31Rd4Oh4iDWVm5NpoilXTFe3Eud9oaYRvExAD1a3DtOtp/K4H4Mk3kiss2gpKZ1imTArg6TzfzAqDZZyNCTTt2hUjnjLYRqfQCqKFPdapr/xwyaHRC6XFdTvzPWTo2nEHZ1+Xr/SkDqiTuJkFlF+UwbIogf58OOkwrXo9J5QdSZ0Z9EYdcnNSEHIfg3V0Kj4Fsp5hRJBgMv41kInBPt+A90t9t7L4QGphqg9zCPaY+dMD9bWpgMoMwUSJMI9pVcOmlgrS3PoMGpfCTz3cvo/E+WMr5Wsggd1JEq7nVqizbHOHiAkv3zK5Q/VXlMTj1PACq6z87t8utm+dk2t6aPJhJbZgpQX8TlwsyXdliiqb72ukH257veGWOkJq8Ps2SCKoSuGJr9NC6j7cpvtYx9wPHDVRRVx4CDqf+33cnbGL+x1JLDaalTFV5Qx4Kn7nsOwife7K19jnwO4wgnZd8+d2Uf+1UB9iGiwMG/xGLVbXiUu9eOOFwmT4F1ORAvy5cPyFzTw5+kzQUFbZ81i9YohF+7D0c6ZfV1uXTwqV7Aaa4h/Z+ebW6JlyrvFG2m3NnMsifLQ5JgHhOzqZTy0l6OmUdEHv3tFoW5PBP0c3KFwp4W99GTdB1fA86KDMmX3/IvgGgIM/dP4WG6mvH78wlW2nYTdQFjTV0GH459knyuOkMlO7X2V92rCRCyVRyhsm+0Ovuvfy9+DYgptSvTQn6IrjSxRM4OBujYud12fI6RJNkFFeE8NvKX17vBciEZ23JDmmPBRKO9IUCIMEmJWXPnc6wcGNbeUq5csAhMLOtyYV7qnmz/ngqCEcxZ6jVViVcC/+xhU+wgHhsD8Dq+gpPuDlKYIxGoKcPu2qdnv4sAJr1wtZrsieOXdR0dyTts4UY6KGteg/S4IY0E2T5OWUb6b4MYFPAn2gB18acOmgk/R1T4SZUS4a5WSKclF0zMHai0kolp5sCSDlk0+kQOLwOQA4rc8jY8aL7CjeSStI+HGrjs+dTUCIJuiPK+xFNr8j/WuvwID+ETB8b4CChbVGg2Ok5/sapTxKXMxHWrBO3MN2gaAEgwDp3DhqxcZDGVAgR2rAr37H8AxY9D9uh3y8SEQ81c85Ap+6siDSSv8cTTQGUy0wbFrgb/181mFchHZf1aLs0ZLlNt1bR79HkSVkNzfYyqC7uI+f+J+3fMmtz0++us4bcnXQbEwoQLAeII81E+wYQ3TP7T+LUPz4PXGX3EdMm97UFaRWc3mPDxtczpe0cPTflXt1E690HC4dQ4Ankjpx/afkIynY60zXychP6z3WUsVKBmbbx3xHLzdI42V2aFUX0UW9jhUhQynfiPPVxfBzTnhEEMxhR66ioCfXbnQDhgkLeXSRrjYAft6s4doy515wkJPyUIYBzdI408F77BGvMkxTdGYZSJ1kzMOep21JNjpFXGgcaamAcPyYGDMW48P+MksVVdDupiAe7IddassN8wXDQuwaHBqmUoyLJhAZF4OP9C53GctfQjyOjCSrgzVhC4K2U8Gc+1a5gzr7NmelSMWlGphmS+PriMjdXlq4n+/cNE1vzIMLdY7wqQODLT+R8C6hHdOOIqDAw4yWASJf0BxltscXqvkHOrWG5EN9tYUsz2lzSSP26TbYjYZbZNxHkCa84zhzSbgfbF0HagcorFAo+DHBDRCcjRI6JJI/XzXV5i1Lj36YYkH8GYh/zckc9WBYcb1Uu/8iJ1bSkj8udVPq1fD4nCJPgt9yNPcdlkNDqRKC20iGr0DKprhEYO7PtwaX/lgCVyCFfGkdczcNg4gCh1npImLRgBXmKD0VhxPJcP2i5MKx8Oecq3f1HeAo7MOw08Wb6CIkag81KI7c+QGFA1B1rntKyJcMycU2udE3YbhoNVTiTMN2XU3V/xkftmRyo9/E2N5p7sjAOgoPxoZTwY+XEq7eoafXCMt+ffkxzjOA48Hu6lP8nYm9Y2tLNXu8s2iloPv7XnMGreWC6c/b+R8zV+lJWCU8u4d0QJ5GkKD9GbPpEeg76Xj3we3l7/g9KkuEA5pd9nA0CFCIVMAg0EXSIBRkDqTVMps8Ga/y98BkaEpNhMtV71T/Ig=="}</script>
+<script>
+/* ============ UTIL ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const enc=new TextEncoder();
+const hx=b=>b.toString(16).padStart(2,'0');
+const hex=u=>[...u].map(hx).join('');
+const bitPop=x=>{let n=0;while(x){n+=x&1;x>>=1}return n};
+async function sha(s){return new Uint8Array(await crypto.subtle.digest('SHA-256',enc.encode(s)))}
+
+/* ============ NIM ============ */
+let NIM='';
+const nimSah=v=>/^\d{6,15}$/.test(v);
+function perluNim(el){
+  if(NIM) return true;
+  el.innerHTML='<div class="err">Isi NIM terlebih dahulu.</div>';
+  $('#nim').focus();
+  return false;
+}
+function setNim(v){
+  v=v.trim();
+  const lama=NIM;
+  NIM=nimSah(v)?v:'';
+  $('#nim-msg').textContent=v&&!NIM?'NIM harus berupa 6–15 digit angka.':'';
+  try{NIM?localStorage.setItem('kripto6:nim',NIM):localStorage.removeItem('kripto6:nim')}catch(e){}
+  if(NIM!==lama) nimBerubah(lama);
+}
+function nimBerubah(lama){
+  // teks bawaan Tab 1 ikut NIM, kecuali sudah diubah mahasiswa
+  [['#l-a','A'],['#l-b','B']].forEach(([id,n])=>{
+    const t=$(id);
+    if(!t.value||t.value===teksL(lama,n)) t.value=NIM?teksL(NIM,n):'';
+  });
+  $('#l-out').innerHTML='';
+  $('#m-out').innerHTML='';
+  K3=null; ['#h1-out','#h2-out','#h3-out','#h4-out'].forEach(x=>$(x).innerHTML='');
+  renderDH();
+}
+$('#nim').addEventListener('input',e=>setNim(e.target.value));
+
+/* ============ TAB 1 · EFEK LONGSORAN ============ */
+const teksL=(nim,nilai)=>`Mahasiswa NIM ${nim} lulus mata kuliah Keamanan Siber dengan nilai ${nilai}`;
+$('#l-a').placeholder=teksL('{NIM}','A');
+$('#l-b').placeholder=teksL('{NIM}','B');
+const pkcs7=p=>{const n=16-p.length%16,r=new Uint8Array(p.length+n);r.set(p);r.fill(n,p.length);return r};
+function blokTeks(q,len,lain,i){
+  let s='';
+  for(let j=i*16;j<i*16+16&&j<q.length;j++){
+    const b=q[j];
+    let c=j>=len?'<span class="pad">·</span>':b>=32&&b<127?esc(String.fromCharCode(b)):'•';
+    if(lain[j]!==b) c='<mark>'+c+'</mark>';
+    s+=c;
+  }
+  return s;
+}
+function hexBlok(c,lain){
+  let s='';
+  for(let i=0;i<c.length;i+=16){
+    let h='';
+    for(let j=i;j<i+16&&j<c.length;j++) h+=lain[j]===c[j]?hx(c[j]):'<mark>'+hx(c[j])+'</mark>';
+    s+='<span>'+h+'</span>';
+  }
+  return s;
+}
+async function longsoran(){
+  const out=$('#l-out');
+  if(!perluNim(out)) return;
+  const a=$('#l-a').value, b=$('#l-b').value;
+  if(!a||!b){out.innerHTML='<div class="err">Kedua kolom teks harus diisi.</div>';return}
+  const kunci=await sha('kunci-'+NIM), iv=(await sha('iv-'+NIM)).slice(0,16);
+  const k=await crypto.subtle.importKey('raw',kunci,'AES-CBC',false,['encrypt']);
+  const pa=enc.encode(a), pb=enc.encode(b);
+  const ca=new Uint8Array(await crypto.subtle.encrypt({name:'AES-CBC',iv},k,pa));
+  const cb=new Uint8Array(await crypto.subtle.encrypt({name:'AES-CBC',iv},k,pb));
+  const qa=pkcs7(pa), qb=pkcs7(pb);
+  const nBlok=Math.max(ca.length,cb.length)/16;
+
+  let bedaPertama=-1;
+  for(let j=0;j<Math.max(qa.length,qb.length);j++) if(qa[j]!==qb[j]){bedaPertama=j;break}
+
+  const blok=[];
+  for(let i=0;i<nBlok;i++){
+    const A=ca.subarray(i*16,i*16+16), B=cb.subarray(i*16,i*16+16);
+    let beda=null, bits=null;
+    if(A.length===16&&B.length===16){
+      beda=0; bits=[];
+      for(let j=0;j<16;j++){const x=A[j]^B[j];beda+=bitPop(x);for(let t=7;t>=0;t--) bits.push((x>>t)&1)}
+    }
+    blok.push({i,beda,bits});
+  }
+  const dibanding=blok.filter(x=>x.beda!==null);
+  const total=dibanding.reduce((s,x)=>s+x.beda,0), totalBit=dibanding.length*128;
+  const kena=dibanding.filter(x=>x.beda>0);
+  const rata=kena.length?kena.reduce((s,x)=>s+x.beda,0)/(kena.length*128)*100:0;
+  const pct=n=>(n/128*100).toFixed(1).replace('.',',');
+  const angka=n=>n.toFixed(1).replace('.',',');
+
+  const baris=blok.map(x=>`<tr>
+    <td>${x.i+1}</td>
+    <td><div class="pt">A: ${blokTeks(qa,pa.length,qb,x.i)||'<span class="pad">—</span>'}</div><div class="pt">B: ${blokTeks(qb,pb.length,qa,x.i)||'<span class="pad">—</span>'}</div></td>
+    <td>${x.beda===null?'—':x.beda+' / 128'}</td>
+    <td>${x.beda===null?'hanya ada di satu teks':`${pct(x.beda)}%<div class="bar"><i style="width:${x.beda/128*100}%"></i></div>`}</td>
+  </tr>`).join('');
+
+  const kisi=dibanding.map(x=>`<div class="kisi-blok">Blok <b>${x.i+1}</b> · ${x.beda}/128 bit<div class="kisi">${x.bits.map(v=>v?'<i class="x"></i>':'<i></i>').join('')}</div></div>`).join('');
+
+  let amati;
+  if(bedaPertama<0) amati='<div class="hint">Kedua teks sama persis, sehingga ciphertext-nya juga sama persis. Ubah satu karakter pada salah satu teks.</div>';
+  else{
+    const bk=Math.floor(bedaPertama/16)+1;
+    amati=`<div class="hint">Perbedaan pertama ada pada bita ke-${bedaPertama+1} plaintext, yaitu di <b>blok ${bk}</b>.
+      ${bk>1?`Blok 1–${bk-1} tidak berubah sama sekali, sedangkan blok ${bk} sampai blok terakhir berubah rata-rata <b>${angka(rata)}%</b>.`:`Blok 1 sampai blok terakhir berubah rata-rata <b>${angka(rata)}%</b>.`}
+      <br><br><b>Amati:</b> mengapa blok <i>sebelum</i> karakter yang diubah tidak ikut berubah, sedangkan setiap blok <i>sesudahnya</i> berubah sekitar 50%? Petunjuk: pada mode CBC, setiap blok plaintext di-XOR dengan blok ciphertext sebelumnya sebelum dienkripsi.</div>`;
+  }
+  const catPanjang=ca.length!==cb.length?'<div class="hint">Panjang kedua teks berbeda sehingga jumlah bloknya berbeda. Blok yang hanya ada di satu teks tidak ikut dibandingkan.</div>':'';
+
+  out.innerHTML=`
+  <div class="card">
+    <h2>Kunci dan IV dari NIM ${esc(NIM)}</h2>
+    <p>Kunci = SHA-256("kunci-${esc(NIM)}"), IV = 16 bita pertama SHA-256("iv-${esc(NIM)}").</p>
+    <span class="lbl">Kunci AES-256 (32 bita)</span><div class="hex">${hex(kunci)}</div>
+    <span class="lbl" style="margin-top:9px">IV (16 bita)</span><div class="hex">${hex(iv)}</div>
+  </div>
+  <div class="card">
+    <h2>Ciphertext (heksadesimal)</h2>
+    <p>Setiap kelompok adalah satu blok 16 bita. Bita yang berbeda antara A dan B ditandai.</p>
+    <span class="lbl">Ciphertext A · ${ca.length} bita</span><div class="hex">${hexBlok(ca,cb)}</div>
+    <span class="lbl" style="margin-top:9px">Ciphertext B · ${cb.length} bita</span><div class="hex">${hexBlok(cb,ca)}</div>
+  </div>
+  <div class="card">
+    <h2>Perbandingan per Blok</h2>
+    <div class="grid3" style="margin-bottom:14px">
+      <div class="metric"><div class="v">${total} / ${totalBit}</div><div class="l">Total bit berubah</div></div>
+      <div class="metric"><div class="v">${kena.length} / ${nBlok}</div><div class="l">Blok terdampak</div></div>
+      <div class="metric"><div class="v">${angka(rata)}%</div><div class="l">Rata-rata pada blok terdampak</div></div>
+    </div>
+    <p class="geser">Geser tabel ke samping untuk melihat seluruh kolom.</p>
+    <div class="scroll"><table>
+      <tr><th>Blok</th><th>Plaintext blok (A dan B)</th><th>Bit berbeda</th><th>Persentase</th></tr>${baris}
+    </table></div>
+    <p style="margin-top:8px;font-size:12px">Karakter yang berbeda ditandai. Titik samar <span class="pad">·</span> adalah bita padding PKCS#7 yang ditambahkan agar panjang data kelipatan 16 bita.</p>
+    ${catPanjang}
+  </div>
+  <div class="card">
+    <h2>Kisi Bit per Blok</h2>
+    <p>Setiap kotak mewakili satu bit ciphertext (16 × 8 = 128 bit per blok).</p>
+    <div class="legenda"><span><i class="x"></i>bit berbeda</span><span><i></i>bit sama</span></div>
+    <div class="kisi-wrap">${kisi}</div>
+    ${amati}
+  </div>`;
+}
+$('#l-go').onclick=longsoran;
+$('#l-reset').onclick=()=>{
+  if(!perluNim($('#l-out'))) return;
+  $('#l-a').value=teksL(NIM,'A'); $('#l-b').value=teksL(NIM,'B'); $('#l-out').innerHTML='';
+};
+
+/* ============ TAB 2 · ECB vs CBC ============ */
+const GW=240, GH=120;
+// latar, bentuk 1, bentuk 2, tulisan
+const PALET=[['#f4efe6','#e8b04a','#5fa8a0','#1d2433'],['#e9f1f7','#f28b82','#8ab4f8','#202124'],
+  ['#fff7e0','#7cb342','#ef6c00','#263238'],['#eef0ff','#9575cd','#4db6ac','#1a1a2e']];
+async function gambarNim(nim=NIM){
+  const h=await sha('gambar-'+nim), pal=PALET[h[0]%PALET.length];
+  const cv=document.createElement('canvas'); cv.width=GW; cv.height=GH;
+  const g=cv.getContext('2d',{willReadFrequently:true});
+  g.fillStyle=pal[0]; g.fillRect(0,0,GW,GH);
+  g.fillStyle=pal[2]; g.fillRect(h[4]%170,h[5]%70,50+h[6]%40,30+h[7]%25);
+  g.fillStyle=pal[1]; g.beginPath(); g.arc(30+h[1]%180,25+h[2]%70,20+h[3]%18,0,2*Math.PI); g.fill();
+  // NIM sebesar mungkin; NIM panjang dipecah dua baris agar goresannya tetap tebal
+  const huruf=fs=>`800 ${fs}px system-ui,-apple-system,'Segoe UI',Arial,sans-serif`;
+  const muat=baris=>{let fs=64;for(;fs>10;fs--){g.font=huruf(fs);if(Math.max(...baris.map(b=>g.measureText(b).width))<=GW-24&&fs*baris.length<=GH-16)break}return fs};
+  let baris=[nim], fs=muat(baris);
+  if(fs<34){const t=Math.ceil(nim.length/2);baris=[nim.slice(0,t),nim.slice(t)];fs=muat(baris)}
+  g.font=huruf(fs); g.fillStyle=pal[3]; g.textAlign='center'; g.textBaseline='middle';
+  baris.forEach((b,i)=>g.fillText(b,GW/2,GH/2+2+(i-(baris.length-1)/2)*fs));
+  // kuantisasi ke palet agar tidak ada piksel antialias
+  const d=g.getImageData(0,0,GW,GH).data, rgb=pal.map(c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)));
+  for(let i=0;i<d.length;i+=4){
+    let k=0,min=Infinity;
+    rgb.forEach((c,j)=>{const e=(d[i]-c[0])**2+(d[i+1]-c[1])**2+(d[i+2]-c[2])**2;if(e<min){min=e;k=j}});
+    d[i]=rgb[k][0]; d[i+1]=rgb[k][1]; d[i+2]=rgb[k][2]; d[i+3]=255;
+  }
+  return new Uint8Array(d);
+}
+// ECB (simulasi): tiap blok dienkripsi terpisah, IV nol; hasil disimpan per isi blok
+async function enkripsiECB(asli,k){
+  const nol=new Uint8Array(16), cache=new Map(), ecb=new Uint8Array(asli.length);
+  for(let i=0;i<asli.length;i+=16){
+    const blk=asli.subarray(i,i+16), kc=hex(blk);
+    let c=cache.get(kc);
+    if(!c){c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-CBC',iv:nol},k,blk)).slice(0,16);cache.set(kc,c)}
+    ecb.set(c,i);
+  }
+  return {ecb,unik:cache.size};
+}
+const blokUnik=u=>{const s=new Set();for(let i=0;i<u.length;i+=16) s.add(hex(u.subarray(i,i+16)));return s.size};
+async function enkripsiGambar(){
+  const out=$('#m-out');
+  if(!perluNim(out)) return;
+  const btn=$('#m-go'); btn.disabled=true;
+  out.innerHTML='<div class="hint">Mengenkripsi gambar…</div>';
+  try{
+    const asli=await gambarNim();
+    const k=await crypto.subtle.importKey('raw',await sha('kunci-'+NIM),'AES-CBC',false,['encrypt']);
+    const {ecb,unik}=await enkripsiECB(asli,k);
+    // CBC: satu kali enkripsi seluruh data dengan IV acak
+    const iv=crypto.getRandomValues(new Uint8Array(16));
+    const cbc=new Uint8Array(await crypto.subtle.encrypt({name:'AES-CBC',iv},k,asli)).slice(0,asli.length);
+    const nBlok=asli.length/16, uAsli=unik, uEcb=blokUnik(ecb), uCbc=blokUnik(cbc);
+    for(let i=3;i<asli.length;i+=4){ecb[i]=255;cbc[i]=255}
+    const fig=(id,judul,ket)=>`<figure class="gbr"><canvas id="${id}" width="${GW}" height="${GH}"></canvas><figcaption><b>${judul}</b> · ${ket}</figcaption></figure>`;
+    const n=x=>x.toLocaleString('id-ID');
+    out.innerHTML=`
+    <div class="card">
+      <h2>Hasil Enkripsi Gambar · NIM ${esc(NIM)}</h2>
+      <div class="grid3">${fig('m-asli','Asli','sebelum dienkripsi')}${fig('m-ecb','ECB','tiap blok dienkripsi terpisah')}${fig('m-cbc','CBC','blok dirantai, IV acak')}</div>
+      <h3>Jumlah pola blok yang berbeda</h3>
+      <p class="geser">Geser tabel ke samping untuk melihat seluruh kolom.</p>
+      <div class="scroll"><table class="ref">
+        <tr><th>Gambar</th><th>Jumlah blok 16 bita</th><th>Pola blok berbeda</th></tr>
+        <tr><td><b>Asli</b></td><td>${n(nBlok)}</td><td>${n(uAsli)}</td></tr>
+        <tr><td><b>ECB</b></td><td>${n(nBlok)}</td><td>${n(uEcb)}</td></tr>
+        <tr><td><b>CBC</b></td><td>${n(nBlok)}</td><td>${n(uCbc)}</td></tr>
+      </table></div>
+      <div class="hint"><b>Amati:</b> bandingkan jumlah pola blok berbeda pada gambar asli dengan hasil ECB dan CBC. Apa artinya bagi penyerang yang hanya melihat ciphertext? Tekan <b>Enkripsi Gambar</b> sekali lagi: hasil mana yang berubah, dan mengapa?</div>
+    </div>`;
+    [['#m-asli',asli],['#m-ecb',ecb],['#m-cbc',cbc]].forEach(([id,u])=>$(id).getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(u),GW,GH),0,0));
+  }catch(e){out.innerHTML='<div class="err">Gagal mengenkripsi gambar: '+esc(e.message)+'</div>'}
+  btn.disabled=false;
+}
+$('#m-go').onclick=enkripsiGambar;
+
+/* ============ TAB 3 · SIMETRIS vs ASIMETRIS ============ */
+let K3=null;
+const RSA_ALG={name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'};
+const ms=x=>x.toLocaleString('id-ID',{minimumFractionDigits:3,maximumFractionDigits:3})+' ms';
+const kali=x=>x.toLocaleString('id-ID',{maximumFractionDigits:1})+'×';
+const bita=x=>x.toLocaleString('id-ID')+' bita';
+const samaIsi=(x,y)=>{if(x.length!==y.length)return false;for(let i=0;i<x.length;i++)if(x[i]!==y[i])return false;return true};
+function pesanNim(n){
+  const s=`Pesan uji praktikum Kriptografi Dasar milik NIM ${NIM}. `;
+  let t=''; while(t.length<n) t+=s;
+  return enc.encode(t.slice(0,n));
+}
+function perluKunci(el){
+  if(K3) return true;
+  el.innerHTML='<div class="err">Bangkitkan kunci terlebih dahulu (Langkah 1).</div>';
+  return false;
+}
+async function jalankan(btn,out,fn){
+  btn.disabled=true;
+  try{await fn()}catch(e){out.innerHTML='<div class="err">Terjadi galat: '+esc(e.name+(e.message?': '+e.message:''))+'</div>'}
+  btn.disabled=false;
+}
+async function bangkitkanKunci(){
+  const out=$('#h1-out');
+  if(!perluNim(out)) return;
+  out.innerHTML='<div class="hint">Membangkitkan kunci…</div>';
+  let t=performance.now();
+  const aes=await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  const tA=performance.now()-t; t=performance.now();
+  const rsa=await crypto.subtle.generateKey(RSA_ALG,false,['encrypt','decrypt']);
+  const tR=performance.now()-t;
+  K3={aes,rsa};
+  ['#h2-out','#h3-out','#h4-out'].forEach(s=>$(s).innerHTML='');
+  out.innerHTML=`<div class="scroll"><table class="ref">
+    <tr><th>Kunci</th><th>Isi</th><th>Waktu pembangkitan</th></tr>
+    <tr><td><b>AES-GCM 256 bit</b></td><td>satu kunci rahasia yang dipakai bersama</td><td><code>${ms(tA)}</code></td></tr>
+    <tr><td><b>RSA-OAEP 2048 bit</b></td><td>pasangan kunci publik dan kunci privat</td><td><code>${ms(tR)}</code></td></tr>
+  </table></div>
+  <div class="ok"><b>Kunci siap.</b> Lanjutkan ke Langkah 2. Kunci ini hanya tersimpan di memori halaman dan hilang bila halaman dimuat ulang.</div>`;
+}
+// Peramban membulatkan performance.now() (0,1–1 ms) demi keamanan. Karena itu setiap operasi
+// diulang sekurang-kurangnya `min` kali dan sampai totalnya ≥ 100 ms, lalu dirata-rata.
+async function rataWaktu(fn,min=100){
+  let n=0, el=0; const t0=performance.now();
+  while((n<min||el<100)&&n<100000){await fn();n++;el=performance.now()-t0}
+  return {t:el/n,n};
+}
+const sel=x=>`<code>${ms(x.t)}</code><small class="kali">${x.n.toLocaleString('id-ID')} kali</small>`;
+async function ujiKecepatan(){
+  const out=$('#h2-out');
+  if(!perluNim(out)||!perluKunci(out)) return;
+  out.innerHTML='<div class="hint">Mengukur… (sekurang-kurangnya 100 kali per operasi)</div>';
+  const m=pesanNim(190), ivA=crypto.getRandomValues(new Uint8Array(12));
+  const cA=await crypto.subtle.encrypt({name:'AES-GCM',iv:ivA},K3.aes,m);
+  const cR=await crypto.subtle.encrypt({name:'RSA-OAEP'},K3.rsa.publicKey,m);
+  const ok=samaIsi(new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:ivA},K3.aes,cA)),m)
+    &&samaIsi(new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},K3.rsa.privateKey,cR)),m);
+  const aesE=await rataWaktu(()=>crypto.subtle.encrypt({name:'AES-GCM',iv:crypto.getRandomValues(new Uint8Array(12))},K3.aes,m));
+  const aesD=await rataWaktu(()=>crypto.subtle.decrypt({name:'AES-GCM',iv:ivA},K3.aes,cA));
+  const rsaE=await rataWaktu(()=>crypto.subtle.encrypt({name:'RSA-OAEP'},K3.rsa.publicKey,m));
+  const rsaD=await rataWaktu(()=>crypto.subtle.decrypt({name:'RSA-OAEP'},K3.rsa.privateKey,cR));
+  out.innerHTML=`<span class="lbl">Pesan uji (${bita(m.length)})</span><div class="kotak-pesan">${esc(new TextDecoder().decode(m))}</div>
+  <p class="geser">Geser tabel ke samping untuk melihat seluruh kolom.</p>
+  <div class="scroll"><table class="ref">
+    <tr><th>Operasi</th><th>AES-GCM</th><th>RSA-OAEP</th><th>RSA berapa kali lebih lambat</th></tr>
+    <tr><td><b>Enkripsi</b> (rata-rata per pesan)</td><td>${sel(aesE)}</td><td>${sel(rsaE)}</td><td><b>${kali(rsaE.t/aesE.t)}</b></td></tr>
+    <tr><td><b>Dekripsi</b> (rata-rata per pesan)</td><td>${sel(aesD)}</td><td>${sel(rsaD)}</td><td><b>${kali(rsaD.t/aesD.t)}</b></td></tr>
+  </table></div>
+  ${ok?'<div class="ok">Pesan uji berhasil didekripsi kembali dengan kedua algoritma.</div>':'<div class="err">Pesan uji tidak kembali utuh setelah didekripsi.</div>'}
+  <p style="margin:0;font-size:12px">Peramban membulatkan pengukuran waktu demi keamanan, sehingga setiap operasi diulang sekurang-kurangnya 100 kali, dan terus diulang sampai total waktunya mencapai 100 ms, lalu dirata-rata. Angka waktu berbeda di setiap perangkat dan setiap percobaan. Yang perlu diperhatikan adalah perbandingannya. Bandingkan juga enkripsi dan dekripsi RSA: mana yang lebih lambat?</p>`;
+}
+async function rsaSatuKB(){
+  const out=$('#h3-out');
+  if(!perluNim(out)||!perluKunci(out)) return;
+  const m=pesanNim(1024);
+  try{
+    await crypto.subtle.encrypt({name:'RSA-OAEP'},K3.rsa.publicKey,m);
+    out.innerHTML='<div class="hint">Enkripsi ternyata berhasil. Peramban ini berperilaku di luar standar.</div>';
+  }catch(e){
+    out.innerHTML=`<div class="err"><b>Enkripsi gagal.</b> Pesan galat dari peramban: <code>${esc(e.name)}${e.message?': '+esc(e.message):''}</code></div>
+    <p style="margin:0">Pesan sepanjang ${bita(m.length)} melebihi batas RSA-OAEP 2048 bit dengan SHA-256, yaitu 190 bita sekali enkripsi. RSA tidak dirancang untuk mengenkripsi data besar. Untuk data besar, RSA hanya dipakai membungkus kunci simetris yang kecil, seperti pada Langkah 4.</p>`;
+  }
+}
+async function skemaHibrida(){
+  const out=$('#h4-out');
+  if(!perluNim(out)||!perluKunci(out)) return;
+  out.innerHTML='<div class="hint">Menyiapkan data 1 MB dan menjalankan skema hibrida…</div>';
+  const N=1<<20, data=new Uint8Array(N);
+  for(let i=0;i<N;i+=65536) crypto.getRandomValues(data.subarray(i,i+65536)); // batas 65.536 bita per panggilan
+  // pengirim
+  const sesi=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},sesi,data));
+  const mentah=new Uint8Array(await crypto.subtle.exportKey('raw',sesi));
+  const bungkus=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},K3.rsa.publicKey,mentah));
+  // penerima
+  const mentah2=await crypto.subtle.decrypt({name:'RSA-OAEP'},K3.rsa.privateKey,bungkus);
+  const sesi2=await crypto.subtle.importKey('raw',mentah2,'AES-GCM',false,['decrypt']);
+  const pt=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv},sesi2,ct));
+  const utuh=samaIsi(pt,data);
+  // pengukuran waktu tiap tahap (diulang, lihat rataWaktu)
+  out.innerHTML='<div class="hint">Mengukur waktu setiap tahap…</div>';
+  const tAe=await rataWaktu(()=>crypto.subtle.encrypt({name:'AES-GCM',iv:crypto.getRandomValues(new Uint8Array(12))},sesi,data),5);
+  const tRe=await rataWaktu(async()=>crypto.subtle.encrypt({name:'RSA-OAEP'},K3.rsa.publicKey,await crypto.subtle.exportKey('raw',sesi)),5);
+  const tRd=await rataWaktu(async()=>crypto.subtle.importKey('raw',await crypto.subtle.decrypt({name:'RSA-OAEP'},K3.rsa.privateKey,bungkus),'AES-GCM',false,['decrypt']),5);
+  const tAd=await rataWaktu(()=>crypto.subtle.decrypt({name:'AES-GCM',iv},sesi2,ct),5);
+  out.innerHTML=`<div class="grid2">
+    <div><h3 style="margin-top:4px">Ukuran</h3><div class="scroll"><table class="ref">
+      <tr><th>Besaran</th><th>Ukuran</th></tr>
+      <tr><td>Data asli (acak)</td><td><code>${bita(data.length)}</code></td></tr>
+      <tr><td>Ciphertext AES-GCM</td><td><code>${bita(ct.length)}</code></td></tr>
+      <tr><td>Kunci sesi AES</td><td><code>${bita(mentah.length)}</code></td></tr>
+      <tr><td>Kunci sesi terbungkus RSA</td><td><code>${bita(bungkus.length)}</code></td></tr>
+    </table></div></div>
+    <div><h3 style="margin-top:4px">Waktu</h3><div class="scroll"><table class="ref">
+      <tr><th>Tahap</th><th>Waktu rata-rata</th></tr>
+      <tr><td>Pengirim · AES mengenkripsi 1 MB data</td><td>${sel(tAe)}</td></tr>
+      <tr><td>Pengirim · RSA membungkus kunci sesi</td><td>${sel(tRe)}</td></tr>
+      <tr><td>Penerima · RSA membuka kunci sesi</td><td>${sel(tRd)}</td></tr>
+      <tr><td>Penerima · AES mendekripsi 1 MB data</td><td>${sel(tAd)}</td></tr>
+    </table></div></div>
+  </div>
+  ${utuh?`<div class="ok"><b>Verifikasi: data kembali utuh.</b> Seluruh ${bita(pt.length)} hasil dekripsi identik dengan data asli.</div>`:'<div class="err"><b>Verifikasi gagal:</b> data hasil dekripsi tidak sama dengan data asli.</div>'}
+  <div class="hint">Prinsip yang sama dipakai setiap kali peramban membuka situs HTTPS: kriptografi asimetris dipakai di awal untuk menyepakati kunci sesi, lalu seluruh data halaman dikirim dengan enkripsi simetris yang cepat. Pada TLS 1.3, kunci sesi disepakati dengan Diffie–Hellman (Tab 4), bukan dibungkus RSA, tetapi pembagian perannya sama.</div>`;
+}
+[['#h1-go','#h1-out',bangkitkanKunci],['#h2-go','#h2-out',ujiKecepatan],['#h3-go','#h3-out',rsaSatuKB],['#h4-go','#h4-out',skemaHibrida]]
+  .forEach(([b,o,f])=>$(b).onclick=()=>jalankan($(b),$(o),f));
+
+/* ============ TAB 4 · DIFFIE–HELLMAN ============ */
+const P=1019n, G=2n;
+const powmod=(b,e,m)=>{let r=1n;b%=m;while(e>0n){if(e&1n)r=r*b%m;b=b*b%m;e>>=1n}return r};
+async function rahasiaDH(nim=NIM){
+  // kandidat di rentang 2..p-2 dari SHA-256 NIM
+  const c=[];
+  for(let n=0;c.length<64;n++){const h=await sha(`dh-${nim}-${n}`);for(let j=0;j<32;j+=2)c.push(2n+BigInt(((h[j]<<8)|h[j+1])%1016))}
+  const a=c[0], b=c.find(x=>x!==a);
+  // m dipilih agar kunci Alice dan Bob saat diserang tetap berbeda
+  const m=c.find(x=>x!==a&&x!==b&&powmod(powmod(G,x,P),a,P)!==powmod(powmod(G,x,P),b,P));
+  return {a,b,m};
+}
+let dhTok=0;
+async function renderDH(){
+  const out=$('#dh-out'), tok=++dhTok;
+  if(!NIM){out.innerHTML='<div class="err">Isi NIM terlebih dahulu.</div>';return}
+  const {a,b,m}=await rahasiaDH();
+  if(tok!==dhTok) return;
+  const mal=$('#dh-mal').checked;
+  const A=powmod(G,a,P), B=powmod(G,b,P), M=powmod(G,m,P);
+  const v=(lbl,isi,ket='',kls='')=>`<div class="dhv ${kls}"><span>${lbl}</span><code>${isi}</code>${ket?`<small>${ket}</small>`:''}</div>`;
+  let alice, bob, saluran, status, alur='';
+  if(!mal){
+    const kA=powmod(B,a,P), kB=powmod(A,b,P);
+    alice=v('Rahasia',`a = ${a}`,'tidak pernah dikirim')+v('Nilai publik',`A = ${G}^${a} mod ${P} = ${A}`)+v('Menerima dari Bob',`B = ${B}`)+v('Kunci bersama',`K = ${B}^${a} mod ${P} = ${kA}`,'','kunci');
+    bob=v('Rahasia',`b = ${b}`,'tidak pernah dikirim')+v('Nilai publik',`B = ${G}^${b} mod ${P} = ${B}`)+v('Menerima dari Alice',`A = ${A}`)+v('Kunci bersama',`K = ${A}^${b} mod ${P} = ${kB}`,'','kunci');
+    saluran=`<div class="dhv"><span>Diketahui semua orang</span><code>p = ${P}, g = ${G}</code></div>
+      <div class="kirim">Alice → Bob: A = ${A}</div><div class="kirim">Bob → Alice: B = ${B}</div>
+      <p style="font-size:12px;margin:0">Siapa pun dapat melihat p, g, A, dan B, tetapi kunci bersama hanya dapat dihitung oleh pemilik bilangan rahasia a atau b.</p>`;
+    status=kA===kB?`<div class="ok"><b>Kunci sama ✓</b> Alice dan Bob sama-sama memperoleh K = ${kA} tanpa pernah mengirimkan kunci itu.</div>`:`<div class="err">Kunci berbeda.</div>`;
+  }else{
+    const kA=powmod(M,a,P), kB=powmod(M,b,P), K1=powmod(A,m,P), K2=powmod(B,m,P);
+    alice=v('Rahasia',`a = ${a}`,'tidak pernah dikirim')+v('Nilai publik',`A = ${G}^${a} mod ${P} = ${A}`)+v('Menerima "dari Bob"',`"B" = ${M}`,'sebenarnya M dari Mallory, bukan B')+v('Kunci yang dipakai',`K = ${M}^${a} mod ${P} = ${kA}`,'','kunci');
+    bob=v('Rahasia',`b = ${b}`,'tidak pernah dikirim')+v('Nilai publik',`B = ${G}^${b} mod ${P} = ${B}`)+v('Menerima "dari Alice"',`"A" = ${M}`,'sebenarnya M dari Mallory, bukan A')+v('Kunci yang dipakai',`K = ${M}^${b} mod ${P} = ${kB}`,'','kunci');
+    saluran=`<div class="dhv"><span>Diketahui semua orang</span><code>p = ${P}, g = ${G}</code></div>
+      <div class="kirim cegat">Alice → Bob: A = ${A}</div><div class="kirim cegat">Bob → Alice: B = ${B}</div>
+      <div class="mallory"><h3>Mallory</h3>
+        ${v('Rahasia',`m = ${m}`)}
+        ${v('Mencegat',`A = ${A} dan B = ${B}`)}
+        ${v('Mengirim ke Alice dan Bob',`M = ${G}^${m} mod ${P} = ${M}`)}
+        ${v('Kunci dengan Alice',`K1 = ${A}^${m} mod ${P} = ${K1}`,K1===kA?'sama dengan kunci Alice':'','kunci')}
+        ${v('Kunci dengan Bob',`K2 = ${B}^${m} mod ${P} = ${K2}`,K2===kB?'sama dengan kunci Bob':'','kunci')}
+      </div>`;
+    status=`<div class="err"><b>Kunci Alice (${kA}) ≠ kunci Bob (${kB}), tetapi keduanya tidak menyadarinya.</b> Mallory memegang K1 = ${K1}, yang sama dengan kunci Alice, dan K2 = ${K2}, yang sama dengan kunci Bob.</div>`;
+    alur=`<div class="card"><h2>Alur Pesan yang Disadap</h2>
+      <p>Visualisasi alur saja, tanpa enkripsi sungguhan.</p>
+      <ol class="alur">
+        <li><b>1 · Alice</b><div>Menulis pesan lalu mengenkripsinya dengan kunci K = ${kA}.<br><span class="msg">Transfer Rp1.000.000 ke rekening 123</span> → <span class="msg enk">🔒 terenkripsi dengan ${kA}</span></div></li>
+        <li><b>2 · Mallory</b><div>Mencegat pesan dan membukanya dengan K1 = ${K1}. Pesan terbaca utuh.<br><span class="msg">Transfer Rp1.000.000 ke rekening 123</span></div></li>
+        <li><b>3 · Mallory</b><div>Mengubah isi pesan, lalu mengenkripsinya ulang dengan K2 = ${K2}.<br><span class="msg palsu">Transfer Rp9.000.000 ke rekening 999</span> → <span class="msg enk">🔒 terenkripsi dengan ${K2}</span></div></li>
+        <li><b>4 · Bob</b><div>Membuka pesan dengan kuncinya, K = ${kB}. Dekripsi berhasil, sehingga Bob yakin pesan itu asli dari Alice.<br><span class="msg palsu">Transfer Rp9.000.000 ke rekening 999</span></div></li>
+      </ol></div>`;
+  }
+  out.innerHTML=`<div class="card">
+    <div class="dh"><div><h3>Alice</h3>${alice}</div><div><h3>Saluran Terbuka</h3>${saluran}</div><div><h3>Bob</h3>${bob}</div></div>
+    ${status}</div>${alur}`;
+}
+$('#dh-mal').onchange=renderDH;
+
+/* ============ KUNCI PER NIM (dipakai halaman versi) ============ */
+async function kunciNIM(nim){
+  const kunci=await sha('kunci-'+nim), iv=(await sha('iv-'+nim)).slice(0,16);
+  const k=await crypto.subtle.importKey('raw',kunci,'AES-CBC',false,['encrypt']);
+  const [ca,cb]=await Promise.all(['A','B'].map(async n=>new Uint8Array(await crypto.subtle.encrypt({name:'AES-CBC',iv},k,enc.encode(teksL(nim,n))))));
+  const bit=[]; for(let i=0;i<ca.length;i+=16){let s=0;for(let j=i;j<i+16;j++)s+=bitPop(ca[j]^cb[j]);bit.push(s)}
+  const total=bit.reduce((s,x)=>s+x,0);
+  const asli=await gambarNim(nim), {ecb,unik}=await enkripsiECB(asli,k);
+  for(let i=3;i<ecb.length;i+=4) ecb[i]=255;
+  const {a,b,m}=await rahasiaDH(nim);
+  const A=powmod(G,a,P), B=powmod(G,b,P), M=powmod(G,m,P);
+  const n=x=>x.toLocaleString('id-ID');
+  const html=`
+  <h3>Tab 1 · teks bawaan</h3>
+  <table class="ref">
+    <tr><td>Kunci AES-256</td><td><code style="word-break:break-all">${hex(kunci)}</code></td></tr>
+    <tr><td>IV</td><td><code>${hex(iv)}</code></td></tr>
+    <tr><td>Ciphertext A</td><td><code style="word-break:break-all">${hex(ca)}</code></td></tr>
+    <tr><td>Bit berbeda per blok</td><td>${bit.map((x,i)=>`blok ${i+1}: <b>${x}</b>`).join(' · ')}</td></tr>
+    <tr><td>Total</td><td><b>${total} / ${bit.length*128}</b> bit, ${bit.filter(x=>x>0).length} dari ${bit.length} blok terdampak</td></tr>
+  </table>
+  <p style="margin-top:6px;font-size:12px">Angka ini hanya berlaku bila mahasiswa memakai teks bawaan. Bila teksnya diubah, cocokkan kunci dan IV saja.</p>
+  <h3>Tab 2 · gambar Asli dan ECB</h3>
+  <div class="grid3"><figure class="gbr"><canvas id="kn-asli" width="${GW}" height="${GH}"></canvas><figcaption><b>Asli</b></figcaption></figure>
+    <figure class="gbr"><canvas id="kn-ecb" width="${GW}" height="${GH}"></canvas><figcaption><b>ECB</b> · selalu sama untuk NIM ini</figcaption></figure>
+    <div style="font-size:12.5px;color:var(--muted)">Pola blok berbeda: Asli <b>${n(unik)}</b>, ECB <b>${n(unik)}</b>, CBC <b>${n(asli.length/16)}</b>.<br><br>Gambar CBC berbeda setiap kali tombol ditekan (IV acak), jadi tidak dapat dicocokkan.</div></div>
+  <h3>Tab 4 · Diffie–Hellman (p = ${P}, g = ${G})</h3>
+  <table class="ref">
+    <tr><th>Besaran</th><th>Tanpa Mallory</th><th>Dengan Mallory</th></tr>
+    <tr><td>Rahasia</td><td>a = <b>${a}</b>, b = <b>${b}</b></td><td>m = <b>${m}</b></td></tr>
+    <tr><td>Nilai publik</td><td>A = <b>${A}</b>, B = <b>${B}</b></td><td>M = <b>${M}</b></td></tr>
+    <tr><td>Kunci Alice</td><td>K = <b>${powmod(B,a,P)}</b></td><td><b>${powmod(M,a,P)}</b> = K1</td></tr>
+    <tr><td>Kunci Bob</td><td>K = <b>${powmod(A,b,P)}</b></td><td><b>${powmod(M,b,P)}</b> = K2</td></tr>
+  </table>`;
+  return {html,asli,ecb};
+}
+function pasangKunciNIM(){
+  const kb=$('#kn-btn'); if(!kb) return;
+  const go=async()=>{
+    const v=$('#kn-nim').value.trim(), o=$('#kn-out');
+    if(!nimSah(v)){o.innerHTML='<div class="err">NIM harus berupa 6–15 digit angka.</div>';return}
+    o.innerHTML='<div class="hint">Menghitung…</div>';
+    const r=await kunciNIM(v);
+    o.innerHTML=r.html;
+    [['#kn-asli',r.asli],['#kn-ecb',r.ecb]].forEach(([id,u])=>$(id).getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(u),GW,GH),0,0));
+  };
+  kb.onclick=go; $('#kn-nim').onkeydown=e=>{if(e.key==='Enter')go()};
+}
+
+/* ============ VERSI ============ */
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function periksaVersi(){
+  const msg=$('#versi-msg'), pw=$('#versi-kode').value;
+  if(!pw) return;
+  if(!window.crypto||!crypto.subtle){msg.innerHTML='<div class="err">Peramban ini tidak didukung. Gunakan Chrome, Edge, atau Firefox versi terbaru.</div>';return}
+  msg.innerHTML='<div class="hint">Memeriksa…</div>';
+  try{
+    const d=JSON.parse($('#versi-data').textContent);
+    const bahan=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+    const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.i,hash:'SHA-256'},bahan,{name:'AES-GCM',length:256},false,['decrypt']);
+    const isi=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.n)},k,b64(d.c));
+    $('#versi-isi').innerHTML=new TextDecoder().decode(isi);
+    $('#versi-form').style.display='none';
+    pasangKunciNIM();
+  }catch(e){msg.innerHTML='<div class="err">Kode tidak dikenali.</div>'}
+  $('#versi-kode').value='';
+}
+$('#btn-versi').onclick=periksaVersi;
+$('#versi-kode').onkeydown=e=>{if(e.key==='Enter')periksaVersi()};
+let klikVer=0,waktuVer=0;
+$('#ver').onclick=()=>{
+  const t=Date.now(); klikVer=t-waktuVer<1500?klikVer+1:1; waktuVer=t;
+  if(klikVer>=5){klikVer=0;goTab('versi')}
+};
+
+/* ============ UI ============ */
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=document.querySelector('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+}
+$$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+$$('[data-go]').forEach(b=>b.onclick=()=>goTab(b.dataset.go));
+
+/* ============ TEMA ============ */
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+$('#btn-tema').onclick=()=>{
+  const t=document.documentElement.dataset.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem('tema',t)}catch(e){}
+  labelTema();
+};
+labelTema();
+
+/* init */
+(function(){let n='';try{n=localStorage.getItem('kripto6:nim')||''}catch(e){}if(n){$('#nim').value=n;setNim(n)}else renderDH()})();
+</script>
+</body>
+</html>
