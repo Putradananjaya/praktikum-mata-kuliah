@@ -478,9 +478,11 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
     <div class="row">
       <input type="password" id="versi-kode" placeholder="Kode akses" autocomplete="off" style="flex:1;min-width:180px;max-width:320px">
       <button class="sec" id="btn-versi">Periksa</button>
+      <button class="sec" id="btn-bio" hidden>Buka dengan sidik jari</button>
     </div>
     <div id="versi-msg"></div>
   </div>
+  <div id="versi-bio"></div>
   <div id="versi-isi"></div>
 </div>
 
@@ -818,11 +820,8 @@ function kunciNIM(nim){
 
 /* ============ VERSI ============ */
 const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-async function periksaVersi(){
-  const msg=$('#versi-msg'), pw=$('#versi-kode').value;
-  if(!pw) return;
-  if(!window.crypto||!crypto.subtle){msg.innerHTML='<div class="err">Peramban ini tidak didukung. Gunakan Chrome, Edge, atau Firefox versi terbaru.</div>';return}
-  msg.innerHTML='<div class="hint">Memeriksa…</div>';
+const ub64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
+async function bukaVersi(pw){
   try{
     const d=JSON.parse($('#versi-data').textContent);
     const bahan=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
@@ -832,11 +831,102 @@ async function periksaVersi(){
     $('#versi-form').style.display='none';
     const kb=$('#kn-btn');
     if(kb){const go=()=>{const n=$('#kn-nim').value.trim();$('#kn-out').innerHTML=/^\d{6,15}$/.test(n)?kunciNIM(n):'<div class="err">NIM harus berupa 6–15 digit angka.</div>'};kb.onclick=go;$('#kn-nim').onkeydown=e=>{if(e.key==='Enter')go()}}
-  }catch(e){msg.innerHTML='<div class="err">Kode tidak dikenali.</div>'}
+    return true;
+  }catch(e){return false}
+}
+async function periksaVersi(){
+  const msg=$('#versi-msg'), pw=$('#versi-kode').value;
+  if(!pw) return;
+  if(!window.crypto||!crypto.subtle){msg.innerHTML='<div class="err">Peramban ini tidak didukung. Gunakan Chrome, Edge, atau Firefox versi terbaru.</div>';return}
+  msg.innerHTML='<div class="hint">Memeriksa…</div>';
+  const ok=await bukaVersi(pw);
   $('#versi-kode').value='';
+  if(!ok){msg.innerHTML='<div class="err">Kode tidak dikenali.</div>';return}
+  msg.innerHTML='';
+  bioTawar(pw);
 }
 $('#btn-versi').onclick=periksaVersi;
 $('#versi-kode').onkeydown=e=>{if(e.key==='Enter')periksaVersi()};
+
+/* ============ SIDIK JARI (WebAuthn PRF) ============
+   Rahasia PRF dari passkey perangkat membungkus kode akses; hasilnya disimpan di localStorage
+   peramban dosen. Tanpa sidik jari, bungkusan itu tidak bisa dibuka. */
+const BIO_KEY='bio:'+location.pathname, BIO_CRED='bio:cred';
+const BIO_SALT=new TextEncoder().encode('praktikum-mata-kuliah:versi:v1');
+const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+const bioKunci=f=>crypto.subtle.importKey('raw',f,'AES-GCM',false,['encrypt','decrypt']);
+async function bioDukung(){
+  if(!window.PublicKeyCredential||!window.isSecureContext) return false;
+  try{
+    if(PublicKeyCredential.getClientCapabilities){const c=await PublicKeyCredential.getClientCapabilities();if(c['extension:prf']===false) return false}
+    return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+  }catch(e){return false}
+}
+async function bioPrf(id){
+  const r=await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),
+    allowCredentials:[{type:'public-key',id:b64(id)}],userVerification:'required',extensions:{prf:{eval:{first:BIO_SALT}}}}});
+  const f=r.getClientExtensionResults().prf?.results?.first;
+  if(!f) throw new Error('prf');
+  return bioKunci(f);
+}
+async function bioDaftar(pw){
+  let id=lsGet(BIO_CRED), k;
+  if(id){try{k=await bioPrf(id)}catch(e){if(e.message==='prf') throw e;id=null;lsSet(BIO_CRED,null)}}
+  if(!id){
+    const c=await navigator.credentials.create({publicKey:{rp:{name:'Praktikum Virtual'},
+      user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'dosen',displayName:'Dosen Praktikum'},
+      challenge:crypto.getRandomValues(new Uint8Array(32)),
+      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:'platform',residentKey:'preferred',userVerification:'required'},
+      extensions:{prf:{eval:{first:BIO_SALT}}}}});
+    const p=c.getClientExtensionResults().prf;
+    if(!p?.enabled) throw new Error('prf');
+    id=ub64(c.rawId); lsSet(BIO_CRED,id);
+    k=p.results?.first?await bioKunci(p.results.first):await bioPrf(id);
+  }
+  const n=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:n},k,new TextEncoder().encode(pw));
+  if(!lsSet(BIO_KEY,{n:ub64(n),c:ub64(ct)})) throw new Error('simpan');
+}
+function bioTombol(){$('#btn-bio').hidden=!(lsGet(BIO_KEY)&&lsGet(BIO_CRED))}
+async function bioBuka(){
+  const msg=$('#versi-msg'), e=lsGet(BIO_KEY), id=lsGet(BIO_CRED);
+  if(!e||!id) return;
+  msg.innerHTML='<div class="hint">Tempelkan jari pada sensor…</div>';
+  let pw;
+  try{pw=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(e.n)},await bioPrf(id),b64(e.c)))}
+  catch(err){msg.innerHTML='<div class="err">Sidik jari dibatalkan atau tidak dikenali. Coba lagi, atau masukkan kode akses.</div>';return}
+  if(!await bukaVersi(pw)){lsSet(BIO_KEY,null);bioTombol();msg.innerHTML='<div class="err">Kode akses halaman ini sudah diganti. Masukkan kode akses yang baru, lalu daftarkan ulang sidik jari.</div>';return}
+  msg.innerHTML='';
+  bioTawar(pw);
+}
+async function bioTawar(pw){
+  const box=$('#versi-bio');
+  if(lsGet(BIO_KEY)&&lsGet(BIO_CRED)){
+    box.innerHTML='<div class="card" style="font-size:12.5px;color:var(--muted)">Sidik jari aktif untuk halaman ini di perangkat ini. <button class="sec" id="bio-hapus" style="margin-left:6px">Hapus dari perangkat ini</button></div>';
+    $('#bio-hapus').onclick=()=>{lsSet(BIO_KEY,null);bioTombol();box.innerHTML=''};
+    return;
+  }
+  if(!await bioDukung()) return;
+  box.innerHTML=`<div class="card"><h2>Buka dengan sidik jari</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Daftarkan sidik jari (Touch ID) perangkat ini agar halaman ini dapat dibuka tanpa mengetik kode akses. Kode akses tetap berlaku sebagai cadangan.</p>
+    <button class="sec" id="bio-daftar">Daftarkan sidik jari</button><div id="bio-msg"></div></div>`;
+  $('#bio-daftar').onclick=async()=>{
+    const m=$('#bio-msg');
+    m.innerHTML='<div class="hint">Ikuti permintaan sidik jari dari peramban…</div>';
+    try{
+      await bioDaftar(pw);
+      bioTombol(); $('#bio-daftar').remove();
+      m.innerHTML='<div class="ok"><b>Berhasil.</b> Mulai sekarang halaman ini dapat dibuka dengan tombol <b>Buka dengan sidik jari</b>.</div>';
+    }catch(e){
+      m.innerHTML=e.message==='prf'?'<div class="err">Peramban ini belum mendukung pembukaan dengan sidik jari. Gunakan Chrome, Edge, atau Safari versi terbaru.</div>'
+        :'<div class="err">Pendaftaran dibatalkan atau gagal. Coba lagi.</div>';
+    }
+  };
+}
+$('#btn-bio').onclick=bioBuka;
+bioTombol();
 let klikVer=0,waktuVer=0;
 $('#ver').onclick=()=>{
   const t=Date.now(); klikVer=t-waktuVer<1500?klikVer+1:1; waktuVer=t;
