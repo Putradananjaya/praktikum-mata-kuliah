@@ -1469,5 +1469,67 @@ function adeganMulaiAlg(cfg){
   requestAnimationFrame(putar);
 })();
 </script>
+<script>
+/* ============ NAVIGASI PRESENTASI ============
+   Untuk remote presenter: PageDown atau panah kanan = maju, PageUp atau panah kiri = mundur.
+   Maju menyorot kartu berikutnya; kartu yang lebih panjang dari layar digulir dulu sampai habis;
+   setelah kartu terakhir, pindah ke tab berikutnya. Tidak aktif saat mengetik di kotak isian. */
+(function(){
+  const gaya=document.createElement('style');
+  gaya.textContent='.sorot-presentasi{outline:3px solid var(--fp);outline-offset:4px}'+
+    '#posisi-presentasi{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:0;transition:opacity .25s;pointer-events:none}'+
+    '#posisi-presentasi.on{opacity:1}';
+  document.head.appendChild(gaya);
+  const posisi=document.createElement('div');posisi.id='posisi-presentasi';posisi.setAttribute('aria-live','polite');document.body.appendChild(posisi);
+  let i=-1,tab=null,tunda=null;
+  const urutan=()=>[...document.querySelectorAll('nav button[data-t]')].map(b=>b.dataset.t);
+  const aktif=()=>{const t=document.querySelector('.tab.on');return t?t.id.slice(2):null};
+  const kartu=()=>{const t=document.querySelector('.tab.on');return t?[...t.querySelectorAll('.card')].filter(c=>c.offsetParent!==null&&!c.parentElement.closest('.card')):[]};
+  const atas=()=>{const nb=document.querySelector('.nimbar');return (nb&&getComputedStyle(nb).position==='sticky'?nb.offsetHeight:0)+14};
+  function tampilPosisi(K){
+    const u=urutan(),n=u.indexOf(aktif());
+    posisi.textContent=(n>=0?`Tab ${n+1}/${u.length} · `:'')+`bagian ${i+1}/${K.length}`;
+    posisi.classList.add('on');clearTimeout(tunda);tunda=setTimeout(()=>posisi.classList.remove('on'),1800);
+  }
+  function ke(K){
+    const c=K[i];if(!c)return;
+    document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'));
+    c.classList.add('sorot-presentasi');
+    scrollTo({top:Math.max(0,c.getBoundingClientRect().top+scrollY-atas()),behavior:'smooth'});
+    tampilPosisi(K);
+  }
+  function mulaiDariLayar(K){const a=atas();i=Math.max(0,K.findIndex(c=>c.getBoundingClientRect().bottom>a+40));tab=aktif()}
+  function pindahTab(arah){
+    const u=urutan(),n=u.indexOf(aktif());
+    if(n<0||n+arah<0||n+arah>=u.length){scrollTo({top:arah<0?0:document.body.scrollHeight,behavior:'smooth'});return}
+    goTab(u[n+arah]);tab=aktif();
+    requestAnimationFrame(()=>{const K=kartu();i=arah>0?0:K.length-1;ke(K)});
+  }
+  function langkah(arah){
+    const K=kartu();
+    if(!K.length){pindahTab(arah);return}
+    const disorot=tab===aktif()&&K[i]&&K[i].classList.contains('sorot-presentasi');
+    if(!disorot){mulaiDariLayar(K);ke(K);return}
+    const r=K[i].getBoundingClientRect();
+    if(arah>0&&r.bottom>innerHeight+8){scrollBy({top:innerHeight*.75,behavior:'smooth'});return}
+    if(arah<0&&r.top<atas()-8){scrollBy({top:-innerHeight*.75,behavior:'smooth'});return}
+    const j=i+arah;
+    if(j>=0&&j<K.length){i=j;ke(K)}else pindahTab(arah);
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    const maju=e.key==='PageDown'||e.key==='ArrowRight',mundur=e.key==='PageUp'||e.key==='ArrowLeft';
+    if(!maju&&!mundur)return;
+    const el=e.target;
+    if(el.closest&&el.closest('textarea,select,[contenteditable="true"]'))return;
+    if(el.tagName==='INPUT'&&!['range','checkbox','radio','button','submit'].includes(el.type))return;
+    e.preventDefault();e.stopPropagation();
+    if(el.blur&&el!==document.body)el.blur();
+    langkah(maju?1:-1);
+  },true);
+  // tab yang dipilih dengan klik mengulang hitungan dari atas
+  document.addEventListener('click',e=>{if(e.target.closest('nav button,[data-go]')){i=-1;tab=null;document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'))}},true);
+})();
+</script>
 </body>
 </html>
