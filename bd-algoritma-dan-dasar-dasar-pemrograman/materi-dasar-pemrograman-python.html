@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasar Pemrograman Python — Materi Modul 6</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7' fill='%2318181b' stroke='%233f3f46'/%3E%3Cpath d='M8 10l6 6-6 6' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 22h7' stroke='%23e8e8ea' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --int:#ffb000; --float:#29adff; --str:#4ade80; --bool:#ff77a8;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  --int:#b45309; --float:#0369a1; --str:#15803d; --bool:#be185d;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.infobar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.infobar a{color:var(--text)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 12px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card>h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.card p b,.card li b{color:var(--text)}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-size:12.5px;vertical-align:top}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+.wide table{min-width:520px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--code-text)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+textarea{font-family:var(--mono);width:100%;resize:vertical;line-height:1.6}
+button.act,a.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-block}
+button.act:hover,a.act:hover{opacity:.85}
+button.act:disabled{opacity:.35;cursor:default}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+button.sec:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:11px 0}
+.hint{background:color-mix(in srgb,var(--fp) 8%,transparent);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:color-mix(in srgb,var(--tp) 8%,transparent);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.gagal{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+.label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px}
+/* kode bernomor */
+.kode{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:8px 0;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--code-text);overflow-x:auto}
+.kode .ln{display:flex;white-space:pre;padding-right:12px;min-height:1.75em}
+.kode .no{width:34px;text-align:right;padding-right:10px;color:var(--muted);user-select:none;flex:none}
+.kode .ln.jalan{background:color-mix(in srgb,var(--fp) 22%,transparent)}
+.kode .ln.galat{background:color-mix(in srgb,var(--fn) 25%,transparent)}
+.kode .cm{color:var(--muted)}
+.kode .s{color:var(--str)}
+/* layar keluaran: selalu gelap seperti terminal */
+.konsol{background:#0c0c0e;color:#e4e4e7;font-family:var(--mono);font-size:12.5px;line-height:1.6;padding:9px 12px;white-space:pre-wrap;word-break:break-word;margin:0;border:1px solid var(--line);border-radius:6px;min-height:44px}
+.konsol .k{color:#4ade80}
+.konsol .g{color:#f87171}
+.konsol .kosong{color:#71717a;font-style:italic}
+/* kanvas pixel art */
+.layar{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line);background:#1d2b53}
+.layar-wrap{max-width:760px}
+.ikon{image-rendering:pixelated;vertical-align:middle;flex:none}
+/* warna tipe */
+.tp{display:inline-block;font-family:var(--mono);font-size:11.5px;padding:0 6px;border-radius:4px;font-weight:600;white-space:pre-wrap;word-break:break-all}
+.tp.int{color:var(--int);background:color-mix(in srgb,var(--int) 14%,transparent)}
+.tp.float{color:var(--float);background:color-mix(in srgb,var(--float) 14%,transparent)}
+.tp.str{color:var(--str);background:color-mix(in srgb,var(--str) 14%,transparent)}
+.tp.bool{color:var(--bool);background:color-mix(in srgb,var(--bool) 14%,transparent)}
+.tp.lain{color:var(--muted);background:var(--panel2)}
+/* contoh program */
+.contoh{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0;background:var(--panel)}
+.contoh-kepala{display:flex;justify-content:space-between;align-items:center;padding:6px 10px 6px 12px;background:var(--panel2);font-size:12px;color:var(--muted);gap:8px;flex-wrap:wrap}
+.contoh-isi{display:grid;grid-template-columns:3fr 2fr}
+.contoh-isi>*{min-width:0}
+.contoh-isi .kode,.contoh-isi .konsol{border:none;border-radius:0;height:100%}
+.contoh-isi .konsol{border-left:1px solid var(--line)}
+@media(max-width:700px){.contoh-isi{grid-template-columns:1fr}.contoh-isi .konsol{border-left:none;border-top:1px solid var(--line)}}
+.contoh-ketik{font-size:11.5px;color:var(--muted);padding:6px 12px;border-top:1px solid var(--line);background:var(--panel2)}
+/* kartu tipe & peta */
+.kartu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.kartu{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--panel2);display:flex;flex-direction:column;gap:6px}
+.kartu .judul{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px}
+.kartu p{margin:0;font-size:12.5px}
+.kartu .sec{align-self:flex-start;margin-top:auto}
+/* permainan & simulator: jendela bergaya RPG, selalu gelap di kedua tema */
+.game,.sim{--bg:#141a33;--panel:#1c2340;--panel2:#232c52;--line:#4b5aa0;--row:#2b3460;--text:#eef2ff;--muted:#a9b3d6;--accent:#ffffff;--accent-ink:#000;
+  --tp:#55d36b;--fp:#ffc940;--fn:#ff6b6b;--hint-text:#e6eaf8;--code-bg:#10152b;--code-text:#e6eaf8;--hover:#f4f1e6;
+  --int:#ffd34d;--float:#5cc8ff;--str:#7dff8a;--bool:#ff9ccb;
+  color:var(--text);background:#1c2340;border:3px solid #f4f1e6;border-radius:10px;box-shadow:inset 0 0 0 2px #4b5aa0;padding:14px}
+.game .label,.sim .label{color:#c9d2f2}
+.game code,.sim code{background:#2b3460;color:#eef2ff}
+.game .kode .s,.sim .kode .s{color:#7dff8a}
+button.pilih{border-radius:4px;box-shadow:0 3px 0 #0b0f22}
+button.pilih:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.tombol-game{display:grid;gap:8px;margin-top:10px}
+.tombol-game.dua{grid-template-columns:1fr 1fr}
+.tombol-game.tiga{grid-template-columns:repeat(3,1fr)}
+.tombol-game.empat{grid-template-columns:repeat(4,1fr)}
+.tombol-game.lima{grid-template-columns:repeat(5,1fr)}
+@media(max-width:640px){.tombol-game.lima{grid-template-columns:1fr 1fr}.tombol-game.empat{grid-template-columns:1fr 1fr}}
+button.pilih{background:var(--panel);color:var(--text);border:2px solid var(--line);border-radius:7px;padding:10px 8px;cursor:pointer;font-size:13px;font-family:var(--mono);font-weight:600;touch-action:manipulation}
+button.pilih:hover:not(:disabled){border-color:var(--hover)}
+button.pilih:disabled{opacity:.45;cursor:default}
+button.pilih.int{border-color:color-mix(in srgb,var(--int) 60%,transparent);color:var(--int)}
+button.pilih.float{border-color:color-mix(in srgb,var(--float) 60%,transparent);color:var(--float)}
+button.pilih.str{border-color:color-mix(in srgb,var(--str) 60%,transparent);color:var(--str)}
+button.pilih.bool{border-color:color-mix(in srgb,var(--bool) 60%,transparent);color:var(--bool)}
+button.pilih.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 14%,transparent)}
+button.pilih.n{border-color:var(--fn);background:color-mix(in srgb,var(--fn) 14%,transparent)}
+button.pilih small{display:block;font-weight:400;font-size:10.5px;color:var(--muted);font-family:system-ui,sans-serif}
+.pesan-game{min-height:22px;font-size:12.5px;margin-top:8px}
+.skor-terbaik{font-size:12px;color:var(--muted)}
+/* pasangkan */
+.pasang{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pasang>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.pasang button{text-align:left;font-family:var(--mono);font-size:12px;padding:8px 10px;border-radius:6px;border:2px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;white-space:normal;word-break:break-word}
+.pasang button.pil{border-color:var(--fp)}
+.pasang button.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 12%,transparent);cursor:default}
+.pasang button.n{border-color:var(--fn)}
+@media(max-width:640px){.pasang button{font-size:11px;padding:7px}}
+/* simulator */
+
+.sim-alat{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.sim-alat select{max-width:100%}
+.sim-langkah{font-size:12px;color:var(--muted);margin-left:auto}
+.cerita{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:13px;margin-top:12px;min-height:46px}
+.cerita div{margin:3px 0}
+.cerita .galat-c{color:var(--fn)}
+.sim textarea.sim-kode{min-height:180px;font-size:12.5px}
+.sim textarea.sim-ketik{min-height:58px;font-size:12.5px}
+/* anatomi pesan kesalahan */
+.anatomi{font-family:var(--mono);font-size:12.5px;background:#0c0c0e;color:#e4e4e7;border-radius:6px;padding:10px 12px;line-height:1.9;overflow-x:auto;white-space:pre}
+.anatomi .t{border-radius:3px;padding:1px 3px}
+.anatomi .t1{background:#29adff33;outline:1px solid #29adff}
+.anatomi .t2{background:#ffa30033;outline:1px solid #ffa300}
+.anatomi .t3{background:#ff004d33;outline:1px solid #ff004d}
+.anatomi .t4{background:#00e43633;outline:1px solid #00e436}
+.nomor{display:inline-flex;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;align-items:center;justify-content:center;color:#000;margin-right:6px;font-family:system-ui,sans-serif;flex:none}
+/* kuis */
+.soal-kuis{border-top:1px solid var(--row);padding:12px 0}
+.soal-kuis:first-child{border-top:none}
+.soal-kuis .tanya{font-size:13.5px;font-weight:600;margin-bottom:8px}
+.soal-kuis .opsi{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+@media(max-width:640px){.soal-kuis .opsi{grid-template-columns:1fr}}
+.soal-kuis button{text-align:left;font-size:12.5px;padding:8px 10px;border-radius:6px;border:2px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-family:inherit}
+.soal-kuis button.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 12%,transparent)}
+.soal-kuis button.n{border-color:var(--fn);background:color-mix(in srgb,var(--fn) 12%,transparent)}
+.soal-kuis button:disabled{cursor:default}
+.soal-kuis .jelas{font-size:12.5px;color:var(--muted);margin-top:7px}
+.alur{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:10px 0}
+.alur>div{flex:1;min-width:150px;border:1px solid var(--line);border-radius:7px;padding:9px 11px;background:var(--panel2);font-size:12.5px;color:var(--muted)}
+.alur>div b{display:block;color:var(--text);margin-bottom:3px}
+.lanjut{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:6px}
+@media(max-width:640px){
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+  .pasang{gap:6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Algoritma dan Dasar-Dasar Pemrograman</a>
+    <h1>Materi: Dasar Pemrograman Python</h1>
+    <div class="sub">Algoritma dan Dasar-Dasar Pemrograman · Modul 6 · Bahan utama Praktikum Modul 6 — Program Studi Bisnis Digital, Fakultas Ekonomi dan Bisnis, Universitas Pendidikan Nasional</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="sec" id="btn-suara"></button><button class="sec" id="btn-tema"></button></div>
+</header>
+
+<div class="infobar">
+  <span>Halaman materi ini tidak memerlukan NIM. Setelah selesai membaca dan mencoba, kerjakan</span>
+  <a href="dasar-pemrograman-python.html">Praktikum Modul 6 →</a>
+</div>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai</button>
+  <button data-t="b1">1 · Pseudocode ke Python</button>
+  <button data-t="b2">2 · Variabel</button>
+  <button data-t="b3">3 · Tipe Data</button>
+  <button data-t="b4">4 · Operator</button>
+  <button data-t="b5">5 · Masukan &amp; Konversi</button>
+  <button data-t="b6">6 · Keluaran</button>
+  <button data-t="b7">7 · Pesan Kesalahan</button>
+  <button data-t="lab">Lab · Simulator</button>
+  <button data-t="kuis">★ Kuis &amp; Rangkuman</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Materi Modul 6</div>
+    <h2>Dasar Pemrograman Python: Variabel, Tipe Data, dan Masukan-Keluaran</h2>
+    <p>Bahan utama sebelum mengerjakan Praktikum Modul 6. Setiap bab berisi penjelasan singkat, contoh program yang dapat ditelusuri langkah demi langkah, animasi, dan permainan kecil untuk menguji pemahaman.</p>
+  </div>
+  <div class="card">
+    <div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-toko" width="256" height="144" aria-label="Animasi Toko Kopi Nusantara: pelanggan memesan, PAMN menghitung dengan program Python, lalu pelanggan membayar"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Kenalan dengan PAMN</h2>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <img class="ikon" data-ikon="pamnD" data-skala="4" alt="PAMN">
+      <div>
+        <p><b>PAMN</b> adalah robot humanoid dari negeri petualangan kuno yang kini menjaga Toko Kopi Nusantara. Di halaman ini PAMN mewakili Python: ia sangat rajin tetapi sangat harfiah, menjalankan perintah <b>baris demi baris, dari atas ke bawah, persis seperti tertulis</b>. PAMN tidak pernah menebak maksud Anda.</p>
+        <p>Di gudang PAMN, setiap tipe data punya wadahnya sendiri: <b>kepeng emas</b> untuk <code>int</code>, <b>botol ramuan</b> untuk <code>float</code>, <b>gulungan perkamen</b> untuk <code>str</code>, dan <b>lentera</b> untuk <code>bool</code>.</p>
+        <p style="margin:0">Bila perintahnya keliru sedikit saja, misalnya huruf besar yang tertukar atau tanda kutip yang lupa ditutup, PAMN berhenti dan menampilkan pesan kesalahan. Bab 7 mengajarkan cara membaca pesan tersebut.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Peta Materi</h2>
+    <p>Bacalah berurutan. Setiap bab diakhiri permainan atau latihan singkat.</p>
+    <div class="kartu-grid" id="peta"></div>
+  </div>
+  <div class="card">
+    <h2>Cara Memakai Halaman Ini</h2>
+    <ul class="lst">
+      <li><b>Baca penjelasan, lalu perhatikan contoh.</b> Setiap kotak contoh menampilkan kode di kiri dan hasilnya di layar di kanan.</li>
+      <li><b>Tekan "Telusuri di Lab"</b> pada contoh mana pun untuk melihat PAMN menjalankan program itu baris demi baris, lengkap dengan isi setiap variabel.</li>
+      <li><b>Mainkan permainan di akhir bab.</b> Skor terbaik Anda tersimpan di peramban ini.</li>
+      <li><b>Kerjakan kuis</b> pada tab terakhir, lalu lanjutkan ke Praktikum Modul 6.</li>
+      <li><b>Efek suara</b> dapat dimatikan dengan tombol 🔊 di kanan atas halaman.</li>
+    </ul>
+    <div class="hint">Semua contoh berjalan di peramban dengan simulator Python sederhana, tanpa perlu memasang apa pun. Untuk menulis program sungguhan, gunakan Google Colab seperti yang diminta pada praktikum.</div>
+  </div>
+</div>
+
+<!-- ========== BAB 1 ========== -->
+<div class="tab" id="t-b1">
+  <div class="card">
+    <div class="eyebrow">Bab 1</div>
+    <h2>Dari Pseudocode ke Python</h2>
+    <p>Pada Modul 5, algoritma ditulis dalam <i>pseudocode</i>: bahasa yang mudah dibaca manusia, tetapi tidak dapat dijalankan komputer. Agar dapat dijalankan, algoritma ditulis ulang dalam bahasa pemrograman. Mata kuliah ini memakai <b>Python</b>, bahasa yang ringkas, mudah dibaca, dan banyak dipakai di bidang analitik bisnis.</p>
+    <p>Program Python adalah kumpulan perintah. Setiap baris berisi satu perintah, dan Python menjalankannya <b>dari baris pertama sampai baris terakhir</b>.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-terjemah" width="256" height="144" aria-label="Animasi PAMN menerjemahkan baris pseudocode menjadi baris Python"></canvas></div>
+    <div class="contoh" data-contoh="sapa"></div>
+  </div>
+  <div class="card">
+    <h2>Padanan Pseudocode ke Python</h2>
+    <div class="wide"><table>
+      <tr><th>Pseudocode</th><th>Python</th><th>Contoh</th></tr>
+      <tr><td><code>MULAI</code> / <code>SELESAI</code></td><td>Tidak ditulis</td><td>Program berjalan dari baris pertama sampai terakhir</td></tr>
+      <tr><td><code>BACA nama</code></td><td><code>input()</code></td><td><code>nama = input("Nama: ")</code></td></tr>
+      <tr><td><code>TETAPKAN tarif = 11</code></td><td><code>=</code></td><td><code>tarif = 11</code></td></tr>
+      <tr><td><code>HITUNG total = harga * jumlah</code></td><td><code>=</code> dengan operator</td><td><code>total = harga * jumlah</code></td></tr>
+      <tr><td><code>TAMPILKAN total</code></td><td><code>print()</code></td><td><code>print(total)</code></td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Dari Algoritma ke Program</h2>
+    <p>Berikut algoritma menghitung total belanja dalam pseudocode beserta program Python-nya. Bandingkan keduanya baris demi baris.</p>
+<pre>MULAI
+  BACA nama_produk
+  BACA harga
+  BACA jumlah
+  HITUNG total = harga * jumlah
+  TAMPILKAN "Total belanja", nama_produk, ":", total
+SELESAI</pre>
+    <div class="contoh" data-contoh="kasir"></div>
+    <p>Dua hal baru muncul pada program ini: <code>int()</code> dan tanda kutip. Keduanya dibahas pada Bab 3 dan Bab 5.</p>
+  </div>
+  <div class="card">
+    <h2>Aturan Menulis Python</h2>
+    <ul class="lst">
+      <li><b>Huruf besar dan kecil dibedakan.</b> <code>print</code> benar, <code>Print</code> keliru. <code>harga</code> dan <code>Harga</code> adalah dua nama yang berbeda.</li>
+      <li><b>Teks diapit tanda kutip</b>, boleh kutip ganda <code>"Kopi"</code> atau kutip tunggal <code>'Kopi'</code>, asalkan pembuka dan penutupnya sama.</li>
+      <li><b>Kurung dan tanda kutip harus berpasangan.</b> Setiap <code>(</code> harus ditutup <code>)</code>.</li>
+      <li><b>Baris tidak boleh diawali spasi sembarangan.</b> Spasi di awal baris punya arti khusus dalam Python, yang akan dipelajari pada pertemuan percabangan.</li>
+      <li><b>Tanda <code>#</code> memulai komentar</b>: catatan untuk manusia yang diabaikan Python.</li>
+    </ul>
+    <div class="contoh" data-contoh="komentar"></div>
+    <div class="contoh" data-contoh="kapital"></div>
+  </div>
+  <div class="card">
+    <h2>Permainan: Pasangkan Baris</h2>
+    <p>Klik satu baris pseudocode di kiri, lalu klik baris Python padanannya di kanan.</p>
+    <div class="game">
+      <div class="pasang" id="pasang"></div>
+      <div class="pesan-game" id="pasang-pesan"></div>
+      <div class="row" style="margin-bottom:0"><button class="sec" id="pasang-ulang">Acak ulang</button><span class="skor-terbaik" id="pasang-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><span></span><button class="act" data-go="b2">Bab 2 · Variabel →</button></div>
+</div>
+
+<!-- ========== BAB 2 ========== -->
+<div class="tab" id="t-b2">
+  <div class="card">
+    <div class="eyebrow">Bab 2</div>
+    <h2>Variabel: Kotak Berlabel</h2>
+    <p><b>Variabel</b> adalah tempat menyimpan nilai, seperti kotak berlabel di rak gudang. <b>Labelnya adalah nama variabel</b>, <b>isinya adalah nilai</b>. Setiap kali nama itu dipakai, Python mengambil isi kotaknya.</p>
+    <div class="contoh" data-contoh="var"></div>
+  </div>
+  <div class="card">
+    <h2>Makna Tanda =</h2>
+    <p>Dalam Python, tanda <code>=</code> <b>bukan</b> berarti "sama dengan". Tanda <code>=</code> adalah perintah: <b>hitung ruas kanan, lalu masukkan hasilnya ke kotak di ruas kiri</b>. Bacalah <code>total = harga * jumlah</code> sebagai "total diisi dengan harga dikali jumlah".</p>
+    <ul class="lst">
+      <li><b>Ruas kanan dihitung lebih dahulu</b>, baru hasilnya disimpan.</li>
+      <li><b>Satu kotak hanya menyimpan satu nilai.</b> Bila diisi lagi, nilai lama dibuang.</li>
+      <li><b>Variabel menyimpan nilai, bukan rumus.</b> Bila <code>harga</code> berubah, <code>total</code> tidak ikut berubah sampai baris <code>total = …</code> dijalankan lagi.</li>
+    </ul>
+    <p>Telusuri program berikut dengan tombol <b>Langkah ▶</b>. Perhatikan gudang di kanan: PAMN berjalan ke peti yang diisi, mengganti isinya, dan membuang nilai lama.</p>
+    <div class="sim" data-sim="rak,tidak-otomatis,pencacah"></div>
+  </div>
+  <div class="card">
+    <h2>Mengganti Isi Variabel</h2>
+    <div class="contoh" data-contoh="ganti"></div>
+    <div class="contoh" data-contoh="tidak-otomatis"></div>
+    <div class="hint">Pada contoh kedua, <code>total</code> tetap <code>90000</code> meskipun harga sudah diganti menjadi <code>50000</code>. Variabel menyimpan hasil hitungan pada saat baris itu dijalankan.</div>
+  </div>
+  <div class="card">
+    <h2>Pola x = x + 1: Penampung dan Pencacah</h2>
+    <p>Dalam matematika, <code>x = x + 1</code> mustahil. Dalam Python, artinya jelas: ambil isi <code>x</code> sekarang, tambah 1, lalu simpan kembali ke <code>x</code>. Pola ini dipakai untuk menghitung banyaknya sesuatu (pencacah) dan menjumlahkan nilai (penampung) pada Pertemuan 11.</p>
+    <div class="contoh" data-contoh="pencacah"></div>
+    <p>Python juga menyediakan bentuk singkat: <code>stok -= 5</code> sama dengan <code>stok = stok - 5</code>, dan <code>stok += 12</code> sama dengan <code>stok = stok + 12</code>.</p>
+    <div class="contoh" data-contoh="singkat"></div>
+  </div>
+  <div class="card">
+    <h2>Aturan Penamaan Variabel</h2>
+    <div class="wide"><table>
+      <tr><th>Aturan</th><th>Sah</th><th>Tidak sah</th></tr>
+      <tr><td>Hanya huruf, angka, dan garis bawah <code>_</code></td><td><code>harga_satuan</code></td><td><code>harga-satuan</code>, <code>harga%</code></td></tr>
+      <tr><td>Tidak diawali angka</td><td><code>harga2</code></td><td><code>2harga</code></td></tr>
+      <tr><td>Tidak mengandung spasi</td><td><code>total_belanja</code></td><td><code>total belanja</code></td></tr>
+      <tr><td>Bukan kata kunci Python</td><td><code>kelas</code></td><td><code>class</code>, <code>for</code>, <code>True</code></td></tr>
+    </table></div>
+    <h3>Kaidah penamaan yang baik</h3>
+    <ul class="lst">
+      <li><b>Jelaskan isinya:</b> <code>total_belanja</code>, bukan <code>x</code> atau <code>tb</code>.</li>
+      <li><b>Huruf kecil, antarkata dipisah garis bawah</b> (<i>snake_case</i>): <code>harga_satuan</code>, bukan <code>hargaSatuan</code>.</li>
+      <li><b>Jangan memakai nama fungsi bawaan</b> seperti <code>print</code> atau <code>input</code>. Python tidak menolaknya, tetapi setelah ditimpa, fungsinya tidak dapat dipakai lagi.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Permainan: Stempel Label</h2>
+    <p>Label nama variabel datang satu per satu. Stempel <b>SAH</b> atau <b>TIDAK SAH</b> sebelum waktunya habis. Papan ketik: <code>S</code> untuk sah, <code>T</code> untuk tidak sah.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-stempel" width="256" height="144" aria-label="Permainan Stempel Label"></canvas></div>
+      <div class="tombol-game dua">
+        <button class="pilih str" id="stempel-sah">✓ SAH <small>tombol S</small></button>
+        <button class="pilih" id="stempel-tidak" style="color:var(--fn);border-color:color-mix(in srgb,var(--fn) 60%,transparent)">✗ TIDAK SAH <small>tombol T</small></button>
+      </div>
+      <div class="pesan-game" id="stempel-pesan"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="stempel-mulai">Mulai main</button><span class="skor-terbaik" id="stempel-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b1">← Bab 1</button><button class="act" data-go="b3">Bab 3 · Tipe Data →</button></div>
+</div>
+
+<!-- ========== BAB 3 ========== -->
+<div class="tab" id="t-b3">
+  <div class="card">
+    <div class="eyebrow">Bab 3</div>
+    <h2>Empat Tipe Data Dasar</h2>
+    <p>Setiap nilai dalam Python punya <b>tipe</b>. Tipe menentukan apa yang dapat dilakukan terhadap nilai itu: bilangan dapat dihitung, teks dapat disambung. Di halaman ini setiap tipe punya warna dan gambar yang tetap.</p>
+    <div class="kartu-grid" id="kartu-tipe"></div>
+  </div>
+  <div class="card">
+    <h2>Python Menentukan Tipe Secara Otomatis</h2>
+    <p>Anda tidak perlu menyebutkan tipe. Python melihat <b>cara nilai ditulis</b>: tanpa titik berarti <code>int</code>, dengan titik desimal berarti <code>float</code>, diapit tanda kutip berarti <code>str</code>, dan <code>True</code>/<code>False</code> berarti <code>bool</code>. Fungsi <code>type()</code> menunjukkan tipe sebuah nilai.</p>
+    <div class="contoh" data-contoh="tipe"></div>
+    <h3>Tanda kutip mengubah segalanya</h3>
+    <p><code>45000</code> dan <code>"45000"</code> tampak sama, tetapi yang pertama bilangan dan yang kedua teks. Akibatnya berbeda ketika dioperasikan.</p>
+    <div class="contoh" data-contoh="kutip"></div>
+  </div>
+  <div class="card">
+    <h2>Mengapa Nomor Telepon Disimpan sebagai Teks?</h2>
+    <p>Perhatikan apa yang terjadi bila nomor telepon diubah menjadi bilangan dengan <code>int()</code>.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-telepon" width="256" height="144" aria-label="Animasi: int() membuang angka nol di depan nomor telepon"></canvas></div>
+    <div class="contoh" data-contoh="telepon"></div>
+    <p>Bilangan tidak mengenal angka nol di depan, jadi <code>081234567890</code> berubah menjadi <code>81234567890</code>. Menulis <code>081234567890</code> tanpa tanda kutip di dalam kode bahkan ditolak Python dengan <code>SyntaxError</code>.</p>
+    <div class="hint"><b>Uji sederhana:</b> apakah nilai ini akan pernah dijumlahkan, dikurangi, atau dikalikan? Bila tidak, simpan sebagai teks. Nomor telepon, NIM, kode pos, dan nomor rekening tidak pernah dihitung.</div>
+  </div>
+  <div class="card">
+    <h2>Tipe bool dan Perbandingan</h2>
+    <p><code>bool</code> hanya punya dua nilai: <code>True</code> dan <code>False</code>, dengan huruf awal kapital. Nilai <code>bool</code> biasanya lahir dari perbandingan.</p>
+    <div class="wide"><table>
+      <tr><th>Tanda</th><th>Arti</th><th>Contoh</th><th>Hasil</th></tr>
+      <tr><td><code>==</code></td><td>sama dengan</td><td><code>5 == 5</code></td><td><span class="tp bool">True</span></td></tr>
+      <tr><td><code>!=</code></td><td>tidak sama dengan</td><td><code>5 != 5</code></td><td><span class="tp bool">False</span></td></tr>
+      <tr><td><code>&gt;</code> <code>&lt;</code></td><td>lebih dari, kurang dari</td><td><code>150000 &gt; 100000</code></td><td><span class="tp bool">True</span></td></tr>
+      <tr><td><code>&gt;=</code> <code>&lt;=</code></td><td>mulai dari, paling banyak</td><td><code>100000 &gt;= 100000</code></td><td><span class="tp bool">True</span></td></tr>
+    </table></div>
+    <div class="contoh" data-contoh="bool"></div>
+  </div>
+  <div class="card">
+    <h2>Memilih Tipe untuk Data Bisnis</h2>
+    <div class="wide"><table>
+      <tr><th>Data</th><th>Contoh</th><th>Tipe</th><th>Alasan</th></tr>
+      <tr><td>Stok di gudang</td><td>120</td><td><span class="tp int">int</span></td><td>Dihitung per buah, tidak pernah pecahan</td></tr>
+      <tr><td>Harga dalam rupiah</td><td>45000</td><td><span class="tp int">int</span></td><td>Rupiah tidak lazim memakai pecahan</td></tr>
+      <tr><td>Rating produk</td><td>4.5</td><td><span class="tp float">float</span></td><td>Dapat bernilai pecahan</td></tr>
+      <tr><td>Kurs dolar</td><td>15750.25</td><td><span class="tp float">float</span></td><td>Memuat angka di belakang koma</td></tr>
+      <tr><td>Nama toko</td><td>Toko Kopi Nusantara</td><td><span class="tp str">str</span></td><td>Rangkaian karakter</td></tr>
+      <tr><td>Nomor rekening</td><td>0012345678</td><td><span class="tp str">str</span></td><td>Tidak dihitung; angka nol di depan harus tetap ada</td></tr>
+      <tr><td>Status lunas</td><td>ya / tidak</td><td><span class="tp bool">bool</span></td><td>Hanya dua kemungkinan</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Permainan: Gudang Sortir</h2>
+    <p>Peti data berjalan di ban berjalan. Masukkan setiap peti ke tong tipe yang tepat sebelum jatuh dari ujung ban. Papan ketik: <code>1</code> int, <code>2</code> float, <code>3</code> str, <code>4</code> bool.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-gudang" width="256" height="144" aria-label="Permainan Gudang Sortir tipe data"></canvas></div>
+      <div class="tombol-game empat" id="gudang-tombol">
+        <button class="pilih int" data-tipe="int">int <small>tombol 1</small></button>
+        <button class="pilih float" data-tipe="float">float <small>tombol 2</small></button>
+        <button class="pilih str" data-tipe="str">str <small>tombol 3</small></button>
+        <button class="pilih bool" data-tipe="bool">bool <small>tombol 4</small></button>
+      </div>
+      <div class="pesan-game" id="gudang-pesan"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="gudang-mulai">Mulai main</button><span class="skor-terbaik" id="gudang-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b2">← Bab 2</button><button class="act" data-go="b4">Bab 4 · Operator →</button></div>
+</div>
+
+<!-- ========== BAB 4 ========== -->
+<div class="tab" id="t-b4">
+  <div class="card">
+    <div class="eyebrow">Bab 4</div>
+    <h2>Operator Aritmetika</h2>
+    <p>Operator adalah tanda untuk mengolah nilai. Hasil pengolahan disebut <b>ekspresi</b>, dan ekspresi selalu menghasilkan satu nilai.</p>
+    <div class="wide"><table>
+      <tr><th>Operator</th><th>Arti</th><th>Contoh</th><th>Hasil</th></tr>
+      <tr><td><code>+</code></td><td>tambah</td><td><code>17 + 5</code></td><td><span class="tp int">22</span></td></tr>
+      <tr><td><code>-</code></td><td>kurang</td><td><code>17 - 5</code></td><td><span class="tp int">12</span></td></tr>
+      <tr><td><code>*</code></td><td>kali</td><td><code>17 * 5</code></td><td><span class="tp int">85</span></td></tr>
+      <tr><td><code>/</code></td><td>bagi (hasilnya selalu <code>float</code>)</td><td><code>17 / 5</code></td><td><span class="tp float">3.4</span></td></tr>
+      <tr><td><code>//</code></td><td>bagi bulat (sisa dibuang)</td><td><code>17 // 5</code></td><td><span class="tp int">3</span></td></tr>
+      <tr><td><code>%</code></td><td>sisa pembagian</td><td><code>17 % 5</code></td><td><span class="tp int">2</span></td></tr>
+      <tr><td><code>**</code></td><td>pangkat</td><td><code>17 ** 2</code></td><td><span class="tp int">289</span></td></tr>
+    </table></div>
+    <div class="contoh" data-contoh="aritmetika"></div>
+    <div class="hint">Pembagian dengan <code>/</code> <b>selalu</b> menghasilkan <code>float</code>, sekalipun hasilnya bulat: <code>100 / 4</code> menghasilkan <code>25.0</code>, bukan <code>25</code>.</div>
+  </div>
+  <div class="card">
+    <h2>Urutan Pengerjaan</h2>
+    <p>Sama seperti matematika: <b>kurung lebih dahulu</b>, lalu <code>**</code>, lalu <code>*</code> <code>/</code> <code>//</code> <code>%</code>, terakhir <code>+</code> <code>-</code>. Bila ragu, pakailah kurung.</p>
+    <div class="contoh" data-contoh="urutan"></div>
+    <p>Program di atas menghitung harga 3 barang yang masing-masing mendapat potongan 10.000. Tanpa kurung, potongan dikalikan lebih dahulu sehingga hasilnya keliru.</p>
+  </div>
+  <div class="card">
+    <h2>Persen dalam Python</h2>
+    <p>Tanda <code>%</code> dalam Python <b>bukan persen</b>, melainkan sisa pembagian. Untuk menghitung 11% dari suatu nilai, tulis <code>* 11 / 100</code> atau <code>* 0.11</code>.</p>
+    <div class="contoh" data-contoh="persen"></div>
+    <div class="hint">Perhatikan baris ketiga: harga ditambah pajak 11% sekaligus (<code>* 1.11</code>) menghasilkan <code>49950.00000000001</code>, bukan <code>49950.0</code>. Bilangan berkoma disimpan komputer dalam bentuk biner sehingga kadang muncul selisih sangat kecil. Selisih ini wajar; cara merapikan tampilannya dibahas di Bab 6.</div>
+  </div>
+  <div class="card">
+    <h2>Operator pada Teks</h2>
+    <p>Tanda <code>+</code> pada dua teks <b>menyambung</b>, dan tanda <code>*</code> antara teks dan bilangan bulat <b>mengulang</b>. Tanda <code>-</code> dan <code>/</code> tidak berlaku untuk teks.</p>
+    <div class="contoh" data-contoh="teks-op"></div>
+  </div>
+  <div class="card">
+    <h2>Laboratorium Operator</h2>
+    <p>Pilih dua nilai dan satu operator, lalu lihat apa yang terjadi. Perhatikan warna tipe setiap nilai dan hasilnya.</p>
+    <div class="game">
+      <div class="row" style="margin-top:0">
+        <select id="op-kiri"></select>
+        <select id="op-tanda"></select>
+        <select id="op-kanan"></select>
+        <button class="act" id="op-hitung">Hitung</button>
+      </div>
+      <div class="layar-wrap"><canvas class="layar" id="kv-operator" width="256" height="144" aria-label="Animasi dua nilai digabung dengan operator"></canvas></div>
+      <div class="grid2" style="margin-top:10px">
+        <div><div class="label">Kode</div><div class="kode" id="op-kode"></div></div>
+        <div><div class="label">Layar</div><pre class="konsol" id="op-layar"></pre></div>
+      </div>
+      <div class="cerita" id="op-cerita"></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b3">← Bab 3</button><button class="act" data-go="b5">Bab 5 · Masukan &amp; Konversi →</button></div>
+</div>
+
+<!-- ========== BAB 5 ========== -->
+<div class="tab" id="t-b5">
+  <div class="card">
+    <div class="eyebrow">Bab 5</div>
+    <h2>input(): PAMN Bertanya, Pengguna Mengetik</h2>
+    <p><code>input()</code> menampilkan pertanyaan, menunggu pengguna mengetik, lalu mengembalikan ketikan itu. Hasilnya <b>selalu teks (<code>str</code>)</b>, sekalipun yang diketik berupa angka. Inilah sumber kesalahan paling umum bagi pemula.</p>
+    <div class="contoh" data-contoh="input-teks"></div>
+  </div>
+  <div class="card">
+    <h2>Konversi Tipe</h2>
+    <p>Teks hasil <code>input()</code> diubah menjadi bilangan dengan fungsi konversi.</p>
+    <div class="wide"><table>
+      <tr><th>Fungsi</th><th>Mengubah menjadi</th><th>Contoh berhasil</th><th>Contoh gagal</th></tr>
+      <tr><td><code>int()</code></td><td>bilangan bulat</td><td><code>int("45000")</code> → <span class="tp int">45000</span></td><td><code>int("12.5")</code>, <code>int("45.000")</code> → ValueError</td></tr>
+      <tr><td><code>float()</code></td><td>bilangan berkoma</td><td><code>float("12.5")</code> → <span class="tp float">12.5</span></td><td><code>float("12,5")</code> → ValueError</td></tr>
+      <tr><td><code>str()</code></td><td>teks</td><td><code>str(45000)</code> → <span class="tp str">'45000'</span></td><td>Selalu berhasil</td></tr>
+    </table></div>
+    <div class="contoh" data-contoh="konversi"></div>
+    <p>Perhatikan baris terakhir: <code>int(12.9)</code> menghasilkan <code>12</code>. Bagian di belakang koma <b>dibuang</b>, bukan dibulatkan.</p>
+  </div>
+  <div class="card">
+    <h2>Pola Baku: int(input(...))</h2>
+    <p>Bacalah dari dalam ke luar. Ketiga langkah ini terjadi dalam satu baris:</p>
+    <div class="alur">
+      <div><b>① input("Harga: ")</b>Pengguna mengetik 45000. Hasilnya teks <span class="tp str">'45000'</span>.</div>
+      <div><b>② int( … )</b>Teks diubah menjadi bilangan bulat <span class="tp int">45000</span>.</div>
+      <div><b>③ harga = …</b>Bilangan disimpan ke kotak <code>harga</code>.</div>
+    </div>
+    <p>Telusuri program kasir berikut. Ubah juga isi <b>ketikan pengguna</b>, misalnya menjadi <code>12.5</code> atau <code>45.000</code>, lalu jalankan ulang.</p>
+    <div class="sim" data-sim="kasir,lupa-int,koma-desimal,titik-ribuan"></div>
+  </div>
+  <div class="card">
+    <h2>Kapan int(), float(), atau Dibiarkan Teks?</h2>
+    <div class="wide"><table>
+      <tr><th>Data yang diketik</th><th>Konversi</th><th>Alasan</th></tr>
+      <tr><td>Harga, jumlah barang, stok</td><td><code>int(input(...))</code></td><td>Bilangan bulat yang akan dihitung</td></tr>
+      <tr><td>Diskon persen, berat, rating</td><td><code>float(input(...))</code></td><td>Dapat memuat angka di belakang koma</td></tr>
+      <tr><td>Nama, alamat, nomor telepon, kode</td><td><code>input(...)</code> saja</td><td>Teks yang tidak pernah dihitung</td></tr>
+    </table></div>
+    <div class="hint">Python memakai <b>titik</b> sebagai tanda desimal. Bila pengguna mengetik <code>12,5</code> atau <code>45.000</code> (titik ribuan), konversi gagal dengan <code>ValueError</code>.</div>
+  </div>
+  <div class="card">
+    <h2>Permainan: Mesin Konversi</h2>
+    <p>Pengguna mengetik sesuatu. Pilih mesin yang tepat untuk mengolah ketikannya: <code>int()</code>, <code>float()</code>, atau biarkan sebagai teks. Lalu lihat akibatnya ketika nilai itu dipakai.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-mesin" width="256" height="144" aria-label="Permainan Mesin Konversi"></canvas></div>
+      <div class="tombol-game tiga" id="mesin-tombol">
+        <button class="pilih int" data-k="int">int()</button>
+        <button class="pilih float" data-k="float">float()</button>
+        <button class="pilih str" data-k="teks">biarkan teks</button>
+      </div>
+      <div id="mesin-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="mesin-mulai">Mulai main</button><span class="skor-terbaik" id="mesin-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b4">← Bab 4</button><button class="act" data-go="b6">Bab 6 · Keluaran →</button></div>
+</div>
+
+<!-- ========== BAB 6 ========== -->
+<div class="tab" id="t-b6">
+  <div class="card">
+    <div class="eyebrow">Bab 6</div>
+    <h2>print(): Menampilkan ke Layar</h2>
+    <p><code>print()</code> menampilkan nilai ke layar, lalu pindah ke baris baru. Beberapa nilai yang dipisah koma ditampilkan berurutan dengan <b>satu spasi</b> di antaranya.</p>
+    <div class="contoh" data-contoh="print-koma"></div>
+  </div>
+  <div class="card">
+    <h2>Menggabungkan Teks dan Angka</h2>
+    <p>Tanda <code>+</code> tidak dapat menyambung teks dengan bilangan.</p>
+    <div class="contoh" data-contoh="plus-galat"></div>
+    <p>Ada tiga cara yang benar: pisahkan dengan koma, ubah bilangan menjadi teks dengan <code>str()</code>, atau gunakan <i>f-string</i>.</p>
+    <div class="contoh" data-contoh="tiga-cara"></div>
+  </div>
+  <div class="card">
+    <h2>f-string: Teks Berlubang</h2>
+    <p><i>f-string</i> adalah teks yang diawali huruf <code>f</code>. Setiap <code>{ }</code> di dalamnya adalah lubang yang diisi nilai. Di dalam lubang boleh ditulis nama variabel maupun perhitungan.</p>
+    <div class="contoh" data-contoh="fstring"></div>
+    <p>Tanpa huruf <code>f</code>, kurung kurawal dicetak apa adanya. Python tidak menampilkan pesan kesalahan apa pun.</p>
+    <div class="contoh" data-contoh="tanpa-f"></div>
+  </div>
+  <div class="card">
+    <h2>Format Rupiah dan Desimal</h2>
+    <p>Tanda titik dua di dalam lubang mengatur tampilan angka.</p>
+    <div class="wide"><table>
+      <tr><th>Penulisan</th><th>Hasil</th><th>Keterangan</th></tr>
+      <tr><td><code>f"Rp{total}"</code></td><td><code>Rp1250000</code></td><td>Tanpa pemisah ribuan</td></tr>
+      <tr><td><code>f"Rp{total:,}"</code></td><td><code>Rp1,250,000</code></td><td>Pemisah ribuan berupa koma</td></tr>
+      <tr><td><code>f"Rp{total:,}".replace(",", ".")</code></td><td><code>Rp1.250.000</code></td><td>Format Indonesia: koma diganti titik</td></tr>
+      <tr><td><code>f"{nilai:.2f}"</code></td><td><code>85250.50</code></td><td>Dua angka di belakang koma</td></tr>
+      <tr><td><code>f"{nilai:,.0f}"</code></td><td><code>85,250</code></td><td>Pemisah ribuan, tanpa angka desimal</td></tr>
+    </table></div>
+    <div class="contoh" data-contoh="rupiah"></div>
+    <div class="contoh" data-contoh="desimal"></div>
+  </div>
+  <div class="card">
+    <h2>Mesin Struk</h2>
+    <p>Atur pesanan dan pengaturan format, lalu lihat kode serta struk yang dicetak PAMN. Coba matikan huruf <code>f</code> dan perhatikan struknya.</p>
+    <div class="game">
+      <div class="row" style="margin-top:0">
+        <select id="struk-produk"></select>
+        <label style="font-size:12.5px;color:var(--muted)">Harga <input type="number" id="struk-harga" value="45000" min="0" step="500" style="width:110px"></label>
+        <label style="font-size:12.5px;color:var(--muted)">Jumlah <input type="number" id="struk-jumlah" value="2" min="0" max="999" style="width:70px"></label>
+      </div>
+      <div class="row">
+        <label style="font-size:12.5px"><input type="checkbox" id="struk-f" checked> huruf <code>f</code></label>
+        <label style="font-size:12.5px"><input type="checkbox" id="struk-koma" checked> pemisah ribuan <code>:,</code></label>
+        <label style="font-size:12.5px"><input type="checkbox" id="struk-indo" checked> format Indonesia</label>
+        <label style="font-size:12.5px"><input type="checkbox" id="struk-pajak"> pajak 11%</label>
+      </div>
+      <div class="grid2">
+        <div><div class="label">Kode</div><div class="kode" id="struk-kode"></div></div>
+        <div><div class="label">Struk</div><div class="layar-wrap"><canvas class="layar" id="kv-struk" width="256" height="192" aria-label="Animasi printer mencetak struk"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b5">← Bab 5</button><button class="act" data-go="b7">Bab 7 · Pesan Kesalahan →</button></div>
+</div>
+
+<!-- ========== BAB 7 ========== -->
+<div class="tab" id="t-b7">
+  <div class="card">
+    <div class="eyebrow">Bab 7</div>
+    <h2>Membaca Pesan Kesalahan</h2>
+    <p>Pesan kesalahan bukan hukuman, melainkan petunjuk. Python memberi tahu <b>di baris mana</b> ia berhenti dan <b>jenis</b> kesalahannya. Bacalah dari bawah ke atas.</p>
+<div class="anatomi">Traceback (most recent call last):
+  File "main.py", <span class="t t1">line 3</span>, in &lt;module&gt;
+    <span class="t t2">total = harga + ongkir</span>
+<span class="t t3">TypeError</span>: <span class="t t4">unsupported operand type(s) for +: 'int' and 'str'</span></div>
+    <div class="alur">
+      <div><b><span class="nomor" style="background:#ff004d">1</span>Jenis kesalahan</b>Kata di awal baris terakhir. Mulailah membaca dari sini.</div>
+      <div><b><span class="nomor" style="background:#00e436">2</span>Penjelasan</b>Rincian penyebabnya: di sini, bilangan (<code>int</code>) dijumlahkan dengan teks (<code>str</code>).</div>
+      <div><b><span class="nomor" style="background:#29adff">3</span>Nomor baris</b>Baris tempat Python berhenti.</div>
+      <div><b><span class="nomor" style="background:#ffa300">4</span>Isi baris</b>Kode pada baris itu. Penyebabnya bisa di baris ini atau di baris sebelumnya.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Empat Jenis Kesalahan dan Satu yang Tak Terlihat</h2>
+    <div id="daftar-galat"></div>
+  </div>
+  <div class="card">
+    <h2>Langkah Memburu Kesalahan</h2>
+    <ol class="lst">
+      <li><b>Baca baris terakhir pesan</b> untuk mengetahui jenisnya.</li>
+      <li><b>Lihat nomor baris</b>, lalu periksa baris itu dan baris-baris sebelumnya.</li>
+      <li><b>Periksa tipe setiap nilai.</b> Apakah ada hasil <code>input()</code> yang belum dikonversi?</li>
+      <li><b>Bila tidak ada pesan tetapi hasilnya keliru</b>, hitung manual lalu bandingkan dengan keluaran program.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Permainan: Pemburu Bug</h2>
+    <p>Setiap kasus menampilkan program dan layar saat dijalankan. Tentukan jenis kesalahannya untuk menembak bug.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-buru" width="256" height="144" aria-label="Permainan Pemburu Bug"></canvas></div>
+      <div class="grid2" style="margin-top:10px">
+        <div><div class="label">Kode</div><div class="kode" id="buru-kode"></div></div>
+        <div><div class="label">Layar saat dijalankan</div><pre class="konsol" id="buru-layar"></pre></div>
+      </div>
+      <div class="tombol-game lima" id="buru-tombol"></div>
+      <div id="buru-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="buru-mulai">Mulai berburu</button><span class="skor-terbaik" id="buru-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b6">← Bab 6</button><button class="act" data-go="lab">Lab · Simulator →</button></div>
+</div>
+
+<!-- ========== LAB ========== -->
+<div class="tab" id="t-lab">
+  <div class="card">
+    <div class="eyebrow">Laboratorium</div>
+    <h2>Simulator Python Langkah demi Langkah</h2>
+    <p>Pilih contoh atau tulis program sendiri, isi ketikan pengguna, lalu jalankan baris demi baris. Simulator ini mendukung bagian Python yang dipelajari di modul ini: variabel, operator, perbandingan, <code>input()</code>, <code>print()</code>, <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>type()</code>, <code>round()</code>, <code>len()</code>, <i>f-string</i>, dan <code>.replace()</code>.</p>
+    <div class="sim" id="lab-sim" data-sim="*" data-ubah="1"></div>
+    <p style="margin-top:12px">Pesan kesalahan pada simulator ditampilkan ringkas. Jenis dan penjelasannya sama dengan Python, tetapi Python sungguhan kadang menambahkan petunjuk seperti <code>Did you mean</code> atau tanda <code>^</code>. Untuk program di luar cakupan modul ini, gunakan Google Colab.</p>
+  </div>
+</div>
+
+<!-- ========== KUIS ========== -->
+<div class="tab" id="t-kuis">
+  <div class="card">
+    <div class="eyebrow">Rangkuman</div>
+    <h2>Lembar Contekan Modul 6</h2>
+    <div class="kartu-grid">
+      <div class="kartu"><div class="judul">Baris demi baris</div><p>Python menjalankan perintah dari atas ke bawah, persis seperti tertulis. Huruf besar dan kecil dibedakan.</p></div>
+      <div class="kartu"><div class="judul">Tanda =</div><p>Perintah memberi nilai: hitung ruas kanan, simpan ke ruas kiri. <code>x = x + 1</code> berarti tambah isi x dengan 1.</p></div>
+      <div class="kartu"><div class="judul">Nama variabel</div><p>Huruf kecil, angka, garis bawah. Tidak diawali angka, tanpa spasi, bukan kata kunci. Jelaskan isinya.</p></div>
+      <div class="kartu"><div class="judul">Empat tipe</div><p><span class="tp int">int</span> bulat, <span class="tp float">float</span> berkoma, <span class="tp str">str</span> teks berkutip, <span class="tp bool">bool</span> True/False.</p></div>
+      <div class="kartu"><div class="judul">Operator</div><p><code>/</code> selalu float, <code>//</code> bagi bulat, <code>%</code> sisa bagi (bukan persen). <code>+</code> pada teks menyambung.</p></div>
+      <div class="kartu"><div class="judul">input() selalu teks</div><p>Bungkus dengan <code>int()</code> atau <code>float()</code> sebelum dihitung. Nomor telepon dan kode tetap teks.</p></div>
+      <div class="kartu"><div class="judul">print() dan f-string</div><p><code>f"Total: Rp{total:,}"</code> mengisi lubang dengan nilai. Tanpa huruf <code>f</code>, lubang dicetak apa adanya.</p></div>
+      <div class="kartu"><div class="judul">Pesan kesalahan</div><p>Baca dari bawah: jenis, penjelasan, nomor baris. Kesalahan tanpa pesan paling berbahaya: bandingkan dengan hitungan manual.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Kuis Akhir</h2>
+    <p>Sepuluh soal acak. Setiap jawaban langsung diperiksa beserta penjelasannya. Isi kesepuluh permata untuk membuka peti harta PAMN.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-kuis" width="256" height="96" aria-label="Gerbang ujian: permata terisi setiap kali soal dijawab"></canvas></div>
+      <div id="kuis" style="margin-top:6px"></div>
+      <div id="kuis-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="kuis-ulang">Soal baru</button><span class="skor-terbaik" id="kuis-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Langkah Berikutnya</h2>
+    <p>Bila Anda sudah memahami seluruh bab, kerjakan Praktikum Modul 6. Halaman materi ini tetap dapat dibuka sebagai rujukan selama mengerjakan praktikum.</p>
+    <a class="act" href="dasar-pemrograman-python.html">Buka Praktikum Modul 6 →</a>
+  </div>
+</div>
+
+<footer>Materi ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · v1.0</footer>
+</div>
+
+<script>
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const acakSalin=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const lsAmbil=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSimpan=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const GERAK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const jepit=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mulus=t=>{t=jepit(t,0,1);return t*t*(3-2*t)};
+
+/* ============ EFEK SUARA ============ */
+/* Bunyi 8-bit disintesis langsung dengan Web Audio; tidak ada berkas suara yang diunduh */
+const SUARA={aktif:lsAmbil('materi6:suara',true),ctx:null,derau:null};
+function konteksSuara(){
+  if(!SUARA.aktif)return null;
+  try{
+    if(!SUARA.ctx){
+      const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+      SUARA.ctx=new C();
+      const b=SUARA.ctx.createBuffer(1,Math.floor(SUARA.ctx.sampleRate*.5),SUARA.ctx.sampleRate),d=b.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+      SUARA.derau=b;
+    }
+    if(SUARA.ctx.state==='suspended')SUARA.ctx.resume();
+    return SUARA.ctx;
+  }catch(e){return null}
+}
+function nada(f,dur,o={}){
+  const c=konteksSuara();if(!c)return;
+  const t=c.currentTime+(o.tunda||0),gn=c.createGain();
+  gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(o.vol??.06,t+.008);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  gn.connect(c.destination);
+  let src;
+  if(o.jenis==='derau'){src=c.createBufferSource();src.buffer=SUARA.derau;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=f;src.connect(fl);fl.connect(gn)}
+  else{src=c.createOscillator();src.type=o.jenis||'square';src.frequency.setValueAtTime(f,t);if(o.ke)src.frequency.exponentialRampToValueAtTime(o.ke,t+dur);src.connect(gn)}
+  src.start(t);src.stop(t+dur+.03);
+}
+const BUNYI={
+  klik:()=>nada(880,.04,{vol:.03}),
+  langkah:()=>nada(520,.07,{jenis:'triangle',vol:.09,ke:660}),
+  simpan:()=>{nada(440,.05,{jenis:'triangle',vol:.09});nada(880,.09,{jenis:'triangle',vol:.09,tunda:.05})},
+  cetak:()=>{nada(1200,.03,{vol:.03});nada(1500,.03,{vol:.03,tunda:.05});nada(1200,.03,{vol:.03,tunda:.1})},
+  benar:()=>{nada(660,.07,{vol:.05});nada(880,.07,{vol:.05,tunda:.07});nada(1320,.14,{vol:.05,tunda:.14})},
+  salah:()=>nada(200,.28,{jenis:'sawtooth',vol:.05,ke:90}),
+  galat:()=>{nada(160,.12,{vol:.06});nada(120,.25,{vol:.06,tunda:.12,ke:70})},
+  koin:()=>{nada(988,.06,{vol:.05});nada(1319,.16,{vol:.05,tunda:.06})},
+  lempar:()=>nada(260,.25,{jenis:'triangle',vol:.07,ke:900}),
+  stempel:()=>{nada(500,.12,{jenis:'derau',vol:.25});nada(110,.12,{jenis:'sine',vol:.2,ke:50})},
+  jatuh:()=>nada(700,.4,{vol:.04,ke:80}),
+  mesin:()=>{for(let i=0;i<6;i++)nada(110+(i%2)*35,.1,{jenis:'sawtooth',vol:.035,tunda:i*.1})},
+  tembak:()=>nada(1600,.2,{vol:.045,ke:180}),
+  ledak:()=>nada(1200,.5,{jenis:'derau',vol:.3}),
+  hehe:()=>{nada(900,.07,{vol:.04});nada(700,.07,{vol:.04,tunda:.1});nada(900,.07,{vol:.04,tunda:.2})},
+  menang:()=>[523,659,784,1047].forEach((f,i)=>nada(f,i===3?.3:.1,{vol:.05,tunda:i*.1})),
+  kalah:()=>[392,330,262].forEach((f,i)=>nada(f,.2,{jenis:'triangle',vol:.08,tunda:i*.17})),
+  selesai:()=>{nada(784,.08,{jenis:'triangle',vol:.08});nada(1047,.16,{jenis:'triangle',vol:.08,tunda:.08})}
+};
+function bunyi(n){try{if(SUARA.aktif&&BUNYI[n])BUNYI[n]()}catch(e){}}
+
+/* ============ PIXEL ART ============ */
+/* Palet 16 warna; sprite ditulis sebagai larik string, satu karakter = satu piksel, '.' = transparan */
+const PAL=['#000000','#1d2b53','#7e2553','#008751','#ab5236','#5f574f','#c2c3c7','#fff1e8','#ff004d','#ffa300','#ffec27','#00e436','#29adff','#83769c','#ff77a8','#ffccaa'];
+const WARNA_TIPE={int:10,float:12,str:11,bool:14};
+const FONT='Consolas,Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace';
+const warna=c=>typeof c==='number'?PAL[c]:c;
+function siapLayar(c){const g=c.getContext('2d');g.imageSmoothingEnabled=false;return g}
+function kotak(g,x,y,w,h,c){g.fillStyle=warna(c);g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function bingkai(g,x,y,w,h,c){kotak(g,x,y,w,1,c);kotak(g,x,y+h-1,w,1,c);kotak(g,x,y,1,h,c);kotak(g,x+w-1,y,1,h,c)}
+function panel(g,x,y,w,h,isi,tepi){kotak(g,x+1,y,w-2,h,isi);kotak(g,x,y+1,w,h-2,isi);if(tepi!=null){kotak(g,x+1,y,w-2,1,tepi);kotak(g,x+1,y+h-1,w-2,1,tepi);kotak(g,x,y+1,1,h-2,tepi);kotak(g,x+w-1,y+1,1,h-2,tepi)}}
+
+const SPRITE={
+  pito:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoA:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','5....55....5','555555555555','.5cccccccc5.','.5ca9cc9ac5.','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoK:['.....88.....','.....55.....','..55555555..','.5666666665.','.5666666665.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  orang:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','..1..1..','..1..1..','.00..00.'],
+  orang2:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','.1....1.','.1....1.','00....00'],
+  koin:['..9999..','.9aaaa9.','9aa77aa9','9a7aaaa9','9aaaaaa9','9aaaaaa9','.9aaaa9.','..9999..'],
+  gelas:['6......6','6......6','6......6','6cccccc6','6cccccc6','6c7cccc6','6cccccc6','6cccccc6','.6cccc6.','..6666..'],
+  lampu:['..aaaa..','.aa77aa.','aa7aaaaa','aaaaaaaa','aaaaaaaa','.aaaaaa.','..6666..','..5555..','..6666..','...55...'],
+  lampuMati:['..dddd..','.dd66dd.','dd6ddddd','dddddddd','dddddddd','.dddddd.','..6666..','..5555..','..6666..','...55...'],
+  tag:['..bbbbbbbb','.bb3b3bbbb','bbb3b3bbbb','bbbbbbbbbb','bb7777777b','bbbbbbbbbb','.bbbbbbbbb','..bbbbbbbb'],
+  hati:['.88.88.','8888888','8888888','.88888.','..888..','...8...'],
+  hatiK:['.55.55.','5555555','5555555','.55555.','..555..','...5...'],
+  kumbang:['..5........5..','...5......5...','....XXXXXX....','..XXXXXXXXXX..','.XX77XXXX77XX.','.XX70XXXX70XX.','XXXXXXXXXXXXXX','XYYYYYYYYYYYYX','XYYXYYXXYYXYYX','.XYYYYYYYYYYX.','..XXXXXXXXXX..','.5..5....5..5.'],
+  hantu:['...777777...','..77777777..','.7777777777.','.7700770077.','.7700770077.','.7777777777.','.7777887777.','.7777777777.','.7777777777.','.7777777777.','.77.7777.77.','.7...77...7.'],
+  piala:['aaaaaaaaaaaa','a.a7aaaaaa.a','a.a7aaaaaa.a','.aa7aaaaaaa.','..aaaaaaaa..','...aaaaaa...','....aaaa....','.....99.....','.....99.....','...999999...','..44444444..','..44444444..'],
+  peti:['44444444','49999994','49444494','49499494','49499494','49444494','49999994','44444444'],
+  printer:['..777777..','..700007..','5555555555','566666b665','5666666665','5555555555','..777777..','..777777..'],
+  papanKetik:['5555555555','5767676765','5676767675','5767676765','5677777765','5555555555'],
+  roda:['...66...','.6.66.6.','..6666..','666..666','666..666','..6666..','.6.66.6.','...66...'],
+  tambah:['...aa...','...aa...','...aa...','aaaaaaaa','aaaaaaaa','...aa...','...aa...','...aa...'],
+  labu:['..6666..','...66...','...66...','..6bb6..','.6bbbb6.','6bb7bbb6','6bbbbbb6','6bbbbbb6','.666666.']
+};
+const _spr=new Map();
+function gambarSprite(nama,k,balik,ganti){
+  const key=nama+'|'+k+'|'+(balik?1:0)+'|'+(ganti?JSON.stringify(ganti):'');
+  let c=_spr.get(key);if(c)return c;
+  const S=barisSprite(nama),pal=Array.isArray(SPRITE[nama])?null:SPRITE[nama].p,w=S[0].length,h=S.length;
+  c=document.createElement('canvas');c.width=w*k;c.height=h*k;const q=c.getContext('2d');
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const ch=S[y][x];if(ch==='.')continue;
+    const col=ganti&&ganti[ch]!=null?ganti[ch]:pal?pal[ch]:ch==='X'?6:ch==='Y'?5:parseInt(ch,16);
+    if(col==null)continue;
+    q.fillStyle=warna(col);q.fillRect((balik?w-1-x:x)*k,y*k,k,k);
+  }
+  _spr.set(key,c);return c;
+}
+function spr(g,nama,x,y,k=1,o={}){
+  const c=gambarSprite(nama,k,o.balik,o.ganti);
+  if(o.alpha!=null)g.globalAlpha=o.alpha;
+  g.drawImage(c,Math.round(x),Math.round(y));
+  g.globalAlpha=1;return c;
+}
+const barisSprite=nama=>{const S=SPRITE[nama];return Array.isArray(S)?S:S.d};
+const ukuranSprite=nama=>({w:barisSprite(nama)[0].length,h:barisSprite(nama).length});
+function ikonURL(nama,k=3,ganti){return gambarSprite(nama,k,false,ganti).toDataURL()}
+
+/* ============ PAMN & DUNIA RPG ============ */
+/* Sprite berpalet sendiri: {p: warna per karakter, d: baris piksel} */
+const PAL_PAMN={o:'#1b1b2f',k:'#4a4f63',g:'#ffc940',G:'#d18b1c',h:'#e6eef5',m:'#b3c2d1',n:'#7a8aa0',v:'#23304a',e:'#6ff7ff',E:'#ffffff',b:'#f0b067',c:'#c97a36',d:'#8a4a1e',s:'#3fd1b9',t:'#1f8f80',l:'#6b4426',L:'#4a2c16'};
+const PAL_ORANG={o:'#2a1a14',H:'#7a4a24',S:'#f5c9a0',e:'#ff8fb1',E:'#d9607f',b:'#4a6fd1',B:'#2f4aa0',L:'#3a2a20'};
+Object.assign(SPRITE,{
+  pamnD:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnK:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohvvvvvvvvmo..','..ohveevveevmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnA:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','.kohhhhhhhmmmok.','.kkommmmmmmnokk.','.bc.okkkkkko.cd.','.bcossssssttocd.','.obbbsssstttcdo.','..obbbbeecccco..','..obbbbeecccdo..','..obbbbccccddo..','...obbccccddo...','...oddddddddo...','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnS1:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','...okco.ocko....','..okco...ocko...','.olllo...olllo..','oLlllo..olllLo..','oooooo..oooooo..']},
+  pamnS2:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','.....okco.......','.....okco.......','....olllo.......','....olllLo......','....oooooo......']},
+  warga1:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','...obbobBo......','..obbo.obBo.....','.obbo...obBo....','.oLLo...oLLLo...','.oooo...ooooo...']},
+  warga2:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','....obbbbBo.....','....obbbBo......','.....obBo.......','....oLLLo.......','....ooooo.......']},
+  wargaB:{p:PAL_ORANG,d:['......oooo......','....oHHHHHHo....','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','....oHHHHHHo....','.....oSSSSo.....','....oeeeeeeo....','...oeeeeeeeeo...','..oSeeeeeeeeSo..','..oSeEEEEEEeSo..','...oEEEEEEEEo...','....obbbbbbo....','....obbbbbBo....','....obboobBo....','....obboobBo....','....oLLooLLo....','....oLLooLLo....','....oooooooo....']},
+  kepeng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0'},d:['..oooo..','.owyyyo.','owyooyYo','oyo..oYo','oyo..oYo','oyYooYYo','.oYYYYo.','..oooo..']},
+  ramuan:{p:{o:'#1b1b2f',k:'#b07a3e',K:'#7a4a1f',g:'#d8f0ff',b:'#29adff',B:'#1a6fd1',w:'#ffffff'},d:['..okko..','..oKKo..','..ogBo..','.oggbbo.','ogwbbbBo','obwbbbBo','obbbbbBo','obbbbBBo','.oBBBBo.','..oooo..']},
+  gulungan:{p:{o:'#5a3a1a',P:'#c9b27a',p:'#f1e3b5',l:'#8a6a3a',g:'#2fbf4f',G:'#1a8a35'},d:['.oooooooo.','oPppggppPo','oPlpgGplPo','oPppgGppPo','oPlpgGplPo','oPppggppPo','.oooooooo.']},
+  lentera:{p:{o:'#2a1a0a',m:'#8a5a2b',M:'#b07a3e',g:'#ffd0e4',f:'#ff77a8',F:'#ffffff'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  lenteraMati:{p:{o:'#2a1a0a',m:'#6b4a2a',M:'#8a6a4a',g:'#5f6070',f:'#3c3d4a',F:'#4a4b58'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  hatiG:{p:{o:'#5a0a1a',w:'#ffd0d0',r:'#e83a3a',R:'#a01c2c'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']},
+  hatiGK:{p:{o:'#3a2a3a',w:'#5a4a5a',r:'#4a3a4a',R:'#3a2a3a'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']}
+});
+const ikonTipe=v=>v.t==='int'?'kepeng':v.t==='float'?'ramuan':v.t==='str'?'gulungan':v.t==='bool'?(v.v?'lentera':'lenteraMati'):null;
+const TEKS_TIPE={int:'#ffd34d',float:'#5cc8ff',str:'#7dff8a',bool:'#ff9ccb'};
+const POSE_PAMN={diam:'pamnD',kedip:'pamnK',sorak:'pamnA',samping1:'pamnS1',samping2:'pamnS2'};
+/* PAMN digambar dengan titik tengah x dan telapak kaki y */
+function pamn(g,cx,kaki,pose='diam',o={}){
+  const nama=POSE_PAMN[pose]||'pamnD',k=o.skala||1,{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-6*k,kaki-1*k,12*k,2*k,0);kotak(g,cx-4*k,kaki-2*k,8*k,4*k,0);g.globalAlpha=1;
+  spr(g,nama,cx-w*k/2,kaki-h*k,k,{balik:o.balik,ganti:o.ganti,alpha:o.alpha});
+}
+function warga(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2,kaki-h,1,{balik:o.balik});
+}
+
+
+/* Teks: font piksel "Kepeng" buatan sendiri (huruf kapital 7 piksel, lebar proporsional),
+   digambar pada kisi piksel yang sama dengan sprite agar menyatu dengan gaya gim */
+const GLIF={"A":[5,0,[".###.","#...#","#...#","#####","#...#","#...#","#...#"]],"B":[5,0,["####.","#...#","#...#","####.","#...#","#...#","####."]],"C":[5,0,[".###.","#...#","#....","#....","#....","#...#",".###."]],"D":[5,0,["####.","#...#","#...#","#...#","#...#","#...#","####."]],"E":[5,0,["#####","#....","#....","####.","#....","#....","#####"]],"F":[5,0,["#####","#....","#....","####.","#....","#....","#...."]],"G":[5,0,[".###.","#...#","#....","#.###","#...#","#...#",".####"]],"H":[5,0,["#...#","#...#","#...#","#####","#...#","#...#","#...#"]],"I":[3,0,["###",".#.",".#.",".#.",".#.",".#.","###"]],"J":[5,0,["..###","...#.","...#.","...#.","#..#.","#..#.",".##.."]],"K":[5,0,["#...#","#..#.","#.#..","##...","#.#..","#..#.","#...#"]],"L":[5,0,["#....","#....","#....","#....","#....","#....","#####"]],"M":[5,0,["#...#","##.##","#.#.#","#.#.#","#...#","#...#","#...#"]],"N":[5,0,["#...#","##..#","#.#.#","#..##","#...#","#...#","#...#"]],"O":[5,0,[".###.","#...#","#...#","#...#","#...#","#...#",".###."]],"P":[5,0,["####.","#...#","#...#","####.","#....","#....","#...."]],"Q":[5,0,[".###.","#...#","#...#","#...#","#.#.#","#..#.",".##.#"]],"R":[5,0,["####.","#...#","#...#","####.","#.#..","#..#.","#...#"]],"S":[5,0,[".####","#....","#....",".###.","....#","....#","####."]],"T":[5,0,["#####","..#..","..#..","..#..","..#..","..#..","..#.."]],"U":[5,0,["#...#","#...#","#...#","#...#","#...#","#...#",".###."]],"V":[5,0,["#...#","#...#","#...#","#...#","#...#",".#.#.","..#.."]],"W":[5,0,["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"]],"X":[5,0,["#...#","#...#",".#.#.","..#..",".#.#.","#...#","#...#"]],"Y":[5,0,["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."]],"Z":[5,0,["#####","....#","...#.","..#..",".#...","#....","#####"]],"0":[5,0,[".###.","#...#","#..##","#.#.#","##..#","#...#",".###."]],"1":[5,0,["..#..",".##..","..#..","..#..","..#..","..#..",".###."]],"2":[5,0,[".###.","#...#","....#","...#.","..#..",".#...","#####"]],"3":[5,0,["####.","....#","....#",".###.","....#","....#","####."]],"4":[5,0,["...#.","..##.",".#.#.","#..#.","#####","...#.","...#."]],"5":[5,0,["#####","#....","####.","....#","....#","#...#",".###."]],"6":[5,0,["..##.",".#...","#....","####.","#...#","#...#",".###."]],"7":[5,0,["#####","....#","...#.","..#..",".#...",".#...",".#..."]],"8":[5,0,[".###.","#...#","#...#",".###.","#...#","#...#",".###."]],"9":[5,0,[".###.","#...#","#...#",".####","....#","...#.",".##.."]],"a":[5,2,[".###.","....#",".####","#...#",".####"]],"b":[5,0,["#....","#....","####.","#...#","#...#","#...#","####."]],"c":[4,2,[".###","#...","#...","#...",".###"]],"d":[5,0,["....#","....#",".####","#...#","#...#","#...#",".####"]],"e":[5,2,[".###.","#...#","#####","#....",".###."]],"f":[4,0,["..##",".#..","####",".#..",".#..",".#..",".#.."]],"g":[5,2,[".####","#...#","#...#","#...#",".####","....#",".###."]],"h":[5,0,["#....","#....","#.##.","##..#","#...#","#...#","#...#"]],"i":[1,0,["#",".","#","#","#","#","#"]],"j":[3,0,["..#","...","..#","..#","..#","..#","..#","#.#",".#."]],"k":[4,0,["#...","#...","#..#","#.#.","##..","#.#.","#..#"]],"l":[2,0,["#.","#.","#.","#.","#.","#.",".#"]],"m":[5,2,["##.#.","#.#.#","#.#.#","#.#.#","#.#.#"]],"n":[5,2,["#.##.","##..#","#...#","#...#","#...#"]],"o":[5,2,[".###.","#...#","#...#","#...#",".###."]],"p":[5,2,["####.","#...#","#...#","#...#","####.","#....","#...."]],"q":[5,2,[".####","#...#","#...#","#...#",".####","....#","....#"]],"r":[4,2,["#.##","##..","#...","#...","#..."]],"s":[5,2,[".####","#....",".###.","....#","####."]],"t":[4,0,[".#..",".#..","####",".#..",".#..",".#..","..##"]],"u":[5,2,["#...#","#...#","#...#","#..##",".##.#"]],"v":[5,2,["#...#","#...#","#...#",".#.#.","..#.."]],"w":[5,2,["#...#","#...#","#.#.#","#.#.#",".#.#."]],"x":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"y":[5,2,["#...#","#...#","#...#","#...#",".####","....#",".###."]],"z":[5,2,["#####","...#.","..#..",".#...","#####"]]," ":[3,0,[]],"!":[1,0,["#","#","#","#","#",".","#"]],"\"":[3,0,["#.#","#.#"]],"#":[5,1,[".#.#.","#####",".#.#.","#####",".#.#."]],"$":[5,0,["..#..",".####","#.#..",".###.","..#.#","####.","..#.."]],"%":[5,0,["##...","##..#","...#.","..#..",".#...","#..##","...##"]],"&":[5,0,[".##..","#..#.","#.#..",".#...","#.#.#","#..#.",".##.#"]],"'":[1,0,["#","#"]],"(":[2,0,[".#","#.","#.","#.","#.","#.",".#"]],")":[2,0,["#.",".#",".#",".#",".#",".#","#."]],"*":[5,1,["..#..","#.#.#",".###.","#.#.#","..#.."]],"+":[5,1,["..#..","..#..","#####","..#..","..#.."]],",":[2,5,[".#",".#","#."]],"-":[4,3,["####"]],".":[1,6,["#"]],"/":[5,0,["....#","...#.","...#.","..#..",".#...",".#...","#...."]],":":[1,2,["#",".",".",".","#"]],";":[2,2,[".#","..","..",".#",".#","#."]],"<":[3,1,["..#",".#.","#..",".#.","..#"]],"=":[4,2,["####","....","####"]],">":[3,1,["#..",".#.","..#",".#.","#.."]],"?":[5,0,[".###.","#...#","....#","...#.","..#..",".....","..#.."]],"@":[5,0,[".###.","#...#","#.###","#.#.#","#.###","#....",".###."]],"[":[3,0,["###","#..","#..","#..","#..","#..","###"]],"\\":[5,0,["#....",".#...",".#...","..#..","...#.","...#.","....#"]],"]":[3,0,["###","..#","..#","..#","..#","..#","###"]],"^":[5,0,["..#..",".#.#.","#...#"]],"_":[5,7,["#####"]],"`":[2,0,["#.",".#"]],"{":[4,0,["..##",".#..",".#..","#...",".#..",".#..","..##"]],"|":[1,0,["#","#","#","#","#","#","#","#"]],"}":[4,0,["##..","..#.","..#.","...#","..#.","..#.","##.."]],"~":[5,2,[".#...","#.#.#","...#."]],"▶":[4,1,["#...","##..","###.","##..","#..."]],"▼":[5,2,["#####",".###.","..#.."]],"✓":[5,2,["....#","...#.","#.#..",".#..."]],"✗":[5,1,["#...#",".#.#.","..#..",".#.#.","#...#"]],"×":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"…":[5,6,["#.#.#"]],"→":[5,2,["...#.","#####","...#."]],"←":[5,2,[".#...","#####",".#..."]],"·":[1,3,["#"]],"°":[3,0,[".#.","#.#",".#."]]};
+const _glif=new Map();
+const skalaTeks=uk=>Math.max(1,Math.round(uk/10));
+function kanvasGlif(ch,col,tebal){
+  const key=ch+'|'+col+'|'+(tebal?1:0);let c=_glif.get(key);if(c)return c;
+  const [w,y0,rows]=GLIF[ch]||GLIF['?'];
+  c=document.createElement('canvas');c.width=Math.max(1,w+(tebal?1:0));c.height=10;const q=c.getContext('2d');q.fillStyle=warna(col);
+  rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='#'){q.fillRect(x,y0+y,1,1);if(tebal&&r[x+2]!=='#')q.fillRect(x+1,y0+y,1,1)}});
+  _glif.set(key,c);return c;
+}
+const lebarGlif=(ch,tebal,mono)=>mono?6:(GLIF[ch]||GLIF['?'])[0]+1+(tebal?1:0);
+function lebarTeks(s,uk=10,tebal,mono){
+  let w=0;for(const ch of String(s))w+=lebarGlif(ch,tebal,mono);
+  return Math.max(0,w-1)*skalaTeks(uk)+2;
+}
+function tulis(g,s,x,y,col=7,o={}){
+  s=String(s);if(!s)return 0;
+  const uk=(o.uk||10)*(o.skala||1),k=skalaTeks(uk),w=lebarTeks(s,uk,o.tebal,o.mono);
+  let xx=x+1;if(o.rata==='tengah')xx=x-w/2+1;else if(o.rata==='kanan')xx=x-w+1;
+  xx=Math.round(xx);const yy=Math.round(y)+1;
+  const lapis=o.bayang!=null?[[o.bayang,k],[col,0]]:[[col,0]];
+  for(const [c,d] of lapis){
+    let cx=xx;
+    for(const ch of s){
+      const [gw]=GLIF[ch]||GLIF['?'];
+      if(ch!==' '){const im=kanvasGlif(ch,warna(c),o.tebal),ox=o.mono?Math.floor((5-gw)/2)*k:0;g.drawImage(im,cx+ox+d,yy+d,im.width*k,im.height*k)}
+      cx+=lebarGlif(ch,o.tebal,o.mono)*k;
+    }
+  }
+  return w;
+}
+function potong(s,maks,uk=10){s=String(s);if(lebarTeks(s,uk)<=maks)return s;while(s.length>1&&lebarTeks(s+'…',uk)>maks)s=s.slice(0,-1);return s+'…'}
+
+/* Token nilai berwarna sesuai tipe (koin, gelas, tag teks, lampu) */
+function tokenNilai(g,v,cx,cy,o={}){
+  const teks=potong(pyRepr(v),o.maks||110),wt=lebarTeks(teks),ik=ikonTipe(v);
+  const iw=ik?ukuranSprite(ik).w:0,w=wt+iw+(ik?12:8),h=16,x=cx-w/2,y=cy-h/2;
+  const c=TEKS_TIPE[v.t]||'#e6eef5';
+  panel(g,x,y,w,h,'#1c2340',c);
+  if(ik)spr(g,ik,x+4,Math.round(cy-ukuranSprite(ik).h/2));
+  tulis(g,teks,x+(ik?iw+8:4),y+2,c);
+  return w;
+}
+
+
+/* ============ LATAR GAYA RPG GBA ============ */
+const GB={rumput:'#6cc04a',rumputT:'#8ad65a',rumputG:'#4a9a3a',rumputGG:'#357a2c',tanah:'#d9b26b',tanahG:'#b8894a',tanahT:'#ecd08e',
+  jerami:'#e8b84a',jeramiG:'#c08a2a',jeramiT:'#f7d982',jeramiGG:'#8f5f1a',dinding:'#e8dcc0',dindingG:'#c4b392',batu:'#9a8c70',
+  kayu:'#b07a3e',kayuG:'#7f5428',kayuT:'#d29a55',kayuGG:'#4a2c16',daun:'#2f8a35',daunT:'#55b84f',daunG:'#1d5a22',ceri:'#d23c3c',
+  tenda:'#2bb3a3',tendaG:'#1f8f80',putih:'#f4f1e6',lantai:'#c08b4f',lantaiG:'#946433',lantaiT:'#d7a56a',kertas:'#f1e3b5',kertasG:'#b49a62',garis:'#1b1b2f'};
+function acakTetap(benih){let s=benih>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+function latar(w,h,lukis){const c=document.createElement('canvas');c.width=w;c.height=h;lukis(c.getContext('2d'));return c}
+function bulat(q,cx,cy,r,col){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y)+.35);kotak(q,cx-w,cy+y,2*w+1,1,col)}}
+function lukisRumput(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.rumput);
+  for(let i=0;i<w*h/22;i++){
+    const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h),r=a();
+    if(r<.5){kotak(q,px,py+1,1,1,GB.rumputG);kotak(q,px+1,py,1,1,GB.rumputG);kotak(q,px+2,py+1,1,1,GB.rumputG)}
+    else if(r<.8)kotak(q,px,py,1,1,GB.rumputT);
+    else if(r<.86)kotak(q,px,py,2,1,GB.rumputGG);
+  }
+}
+function lukisJalan(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.tanah);
+  for(let i=0;i<w*h/14;i++){const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h);kotak(q,px,py,1,1,a()<.6?GB.tanahG:GB.tanahT)}
+}
+function bunga(q,x,y,c){kotak(q,x,y-1,1,1,c);kotak(q,x-1,y,3,1,c);kotak(q,x,y+1,1,1,c);kotak(q,x,y,1,1,'#ffe066')}
+function semak(q,x,y,r,buah){
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-1,y-1,r-2,GB.daunT);
+  kotak(q,x-r+2,y-1,1,1,GB.daunG);kotak(q,x+1,y+2,1,1,GB.daunG);
+  if(buah)for(const [dx,dy] of [[-2,1],[2,-1],[0,3],[3,2]])kotak(q,x+dx,y+dy,1,1,GB.ceri);
+}
+function pohon(q,x,y,r){
+  kotak(q,x-3,y+r-2,6,10,GB.kayuG);kotak(q,x-3,y+r-2,2,10,GB.kayu);
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-3,y-3,r-4,GB.daunT);
+  const a=acakTetap(x*7+y);for(let i=0;i<r*3;i++){const px=x+Math.floor((a()-.5)*r*1.6),py=y+Math.floor((a()-.5)*r*1.6);kotak(q,px,py,2,1,GB.daunG)}
+}
+function lukisPondok(q,x,y,w){
+  const ha=34,hd=24;
+  kotak(q,x+4,y+ha,w-8,hd,GB.dinding);
+  const a=acakTetap(11);
+  for(let i=0;i<26;i++)kotak(q,x+6+Math.floor(a()*(w-14)),y+ha+3+Math.floor(a()*(hd-8)),4,2,GB.dindingG);
+  kotak(q,x+4,y+ha+hd-3,w-8,3,GB.batu);bingkai(q,x+3,y+ha,w-6,hd+1,GB.garis);
+  for(let r=0;r<ha;r++){const t=Math.max(0,5-r);kotak(q,x+t,y+r,w-2*t,1,GB.jerami)}
+  for(let b=1;b<ha-3;b+=5)for(let i=x+3+((b/5|0)%2)*2;i<x+w-3;i+=4){kotak(q,i,y+b,1,3,GB.jeramiG);kotak(q,i+1,y+b-1,1,1,GB.jeramiT)}
+  kotak(q,x,y+ha-3,w,3,GB.jeramiGG);kotak(q,x+5,y,w-10,1,GB.garis);
+  for(let r=0;r<6;r++){kotak(q,x+5-r,y+r,1,1,GB.garis);kotak(q,x+w-6+r,y+r,1,1,GB.garis)}
+  kotak(q,x,y+5,1,ha-5,GB.garis);kotak(q,x+w-1,y+5,1,ha-5,GB.garis);kotak(q,x,y+ha,w,1,GB.garis);
+  const dx=x+48;kotak(q,dx,y+ha+6,16,hd-6,GB.kayuG);kotak(q,dx+2,y+ha+8,12,hd-8,GB.kayu);kotak(q,dx+7,y+ha+8,1,hd-8,GB.kayuG);
+  kotak(q,dx+2,y+ha+5,12,2,GB.kayuGG);kotak(q,dx+10,y+ha+15,2,2,'#ffd34d');bingkai(q,dx-1,y+ha+5,18,hd-4,GB.garis);
+  kotak(q,x+78,y+ha+5,16,11,GB.garis);kotak(q,x+79,y+ha+6,14,9,'#7ec8e3');kotak(q,x+85,y+ha+6,1,9,GB.garis);kotak(q,x+79,y+ha+10,14,1,GB.garis);kotak(q,x+80,y+ha+7,3,2,'#d8f4ff');
+  kotak(q,x+10,y+ha+6,32,12,GB.kayuGG);kotak(q,x+11,y+ha+7,30,10,GB.kayuT);kotak(q,x+11,y+ha+15,30,2,GB.kayu);
+}
+function lukisPeti(q,x,y){kotak(q,x,y,14,12,GB.kayuGG);kotak(q,x+1,y+1,12,10,GB.kayu);kotak(q,x+1,y+1,12,3,'#5a3418');for(let i=0;i<5;i++)kotak(q,x+2+i*2,y+2,1,1,'#2a1a10');kotak(q,x+1,y+6,12,1,GB.kayuG)}
+function kotakDialog(g,x,y,w,h,nama,baris,u){
+  bingkaiRPG(g,x,y,w,h);
+  if(nama){const tw=lebarTeks(nama,8,true)+10;panel(g,x+8,y-9,tw,12,GB.tenda,GB.putih);tulis(g,nama,x+13,y-8,'#ffffff',{uk:8,tebal:true,bayang:GB.tendaG})}
+  let sisa=GERAK?Math.floor(u*45):1e9;
+  baris.forEach((b,i)=>{const t=b.slice(0,Math.max(0,sisa));sisa-=b.length;tulis(g,t,x+9,y+5+i*12,'#ffffff',{bayang:'#0b0f22'})});
+  if(sisa>4&&Math.floor(u*3)%2===0){const ax=x+w-12,ay=y+h-9;kotak(g,ax,ay,5,1,'#ffffff');kotak(g,ax+1,ay+1,3,1,'#ffffff');kotak(g,ax+2,ay+2,1,1,'#ffffff')}
+}
+function hatiHUD(g,x,y,isi,maks=3){for(let i=0;i<maks;i++)spr(g,i<isi?'hatiG':'hatiGK',x+i*9,y)}
+
+Object.assign(SPRITE,{
+  bugG:{p:{o:'#1b1b2f',k:'#3a2a3a',e:'#ffffff',p:'#1b1b2f',X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'},d:['...k........k...','....k......k....','....oooooooo....','...oZZXXXXYYo...','..oZeeXXXXeeYo..','..oZepXXXXpeYo..','..oXXXXXXXXXXo..','.ooXYYXXXXYYXoo.','okoXXXXXXXXXXoko','..oXYYXXXXYYXo..','okoXXXXXXXXXXoko','..ooXXXXXXXXoo..','.k..oooooooo..k.','k..............k']},
+  hantuG:{p:{o:'#3a3f5a',w:'#eef2ff',s:'#b8c0e0',p:'#1b1b2f',r:'#ff8fb1'},d:['....oooooo....','..oowwwwwwoo..','.owwwwwwwwwwo.','.owwppwwppwwo.','owwwppwwppwwwo','owwwwwwwwwwwwo','owwwwwrrwwwwwo','owwwwwwwwwwwwo','owswwwwwwwwswo','owswwwwwwwwswo','owwwwwwwwwwwwo','owwoowwwwoowwo','owo..owwo..owo','.o....oo....o.']},
+  petiKayu:{p:{o:'#4a2c16',L:'#d29a55',K:'#b07a3e',d:'#7f5428',m:'#b3c2d1'},d:['oooooooooooo','oLLLLLLLLLLo','oKKKKKKKKKKo','oooooooooooo','oKmKKKKKKmKo','oKmKKKKKKmKo','oKKKKKKKKKKo','oKmKKKKKKmKo','oddddddddddo','oooooooooooo']},
+  kuali:{p:{o:'#1b1b2f',b:'#bfffd0',g:'#7dff8a',a:'#5c6178',i:'#3a3f5a',I:'#7a8aa0'},d:['....b...b...','..oooooooo..','.oggggggggo.','oaaaaaaaaaao','oiiiiiiiiiio','oiIiiiiiiiio','oiIiiiiiiiio','.oiiiiiiiio.','..oooooooo..','..o......o..','.oo......oo.']},
+  struk:{p:{o:'#8a6a3a',w:'#fff8e8',l:'#8a8fa3'},d:['oooooooo','owwwwwwo','owllllwo','owwwwwwo','owlllwwo','owwwwwwo','owllllwo','owwwwwwo','owlwllwo','owwwwwwo','oo.oo.oo']},
+  pialaG:{p:{o:'#7a4a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',b:'#8a5a2b'},d:['..oooooooo..','ooowyyyyYooo','o.owyyyyYo.o','o.oyyyyyYo.o','oo.oyyyYo.oo','...oyyyYo...','....oyYo....','.....oo.....','.....yY.....','...oooooo...','...obbbbo...','...oooooo...']}
+});
+
+/* ============ PUSTAKA ADEGAN RPG ============ */
+const BT={batu:'#7d7f8f',batuT:'#9a9cab',batuG:'#5c5e6e',nat:'#3e4050',dinding:'#4b4e63',dindingT:'#666a82',dindingG:'#343648'};
+function lukisLantaiKayu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.lantai);
+  for(let yy=y;yy<y+h;yy+=8){kotak(q,x,yy,w,1,GB.lantaiG);kotak(q,x,yy+1,w,1,GB.lantaiT);for(let xx=x+((yy-y)/8%2)*24+Math.floor(a()*10);xx<x+w;xx+=48)kotak(q,xx,yy,1,8,GB.lantaiG)}
+  for(let i=0;i<w*h/600;i++)kotak(q,x+Math.floor(a()*w),y+Math.floor(a()*h),2,1,GB.lantaiG);
+}
+function lukisDindingKayu(q,x,y,w,h){
+  kotak(q,x,y,w,h,'#7a4a24');
+  for(let xx=x;xx<x+w;xx+=10){kotak(q,xx,y,1,h,'#4a2c16');kotak(q,xx+1,y,1,h,'#9a6234')}
+  kotak(q,x,y+h-3,w,3,'#4a2c16');kotak(q,x,y+h-3,w,1,'#9a6234');
+}
+function lukisLantaiBatu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,BT.nat);
+  for(let yy=y;yy<y+h;yy+=12){const off=((yy-y)/12%2)*8;for(let xx=x-off;xx<x+w;xx+=16){
+    kotak(q,xx+1,yy+1,15,11,BT.batu);kotak(q,xx+1,yy+1,15,1,BT.batuT);kotak(q,xx+1,yy+1,1,11,BT.batuT);kotak(q,xx+2,yy+11,14,1,BT.batuG);
+    if(a()<.35)kotak(q,xx+4+Math.floor(a()*8),yy+4+Math.floor(a()*5),2,1,BT.batuG);
+  }}
+}
+function lukisDindingBatu(q,x,y,w,h){
+  kotak(q,x,y,w,h,BT.dindingG);
+  for(let yy=y;yy<y+h;yy+=8){const off=((yy-y)/8%2)*6;for(let xx=x-off;xx<x+w;xx+=12){kotak(q,xx+1,yy+1,11,6,BT.dinding);kotak(q,xx+1,yy+1,11,1,BT.dindingT)}}
+  kotak(q,x,y+h-2,w,2,'#24263a');
+}
+function obor(g,x,y,t){
+  kotak(g,x-1,y+4,3,8,GB.kayuGG);kotak(g,x-3,y+2,7,3,'#5c6178');kotak(g,x-3,y+2,7,1,'#9aa7b8');
+  const f=GERAK?Math.floor(t*10)%3:0;
+  g.globalAlpha=.13;bulat(g,x,y-3,13+f,'#ffb84d');g.globalAlpha=1;
+  kotak(g,x-2,y-3+(f===1?1:0),5,5,'#ff7a1c');kotak(g,x-1,y-6+(f===2?1:0),3,5,'#ffd34d');kotak(g,x,y-7+f,1,2,'#fff7b0');
+}
+function gigi(g,cx,cy,r,sudut){
+  for(let i=0;i<8;i++){const a=sudut+i*Math.PI/4;kotak(g,Math.round(cx+Math.cos(a)*(r+1))-1,Math.round(cy+Math.sin(a)*(r+1))-1,3,3,'#6a4210')}
+  bulat(g,cx,cy,r,'#6a4210');bulat(g,cx,cy,r-1,'#e0a040');bulat(g,cx-1,cy-1,Math.max(1,r-3),'#f6c870');bulat(g,cx,cy,1,'#5a3a10');
+}
+function mesinKuningan(g,x,y,w,h,label,o={}){
+  const X=Math.round(x+(o.goy||0));
+  g.globalAlpha=.25;kotak(g,X+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,X,y,w,h,GB.kayuGG);kotak(g,X+1,y+1,w-2,h-2,'#8a5a2b');kotak(g,X+1,y+1,w-2,3,'#b07a3e');
+  kotak(g,X+3,y+5,w-6,h-10,'#c98a3a');kotak(g,X+3,y+5,w-6,1,'#f0c070');bingkai(g,X+3,y+5,w-6,h-10,'#5a3a10');
+  for(const [rx,ry] of [[X+5,y+7],[X+w-6,y+7],[X+5,y+h-7],[X+w-6,y+h-7]])kotak(g,rx,ry,1,1,'#fff3b0');
+  const pw=Math.max(30,lebarTeks(label,10,true)+8);panel(g,Math.round(X+w/2-pw/2),y+8,pw,13,GB.kertas,'#5a3a10');tulis(g,label,X+w/2,y+9,'#3a2410',{rata:'tengah',tebal:true});
+  gigi(g,X+Math.round(w/2)-10,y+h-17,5,o.sudut||0);gigi(g,X+Math.round(w/2)+10,y+h-17,5,-(o.sudut||0));
+  if(o.lampu)kotak(g,X+w-10,y+h-10,3,3,o.lampu);
+  kotak(g,X+3,y+h,4,2,GB.kayuGG);kotak(g,X+w-7,y+h,4,2,GB.kayuGG);
+}
+const WARNA_PETI={int:['#e0a020','#ffd34d','#8a5a10'],float:['#2a7fd8','#5cc8ff','#1a3f8a'],str:['#2f9e44','#7dff8a','#1a5a2a'],bool:['#d9558f','#ff9ccb','#8a2a55']};
+function petiHarta(g,x,y,w,h,tipe,o={}){
+  const [m,t,d]=WARNA_PETI[tipe],lh=14;
+  g.globalAlpha=.25;kotak(g,x+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,x,y,w,h,GB.garis);
+  kotak(g,x+1,y+1,w-2,lh-1,m);kotak(g,x+1,y+1,w-2,2,t);kotak(g,x+1,y+lh-2,w-2,1,d);
+  kotak(g,x+1,y+lh,w-2,h-lh-1,d);kotak(g,x+2,y+lh+1,w-4,h-lh-3,m);kotak(g,x+1,y+lh,w-2,1,GB.garis);
+  for(const bx of [x+4,x+w-7]){kotak(g,bx,y+lh+1,3,h-lh-2,'#ffd34d');kotak(g,bx+2,y+lh+1,1,h-lh-2,'#c09020')}
+  kotak(g,Math.round(x+w/2-3),y+lh-3,6,7,'#ffd34d');kotak(g,Math.round(x+w/2-1),y+lh,2,2,GB.garis);
+  if(o.kilau){bingkai(g,x-1,y-1,w+2,h+2,'#fff7b0');bingkai(g,x-2,y-2,w+4,h+4,t)}
+}
+function kuali(g,cx,cy,t,cair,o={}){
+  const goy=o.goy||0,X=cx+goy;
+  if(GERAK)for(let i=0;i<5;i++){const f=Math.floor(t*12+i*2)%3;kotak(g,X-12+i*5,cy+26-f,3,4+f,f===0?'#ffd34d':'#ff7a1c')}
+  kotak(g,X-15,cy+22,4,6,GB.garis);kotak(g,X+11,cy+22,4,6,GB.garis);
+  bulat(g,X,cy+10,17,GB.garis);bulat(g,X,cy+10,16,'#3a3f5a');bulat(g,X-5,cy+5,7,'#4b5068');
+  kotak(g,X-19,cy-3,38,6,GB.garis);kotak(g,X-18,cy-2,36,4,'#5c6178');kotak(g,X-18,cy-2,36,1,'#9aa7b8');
+  kotak(g,X-16,cy-5,32,3,cair);kotak(g,X-12,cy-6,24,1,cair);
+  if(GERAK)for(let i=0;i<3;i++){const ph=(t*1.4+i/3)%1;kotak(g,X-8+i*8,cy-6-ph*10,2,2,o.gelembung||'#ffffff')}
+  if(o.rune){panel(g,X-9,cy+7,18,14,'#2b2f3a','#ffd34d');tulis(g,o.rune,X,cy+9,o.runeWarna||'#ffd34d',{rata:'tengah',tebal:true})}
+}
+function bingkaiRPG(g,x,y,w,h){
+  kotak(g,x+1,y,w-2,h,GB.putih);kotak(g,x,y+1,w,h-2,GB.putih);
+  kotak(g,x+2,y+2,w-4,h-4,'#1c2340');bingkai(g,x+3,y+3,w-6,h-6,'#4b5aa0');
+}
+function asap(g,x,y,u,n=8){for(let k=0;k<n;k++){const a=k*Math.PI*2/n+u,r=4+u*26;g.globalAlpha=Math.max(0,1-u);kotak(g,x+Math.cos(a)*r-2,y+Math.sin(a)*r*.6-2-u*10,4,4,k%2?'#d0d0d8':'#a8a8b4');g.globalAlpha=1}}
+function letup(g,x,y,u,warnaP){for(let k=0;k<10;k++){const a=k*Math.PI/5,r=u*30;kotak(g,x+Math.cos(a)*r-1,y+Math.sin(a)*r-1,3,3,k%2?warnaP:'#fff7b0')}}
+
+
+/* ============ PENJADWAL ANIMASI ============ */
+const ADEGAN=[];
+const amati=new IntersectionObserver(es=>{for(const e of es){const a=ADEGAN.find(x=>x.c===e.target);if(a)a.lihat=e.isIntersecting}});
+function aturSkala(a){
+  const dpr=window.devicePixelRatio||1,cw=a.c.clientWidth;
+  const S=cw?jepit(Math.ceil(cw*dpr/a.W),2,6):Math.max(a.S,3);
+  if(S!==a.S){a.S=S;a.c.width=a.W*S;a.c.height=a.H*S}
+  a.g.setTransform(S,0,0,S,0,0);a.g.imageSmoothingEnabled=false;
+}
+function adegan(kanvas,gambar){const a={c:kanvas,g:kanvas.getContext('2d'),W:kanvas.width,H:kanvas.height,S:0,gambar,lihat:false,akhir:0,paksa:true};ADEGAN.push(a);amati.observe(kanvas);return a}
+function putar(ms){
+  const t=ms/1000;
+  for(const a of ADEGAN){
+    if(!a.lihat&&!a.paksa)continue;
+    if(!a.paksa&&t-a.akhir<1/30)continue;
+    const dt=a.akhir?Math.min(.1,t-a.akhir):0;a.akhir=t;a.paksa=false;
+    aturSkala(a);a.gambar(a.g,t,dt);
+  }
+  requestAnimationFrame(putar);
+}
+
+/* ============ PAMN: PENAFSIR PYTHON MINI ============ */
+class Galat{constructor(jenis,pesan,baris){this.jenis=jenis;this.pesan=pesan;this.baris=baris}}
+const KATA_KUNCI='False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield'.split(' ');
+const BAWAAN=['print','input','int','float','str','type','round','len','abs'];
+const nI=v=>({t:'int',v}),nF=v=>({t:'float',v}),nS=v=>({t:'str',v}),nB=v=>({t:'bool',v}),NONE={t:'NoneType',v:null};
+
+function reprStr(s){const q=s.includes("'")&&!s.includes('"')?'"':"'";return q+s.replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/\t/g,'\\t').split(q).join('\\'+q)+q}
+function strFloat(x){
+  if(Number.isNaN(x))return 'nan';if(!isFinite(x))return x>0?'inf':'-inf';
+  const a=Math.abs(x);
+  if(Number.isInteger(x)&&a<1e16)return x.toFixed(1);
+  let s=(a>=1e16||(a<1e-4&&a>0))?x.toExponential():String(x);
+  return s.replace(/e([+-])(\d)$/,'e$10$2');
+}
+function pyStr(v){switch(v.t){case 'int':return String(v.v);case 'float':return strFloat(v.v);case 'str':return v.v;case 'bool':return v.v?'True':'False';case 'NoneType':return 'None';case 'type':return `<class '${v.v}'>`;case 'fungsi':return `<built-in function ${v.v}>`;case 'metode':return `<built-in method ${v.n} of str object>`}return '?'}
+const pyRepr=v=>v.t==='str'?reprStr(v.v):pyStr(v);
+const KELAS_TIPE=['int','float','str','bool'];
+function chip(v,maks=60){let s=pyRepr(v);if(s.length>maks)s=s.slice(0,maks)+'…';return `<span class="tp ${KELAS_TIPE.includes(v.t)?v.t:'lain'}">${esc(s)}</span>`}
+
+function bacaTeks(src,i,ln,f){
+  const q=src[i];let j=i+1,s='';
+  while(j<src.length){
+    const c=src[j];
+    if(c==='\\'&&j+1<src.length){const d=src[j+1];s+={n:'\n',t:'\t','\\':'\\',"'":"'",'"':'"'}[d]??c+d;j+=2;continue}
+    if(c===q)return {v:s,j:j+1};
+    s+=c;j++;
+  }
+  throw new Galat('SyntaxError',`unterminated ${f?'f-string':'string'} literal (detected at line ${ln})`,ln);
+}
+function token(src,ln){
+  const tk=[];let i=0,m;
+  while(i<src.length){
+    const c=src[i],r=src.slice(i);
+    if(c===' '||c==='\t'){i++;continue}
+    if(c==='#')break;
+    if((c==='f'||c==='F')&&(src[i+1]==='"'||src[i+1]==="'")){const t=bacaTeks(src,i+1,ln,true);tk.push({k:'fstr',v:t.v,i});i=t.j;continue}
+    if(c==='"'||c==="'"){const t=bacaTeks(src,i,ln,false);tk.push({k:'str',v:t.v,i});i=t.j;continue}
+    if((m=r.match(/^(\d[\d_]*(\.\d*)?|\.\d+)([eE][+-]?\d+)?/))){
+      const s=m[0],nx=src[i+s.length];
+      if(nx&&/[A-Za-z_]/.test(nx))throw new Galat('SyntaxError','invalid decimal literal',ln);
+      if(/^0\d/.test(s)&&!/[.eE]/.test(s)&&/[1-9]/.test(s))throw new Galat('SyntaxError','leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers',ln);
+      tk.push({k:'num',v:s,i});i+=s.length;continue;
+    }
+    if((m=r.match(/^[A-Za-z_]\w*/))){tk.push({k:'nama',v:m[0],i});i+=m[0].length;continue}
+    if((m=r.match(/^(\*\*=|\/\/=|\*\*|\/\/|==|!=|<=|>=|\+=|-=|\*=|\/=|%=|[-+*\/%(),.:=<>\[\]{}])/))){tk.push({k:'op',v:m[0],i});i+=m[0].length;continue}
+    const kode=c.codePointAt(0);
+    if(kode>127)throw new Galat('SyntaxError',`invalid character '${c}' (U+${kode.toString(16).toUpperCase().padStart(4,'0')})`,ln);
+    throw new Galat('SyntaxError','invalid syntax',ln);
+  }
+  return tk;
+}
+function cekKurung(tk,ln){
+  const st=[],pas={')':'(',']':'[','}':'{'};
+  for(const t of tk){
+    if(t.k!=='op')continue;
+    if('([{'.includes(t.v))st.push(t);
+    else if(')]}'.includes(t.v)){
+      const o=st.pop();
+      if(!o)throw new Galat('SyntaxError',`unmatched '${t.v}'`,ln);
+      if(o.v!==pas[t.v])throw new Galat('SyntaxError',`closing parenthesis '${t.v}' does not match opening parenthesis '${o.v}'`,ln);
+    }
+  }
+  if(st.length)throw new Galat('SyntaxError',`'${st[0].v}' was never closed`,ln);
+}
+const OPS_SAMA=['=','+=','-=','*=','/=','//=','%=','**='],OPS_BANDING=['==','!=','<','>','<=','>='];
+function urai(tk,ln,src){
+  let p=0;
+  const lihat=(o=0)=>tk[p+o],maju=()=>tk[p++];
+  const op=v=>tk[p]&&tk[p].k==='op'&&tk[p].v===v;
+  const salah=(m='invalid syntax')=>{throw new Galat('SyntaxError',m,ln)};
+  function ekspr(){
+    let a=jumlah();
+    if(tk[p]&&tk[p].k==='op'&&OPS_BANDING.includes(tk[p].v)){const o=maju().v;a={k:'band',op:o,a,b:jumlah()};if(tk[p]&&tk[p].k==='op'&&OPS_BANDING.includes(tk[p].v))salah()}
+    return a;
+  }
+  function jumlah(){let a=kali();while(op('+')||op('-')){const o=maju().v;a={k:'bin',op:o,a,b:kali()}}return a}
+  function kali(){let a=unar();while(op('*')||op('/')||op('//')||op('%')){const o=maju().v;a={k:'bin',op:o,a,b:unar()}}return a}
+  function unar(){if(op('-')||op('+')){const o=maju().v;return {k:'un',op:o,a:unar()}}return pangkat()}
+  function pangkat(){const a=akhiran();if(op('**')){maju();return {k:'bin',op:'**',a,b:unar()}}return a}
+  function akhiran(){
+    let a=atom();
+    for(;;){
+      if(op('(')){maju();a={k:'panggil',f:a,...argumen()}}
+      else if(op('.')){maju();const n=maju();if(!n||n.k!=='nama')salah();a={k:'atribut',obj:a,n:n.v}}
+      else break;
+    }
+    return a;
+  }
+  function argumen(){
+    const args=[],kw={};
+    if(op(')')){maju();return {args,kw}}
+    for(;;){
+      if(lihat()&&lihat().k==='nama'&&lihat(1)&&lihat(1).k==='op'&&lihat(1).v==='='){const n=maju().v;maju();kw[n]=ekspr()}
+      else{if(Object.keys(kw).length)salah('positional argument follows keyword argument');args.push(ekspr())}
+      if(op(',')){maju();if(op(')')){maju();break}continue}
+      if(op(')')){maju();break}
+      salah(lihat()?'invalid syntax. Perhaps you forgot a comma?':'invalid syntax');
+    }
+    return {args,kw};
+  }
+  function atom(){
+    const t=maju();if(!t)salah();
+    if(t.k==='num'){const s=t.v.replace(/_/g,'');return {k:'lit',v:/[.eE]/.test(s)?nF(parseFloat(s)):nI(parseInt(s,10))}}
+    if(t.k==='str'){let s=t.v;while(tk[p]&&tk[p].k==='str')s+=maju().v;return {k:'lit',v:nS(s)}}
+    if(t.k==='fstr')return uraiF(t.v,ln);
+    if(t.k==='nama'){
+      if(t.v==='True')return {k:'lit',v:nB(true)};
+      if(t.v==='False')return {k:'lit',v:nB(false)};
+      if(t.v==='None')return {k:'lit',v:NONE};
+      if(KATA_KUNCI.includes(t.v))salah();
+      return {k:'nama',n:t.v};
+    }
+    if(t.k==='op'&&t.v==='('){const e=ekspr();if(!op(')'))salah();maju();return e}
+    salah();
+  }
+  if(!tk.length)return null;
+  let d=0,pos=-1;
+  for(let i=0;i<tk.length;i++){
+    const t=tk[i];if(t.k!=='op')continue;
+    if('([{'.includes(t.v))d++;else if(')]}'.includes(t.v))d--;
+    else if(d===0&&OPS_SAMA.includes(t.v)){pos=i;break}
+  }
+  if(pos>=0){
+    const kiri=tk.slice(0,pos),opS=tk[pos].v;
+    if(kiri.length!==1||kiri[0].k!=='nama'){
+      if(kiri.length===1&&(kiri[0].k==='num'||kiri[0].k==='str'))salah("cannot assign to literal here. Maybe you meant '==' instead of '='?");
+      if(kiri.length>1&&kiri.every(t=>t.k==='nama'||(t.k==='op'&&'+-*/%'.includes(t.v)))&&kiri.some(t=>t.k==='op'))salah("cannot assign to expression here. Maybe you meant '==' instead of '='?");
+      salah();
+    }
+    const n=kiri[0].v;
+    if(['True','False','None'].includes(n))salah(`cannot assign to ${n}`);
+    if(KATA_KUNCI.includes(n))salah();
+    p=pos+1;if(p>=tk.length)salah();
+    const e=ekspr();if(p<tk.length)salah();
+    return {k:'tetap',n,op:opS,e,ln,src};
+  }
+  const e=ekspr();if(p<tk.length)salah();
+  return {k:'ekspr',e,ln,src};
+}
+function uraiF(s,ln){
+  const bag=[];let i=0,lit='';
+  while(i<s.length){
+    const c=s[i];
+    if(c==='{'){
+      if(s[i+1]==='{'){lit+='{';i+=2;continue}
+      if(lit){bag.push(lit);lit=''}
+      let d=0,j=i+1,q=null,titik=-1;
+      for(;j<s.length;j++){
+        const ch=s[j];
+        if(q){if(ch===q)q=null;continue}
+        if(ch==='"'||ch==="'"){q=ch;continue}
+        if(ch==='('||ch==='[')d++;else if(ch===')'||ch===']')d--;
+        else if(ch==='}'&&d===0)break;
+        else if(ch===':'&&d===0&&titik<0)titik=j;
+      }
+      if(j>=s.length)throw new Galat('SyntaxError',"f-string: expecting '}'",ln);
+      const isi=s.slice(i+1,titik>=0?titik:j),spec=titik>=0?s.slice(titik+1,j):'';
+      if(!isi.trim())throw new Galat('SyntaxError',"f-string: valid expression required before '}'",ln);
+      const tk=token(isi,ln);cekKurung(tk,ln);const st=urai(tk,ln,isi);
+      if(!st||st.k!=='ekspr')throw new Galat('SyntaxError','f-string: invalid syntax',ln);
+      bag.push({e:st.e,spec});i=j+1;continue;
+    }
+    if(c==='}'){if(s[i+1]==='}'){lit+='}';i+=2;continue}throw new Galat('SyntaxError',"f-string: single '}' is not allowed",ln)}
+    lit+=c;i++;
+  }
+  if(lit)bag.push(lit);
+  return {k:'fstr',bag};
+}
+
+const kelompok=s=>{const neg=s.startsWith('-'),d=neg?s.slice(1):s;return (neg?'-':'')+d.replace(/\B(?=(\d{3})+(?!\d))/g,',')};
+function formatSpec(v,spec){
+  if(spec==='')return pyStr(v);
+  const m=spec.match(/^(,)?(?:\.(\d+))?([dfs%])?$/);
+  if(!m)throw new Galat('ValueError',`Invalid format specifier '${spec}' for object of type '${v.t}'`);
+  const [,koma,pres,kode]=m;
+  if(v.t==='str'){
+    if(koma)throw new Galat('ValueError',"Cannot specify ',' with 's'.");
+    if(kode&&kode!=='s')throw new Galat('ValueError',`Unknown format code '${kode}' for object of type 'str'`);
+    return pres!=null?v.v.slice(0,+pres):v.v;
+  }
+  if(!['int','float','bool'].includes(v.t))throw new Galat('TypeError',`unsupported format string passed to ${v.t}.__format__`);
+  if(kode==='s')throw new Galat('ValueError',`Unknown format code 's' for object of type '${v.t}'`);
+  const x=+v.v;
+  if(kode==='d'){
+    if(v.t==='float')throw new Galat('ValueError',"Unknown format code 'd' for object of type 'float'");
+    if(pres!=null)throw new Galat('ValueError','Precision not allowed in integer format specifier');
+    return koma?kelompok(String(x)):String(x);
+  }
+  if(kode==='f'||kode==='%'){
+    let s=(kode==='%'?x*100:x).toFixed(pres!=null?+pres:6);
+    if(koma){const [a,b]=s.split('.');s=kelompok(a)+(b!=null?'.'+b:'')}
+    return s+(kode==='%'?'%':'');
+  }
+  if(pres!=null){let s=v.t==='float'?String(Number(x.toPrecision(Math.max(1,+pres)))):String(x);if(koma){const [a,b]=s.split('.');s=kelompok(a)+(b!=null?'.'+b:'')}return s}
+  const s=v.t==='float'?strFloat(x):String(x),[a,b]=s.split('.');
+  return kelompok(a)+(b!=null?'.'+b:'');
+}
+
+const angkaT=x=>x.t==='int'||x.t==='float'||x.t==='bool';
+function hitungBin(op,a,b){
+  if(angkaT(a)&&angkaT(b)){
+    const x=+a.v,y=+b.v,flt=a.t==='float'||b.t==='float',H=r=>flt?nF(r):nI(r);
+    switch(op){
+      case '+':return H(x+y);
+      case '-':return H(x-y);
+      case '*':return H(x*y);
+      case '/':if(y===0)throw new Galat('ZeroDivisionError',flt?'float division by zero':'division by zero');return nF(x/y);
+      case '//':if(y===0)throw new Galat('ZeroDivisionError',flt?'float floor division by zero':'integer division or modulo by zero');return H(Math.floor(x/y));
+      case '%':if(y===0)throw new Galat('ZeroDivisionError',flt?'float modulo by zero':'integer modulo by zero');return H(x-Math.floor(x/y)*y);
+      case '**':return (!flt&&y<0)?nF(x**y):H(x**y);
+    }
+  }
+  if(a.t==='str'&&b.t==='str'){
+    if(op==='+')return nS(a.v+b.v);
+    if(op==='*')throw new Galat('TypeError',"can't multiply sequence by non-int of type 'str'");
+    if(op==='%')throw new Galat('TypeError','not all arguments converted during string formatting');
+  }
+  if(op==='*'&&a.t==='str'&&(b.t==='int'||b.t==='bool'))return nS(a.v.repeat(Math.max(0,Math.min(+b.v,100000))));
+  if(op==='*'&&b.t==='str'&&(a.t==='int'||a.t==='bool'))return nS(b.v.repeat(Math.max(0,Math.min(+a.v,100000))));
+  if(op==='*'&&(a.t==='str'||b.t==='str')){const o=a.t==='str'?b:a;throw new Galat('TypeError',`can't multiply sequence by non-int of type '${o.t}'`)}
+  if(op==='+'&&a.t==='str')throw new Galat('TypeError',`can only concatenate str (not "${b.t}") to str`);
+  if(op==='%'&&a.t==='str')throw new Galat('TypeError','not all arguments converted during string formatting');
+  if(op==='**')throw new Galat('TypeError',`unsupported operand type(s) for ** or pow(): '${a.t}' and '${b.t}'`);
+  throw new Galat('TypeError',`unsupported operand type(s) for ${op}: '${a.t}' and '${b.t}'`);
+}
+function bandingkan(op,a,b){
+  if(op==='=='||op==='!='){const s=angkaT(a)&&angkaT(b)?(+a.v)===(+b.v):a.t===b.t&&a.v===b.v;return nB(op==='=='?s:!s)}
+  let x,y;
+  if(angkaT(a)&&angkaT(b)){x=+a.v;y=+b.v}else if(a.t==='str'&&b.t==='str'){x=a.v;y=b.v}
+  else throw new Galat('TypeError',`'${op}' not supported between instances of '${a.t}' and '${b.t}'`);
+  return nB(op==='<'?x<y:op==='>'?x>y:op==='<='?x<=y:x>=y);
+}
+const CATATAN_OP={'/':' — hasil / selalu float','//':' — pembagian bulat, sisa dibuang','%':' — sisa pembagian'};
+function nilai(node,c){
+  switch(node.k){
+    case 'lit':return node.v;
+    case 'nama':
+      if(c.vars.has(node.n)){const v=c.vars.get(node.n);c.baca(node.n,v);return v}
+      if(BAWAAN.includes(node.n))return {t:'fungsi',v:node.n};
+      throw new Galat('NameError',`name '${node.n}' is not defined`);
+    case 'fstr':{
+      let s='';
+      for(const b of node.bag)s+=typeof b==='string'?b:formatSpec(nilai(b.e,c),b.spec);
+      if(node.bag.some(b=>typeof b!=='string'))c.catat(`<i>f-string</i> mengisi setiap lubang <code>{…}</code> dengan nilainya → ${chip(nS(s))}`);
+      return nS(s);
+    }
+    case 'un':{
+      const a=nilai(node.a,c);
+      if(a.t==='int'||a.t==='bool')return nI(node.op==='-'?-a.v:+a.v);
+      if(a.t==='float')return nF(node.op==='-'?-a.v:a.v);
+      throw new Galat('TypeError',`bad operand type for unary ${node.op}: '${a.t}'`);
+    }
+    case 'bin':{
+      const a=nilai(node.a,c),b=nilai(node.b,c),r=hitungBin(node.op,a,b);
+      let cat=angkaT(a)&&angkaT(b)?(CATATAN_OP[node.op]||''):'';
+      if(a.t==='str'&&b.t==='str')cat=' — dua teks disambung';
+      else if(node.op==='*'&&r.t==='str')cat=' — teks diulang';
+      c.catat(`${chip(a)} ${esc(node.op)} ${chip(b)} → ${chip(r)}${cat}`);
+      return r;
+    }
+    case 'band':{const a=nilai(node.a,c),b=nilai(node.b,c),r=bandingkan(node.op,a,b);c.catat(`${chip(a)} ${esc(node.op)} ${chip(b)} → ${chip(r)}`);return r}
+    case 'atribut':{
+      const o=nilai(node.obj,c);
+      if(o.t!=='str'||!['replace','upper','lower','title','strip'].includes(node.n))throw new Galat('AttributeError',`'${o.t}' object has no attribute '${node.n}'`);
+      return {t:'metode',obj:o,n:node.n};
+    }
+    case 'panggil':{
+      const f=nilai(node.f,c),args=node.args.map(a=>nilai(a,c)),kw={};
+      for(const k in node.kw)kw[k]=nilai(node.kw[k],c);
+      return panggil(f,args,kw,c);
+    }
+  }
+}
+function bulatGenap(x){const f=Math.floor(x),d=x-f;return d>.5?f+1:d<.5?f:(f%2===0?f:f+1)}
+function panggil(f,args,kw,c){
+  if(f.t==='metode'){
+    const o=f.obj.v;let r;
+    if(f.n==='replace'){
+      if(args.length<2)throw new Galat('TypeError',`replace expected at least 2 arguments, got ${args.length}`);
+      for(const [i,a] of args.slice(0,2).entries())if(a.t!=='str')throw new Galat('TypeError',`replace() argument ${i+1} must be str, not ${a.t}`);
+      r=nS(o.split(args[0].v).join(args[1].v));
+      c.catat(`${chip(f.obj)}.replace(${chip(args[0])}, ${chip(args[1])}) → ${chip(r)}`);
+      return r;
+    }
+    if(args.length)throw new Galat('TypeError',`str.${f.n}() takes no arguments (${args.length} given)`);
+    r=nS(f.n==='upper'?o.toUpperCase():f.n==='lower'?o.toLowerCase():f.n==='strip'?o.trim():o.toLowerCase().replace(/(^|[^a-z])([a-z])/g,(m,a,b)=>a+b.toUpperCase()));
+    c.catat(`${chip(f.obj)}.${f.n}() → ${chip(r)}`);return r;
+  }
+  if(f.t!=='fungsi')throw new Galat('TypeError',`'${f.t}' object is not callable`);
+  const n=f.v,satu=()=>{if(args.length!==1)throw new Galat('TypeError',`${n}() takes exactly one argument (${args.length} given)`);return args[0]};
+  switch(n){
+    case 'print':{
+      const sep=kw.sep?pyStr(kw.sep):' ',end=kw.end?pyStr(kw.end):'\n',s=args.map(pyStr).join(sep);
+      c.tulis(s+end);
+      c.catat(s?`<code>print()</code> menampilkan <code>${esc(s.length>90?s.slice(0,90)+'…':s)}</code> di layar.`:'<code>print()</code> menampilkan baris kosong.');
+      return NONE;
+    }
+    case 'input':{
+      const tanya=args.length?pyStr(args[0]):'';c.tulis(tanya);
+      const ket=c.ambilKetik();
+      if(ket==null)throw new Galat('EOFError','EOF when reading a line');
+      c.tulis(ket,'k');c.tulis('\n','k');
+      c.catat(`<code>input()</code> menampilkan ${chip(nS(tanya))} lalu menunggu. Pengguna mengetik <b>${esc(ket)}</b>; hasilnya selalu teks: ${chip(nS(ket))}.`);
+      return nS(ket);
+    }
+    case 'int':{
+      if(!args.length)return nI(0);
+      const a=args[0];let r;
+      if(a.t==='int')return a;
+      if(a.t==='bool')r=nI(+a.v);
+      else if(a.t==='float'){if(!isFinite(a.v))throw new Galat(Number.isNaN(a.v)?'ValueError':'OverflowError',Number.isNaN(a.v)?'cannot convert float NaN to integer':'cannot convert float infinity to integer');r=nI(Math.trunc(a.v))}
+      else if(a.t==='str'){const s=a.v.trim();if(!/^[+-]?\d+(_\d+)*$/.test(s))throw new Galat('ValueError',`invalid literal for int() with base 10: ${reprStr(a.v)}`);r=nI(parseInt(s.replace(/_/g,''),10))}
+      else throw new Galat('TypeError',`int() argument must be a string, a bytes-like object or a real number, not '${a.t}'`);
+      c.catat(`<code>int(${esc(pyRepr(a))})</code> → ${chip(r)}: ${a.t==='str'?'teks diubah menjadi bilangan bulat':a.t==='float'?'angka di belakang koma dibuang':'diubah menjadi bilangan bulat'}.`);
+      return r;
+    }
+    case 'float':{
+      if(!args.length)return nF(0);
+      const a=args[0];let r;
+      if(a.t==='float')return a;
+      if(a.t==='int'||a.t==='bool')r=nF(+a.v);
+      else if(a.t==='str'){
+        const s=a.v.trim();
+        if(/^[+-]?(inf|infinity)$/i.test(s))r=nF(s.startsWith('-')?-Infinity:Infinity);
+        else if(/^[+-]?nan$/i.test(s))r=nF(NaN);
+        else if(/^[+-]?(\d+(_\d+)*(\.(\d+(_\d+)*)?)?|\.\d+(_\d+)*)([eE][+-]?\d+)?$/.test(s))r=nF(parseFloat(s.replace(/_/g,'')));
+        else throw new Galat('ValueError',`could not convert string to float: ${reprStr(a.v)}`);
+      }
+      else throw new Galat('TypeError',`float() argument must be a string or a real number, not '${a.t}'`);
+      c.catat(`<code>float(${esc(pyRepr(a))})</code> → ${chip(r)}: ${a.t==='str'?'teks diubah menjadi bilangan berkoma':'bilangan diubah menjadi float'}.`);
+      return r;
+    }
+    case 'str':{const r=nS(args.length?pyStr(args[0]):'');if(args.length&&args[0].t!=='str')c.catat(`<code>str(${esc(pyRepr(args[0]))})</code> → ${chip(r)}: nilai diubah menjadi teks.`);return r}
+    case 'type':{const a=satu(),r={t:'type',v:a.t};c.catat(`<code>type(${esc(pyRepr(a).slice(0,40))})</code> → <code>${esc(pyStr(r))}</code>`);return r}
+    case 'round':{
+      const a=args[0];
+      if(!a||!angkaT(a))throw new Galat('TypeError',`type ${a?a.t:'NoneType'} doesn't define __round__ method`);
+      if(args.length<2||args[1].t==='NoneType')return a.t==='float'?nI(bulatGenap(a.v)):nI(+a.v);
+      if(a.t!=='float')return nI(+a.v);
+      return nF(parseFloat(a.v.toFixed(jepit(+args[1].v,0,20))));
+    }
+    case 'len':{const a=satu();if(a.t!=='str')throw new Galat('TypeError',`object of type '${a.t}' has no len()`);return nI([...a.v].length)}
+    case 'abs':{const a=satu();if(a.t==='int'||a.t==='bool')return nI(Math.abs(+a.v));if(a.t==='float')return nF(Math.abs(a.v));throw new Galat('TypeError',`bad operand type for abs(): '${a.t}'`)}
+  }
+}
+function jalankanBaris(st,c){
+  if(st.k==='ekspr'){
+    nilai(st.e,c);
+    if(st.e.k!=='panggil')c.catat('Nilai dihitung, tetapi tidak disimpan ke variabel dan tidak ditampilkan dengan <code>print()</code>.');
+    return;
+  }
+  let v;
+  if(st.op==='=')v=nilai(st.e,c);
+  else{
+    if(!c.vars.has(st.n))throw new Galat('NameError',`name '${st.n}' is not defined`);
+    const lama=c.vars.get(st.n);c.baca(st.n,lama);
+    const kanan=nilai(st.e,c),o=st.op.slice(0,-1);
+    v=hitungBin(o,lama,kanan);
+    c.catat(`${chip(lama)} ${esc(o)} ${chip(kanan)} → ${chip(v)}`);
+  }
+  const ada=c.vars.has(st.n),lama=c.vars.get(st.n);
+  c.vars.set(st.n,v);c.ubah.push(st.n);
+  if(!ada)c.catat(`Kotak <b>${esc(st.n)}</b> dibuat dan diisi ${chip(v)} <span class="tp ${KELAS_TIPE.includes(v.t)?v.t:'lain'}">${v.t}</span>.`);
+  else if(lama.t===v.t&&lama.v===v.v)c.catat(`Kotak <b>${esc(st.n)}</b> diisi ulang dengan nilai yang sama, ${chip(v)}.`);
+  else c.catat(`Isi kotak <b>${esc(st.n)}</b> diganti: ${chip(lama)} dibuang, kini berisi ${chip(v)}.`);
+}
+function siapkan(kode){
+  const baris=kode.replace(/\r/g,'').split('\n'),st=[];
+  for(let i=0;i<baris.length;i++){
+    const ln=i+1,src=baris[i];
+    if(!src.trim()||src.trim().startsWith('#')){st.push(null);continue}
+    if(/^\s/.test(src))return {baris,galat:new Galat('IndentationError','unexpected indent',ln)};
+    try{const tk=token(src,ln);cekKurung(tk,ln);st.push(urai(tk,ln,src))}
+    catch(e){if(e instanceof Galat){e.baris=e.baris||ln;return {baris,galat:e}}throw e}
+  }
+  return {baris,st};
+}
+function teksGalat(g,src){
+  const b=src!=null&&src.trim()?`    ${src.trim()}\n`:'';
+  if(g.jenis==='SyntaxError'||g.jenis==='IndentationError')return `  File "main.py", line ${g.baris}\n${b}${g.jenis}: ${g.pesan}\n`;
+  return `Traceback (most recent call last):\n  File "main.py", line ${g.baris}, in <module>\n${b}${g.jenis}: ${g.pesan}\n`;
+}
+function penjelasanGalat(g){
+  const p=g.pesan;
+  switch(g.jenis){
+    case 'SyntaxError':
+      if(/unterminated/.test(p))return 'Tanda kutip pembuka tidak punya pasangan penutup.';
+      if(/never closed/.test(p))return 'Ada kurung yang dibuka tetapi tidak ditutup.';
+      if(/unmatched|does not match/.test(p))return 'Ada kurung tutup yang tidak berpasangan.';
+      if(/decimal literal/.test(p))return 'Angka menempel pada huruf, misalnya nama variabel yang diawali angka.';
+      if(/leading zeros/.test(p))return 'Bilangan tidak boleh diawali nol. Bila nilainya kode atau nomor telepon, tulis sebagai teks dengan tanda kutip.';
+      if(/forgot a comma/.test(p))return 'Sepertinya ada koma yang terlupa di antara dua nilai.';
+      if(/assign to/.test(p))return 'Ruas kiri tanda = harus berupa satu nama variabel yang sah.';
+      if(/invalid character/.test(p))return 'Ada karakter yang tidak dikenal Python. Tanda kali ditulis *, bukan ×.';
+      return 'Penulisan tidak sesuai aturan Python.';
+    case 'IndentationError':return 'Baris diawali spasi yang tidak semestinya. Hapus spasi di awal baris.';
+    case 'NameError':return 'Nama dipakai sebelum diberi nilai, atau ejaannya berbeda. Ingat: huruf besar dan kecil dibedakan.';
+    case 'TypeError':
+      if(/operand type/.test(p)&&/'str'/.test(p))return 'Bilangan dan teks dicampur dalam satu operasi. Periksa apakah ada hasil input() yang belum dikonversi.';
+      if(/concatenate/.test(p))return 'Teks hanya dapat disambung dengan teks. Gunakan koma, str(), atau f-string.';
+      if(/not callable/.test(p))return 'Nama fungsi bawaan sudah ditimpa oleh variabel.';
+      if(/multiply sequence/.test(p))return 'Teks hanya dapat dikalikan dengan bilangan bulat.';
+      return 'Operasi dilakukan pada tipe yang tidak cocok.';
+    case 'ValueError':
+      if(/int\(\)/.test(p)&&/\d\.\d/.test(p))return 'Teks berisi titik. Untuk bilangan berkoma gunakan float(); bila titik itu pemisah ribuan, ketik angka tanpa titik.';
+      if(/float/.test(p)&&/\d,\d/.test(p))return 'Python memakai titik sebagai tanda desimal, bukan koma.';
+      if(/format/i.test(p))return 'Kode format tidak cocok dengan tipe nilainya.';
+      return 'Tipenya benar, tetapi isinya tidak dapat diubah menjadi bilangan.';
+    case 'ZeroDivisionError':return 'Pembagian dengan nol tidak dapat dilakukan.';
+    case 'AttributeError':return 'Metode tersebut tidak dimiliki tipe nilai ini.';
+    case 'EOFError':return 'Program meminta ketikan, tetapi daftar ketikan pengguna sudah habis. Tambahkan satu baris pada kotak ketikan pengguna.';
+  }
+  return '';
+}
+function ceritaGalat(g){
+  const awal=g.jenis==='SyntaxError'||g.jenis==='IndentationError'?'Python memeriksa seluruh program sebelum menjalankannya, jadi belum ada satu baris pun yang dijalankan. ':'';
+  return `<div class="galat-c">PAMN berhenti di baris ${g.baris}: <b>${g.jenis}</b>. ${awal}${penjelasanGalat(g)}</div>`;
+}
+function jalankanProgram(kode,ketik=[]){
+  const P=siapkan(kode),jejak=[];
+  const c={vars:new Map(),antre:[...ketik],layar:[],stdout:'',cerita:[],dibaca:new Map(),ubah:[]};
+  c.tulis=(s,j='')=>{if(!s)return;const a=c.layar[c.layar.length-1];if(a&&a.j===j)a.t+=s;else c.layar.push({t:s,j});if(!j)c.stdout+=s};
+  c.ambilKetik=()=>c.antre.length?c.antre.shift():null;
+  c.catat=h=>c.cerita.push(h);
+  c.baca=(n,v)=>{if(!c.dibaca.has(n))c.dibaca.set(n,v)};
+  const potret=(ln,galat)=>({ln,vars:[...c.vars].map(([n,v])=>({n,v})),layar:c.layar.map(s=>({...s})),cerita:c.cerita.slice(),ubah:c.ubah.slice(),galat});
+  c.cerita=['Program siap. Tekan <b>Langkah ▶</b> untuk menjalankan baris pertama.'];jejak.push(potret(0));
+  if(P.galat){const g=P.galat;c.cerita=[];c.tulis(teksGalat(g,P.baris[g.baris-1]),'g');c.catat(ceritaGalat(g));jejak.push(potret(g.baris,g));return {jejak,P,c,galat:g}}
+  let galat=null,n=0;
+  for(const st of P.st){
+    if(!st)continue;
+    if(++n>300){c.cerita=['Simulator dihentikan karena programnya terlalu panjang.'];jejak.push(potret(st.ln));break}
+    c.cerita=[];c.dibaca=new Map();c.ubah=[];
+    try{jalankanBaris(st,c)}
+    catch(e){if(!(e instanceof Galat))throw e;e.baris=st.ln;galat=e;c.tulis(teksGalat(e,st.src),'g');c.catat(ceritaGalat(e));jejak.push(potret(st.ln,e));break}
+    if(c.dibaca.size)c.cerita.unshift('Mengambil isi kotak: '+[...c.dibaca].map(([k,v])=>`<b>${esc(k)}</b> = ${chip(v)}`).join(', ')+'.');
+    jejak.push(potret(st.ln));
+  }
+  if(!galat){c.cerita=['Program selesai. Semua baris sudah dijalankan.'];c.ubah=[];jejak.push(potret(-1))}
+  return {jejak,P,c,galat};
+}
+
+/* ============ TAMPILAN KODE & LAYAR ============ */
+function warnaiBaris(src){
+  let h='',i=0;
+  while(i<src.length){
+    const c=src[i];
+    if(c==='#'){h+=`<span class="cm">${esc(src.slice(i))}</span>`;break}
+    const f=(c==='f'||c==='F')&&(src[i+1]==='"'||src[i+1]==="'")&&!/\w/.test(src[i-1]||'');
+    if(c==='"'||c==="'"||f){
+      const q=f?src[i+1]:c;let j=i+(f?2:1);
+      while(j<src.length&&src[j]!==q){if(src[j]==='\\')j++;j++}
+      h+=`<span class="s">${esc(src.slice(i,j+1))}</span>`;i=j+1;continue;
+    }
+    h+=esc(c);i++;
+  }
+  return h;
+}
+const kodeHTML=(baris,kelas={})=>baris.map((s,i)=>`<div class="ln${kelas[i+1]?' '+kelas[i+1]:''}"><span class="no">${i+1}</span><span>${warnaiBaris(s)}</span></div>`).join('');
+const layarHTML=seg=>seg.length?seg.map(s=>s.j?`<span class="${s.j}">${esc(s.t)}</span>`:esc(s.t)).join(''):'<span class="kosong">(belum ada keluaran)</span>';
+
+/* ============ CONTOH PROGRAM ============ */
+/* k = kode, m = ketikan pengguna untuk setiap input(), j = judul */
+const CONTOH={
+  'sapa':{j:'Program pertama',k:`print("Selamat datang di Toko Kopi Nusantara")
+print("Silakan pilih menu favorit Anda")`},
+  'kasir':{j:'Total belanja dengan input()',m:['Gula Aren','35000','4'],k:`nama_produk = input("Nama produk: ")
+harga = int(input("Harga satuan: "))
+jumlah = int(input("Jumlah barang: "))
+total = harga * jumlah
+print("Total belanja", nama_produk, ":", total)`},
+  'komentar':{j:'Komentar diabaikan Python',k:`# Menghitung harga setelah diskon
+harga = 80000      # harga awal
+diskon = 10        # dalam persen
+harga_akhir = harga - harga * diskon / 100
+print(harga_akhir)`},
+  'kapital':{j:'Huruf besar dan kecil dibedakan',k:`Harga = 45000
+print(harga)`},
+  'var':{j:'Variabel menyimpan nilai',k:`nama_toko = "Toko Kopi Nusantara"
+harga = 45000
+jumlah = 3
+total = harga * jumlah
+print(nama_toko)
+print(total)`},
+  'rak':{j:'Rak variabel dan tanda =',k:`harga = 45000
+jumlah = 3
+total = harga * jumlah
+harga = 50000
+jumlah = jumlah + 1
+total = harga * jumlah
+print(total)`},
+  'ganti':{j:'Mengganti isi variabel',k:`stok = 20
+print("Stok awal:", stok)
+stok = 15
+print("Stok sekarang:", stok)`},
+  'tidak-otomatis':{j:'Variabel menyimpan nilai, bukan rumus',k:`harga = 45000
+jumlah = 2
+total = harga * jumlah
+harga = 50000
+print("Harga:", harga)
+print("Total:", total)`},
+  'pencacah':{j:'Pencacah pengunjung',k:`pengunjung = 0
+pengunjung = pengunjung + 1
+pengunjung = pengunjung + 1
+pengunjung = pengunjung + 1
+print("Jumlah pengunjung:", pengunjung)`},
+  'singkat':{j:'Bentuk singkat -= dan +=',k:`stok = 20
+stok -= 5
+stok += 12
+print(stok)`},
+  'tipe':{j:'Melihat tipe dengan type()',k:`print(type(45000))
+print(type(45000.0))
+print(type("45000"))
+print(type(True))`},
+  'kutip':{j:'Bilangan dan teks berbeda perilaku',k:`a = 45000
+b = "45000"
+print(a + a)
+print(b + b)`},
+  'telepon':{j:'Nomor telepon diubah menjadi int',k:`telepon = "081234567890"
+print(telepon)
+print(int(telepon))`},
+  'bool':{j:'bool dari perbandingan',k:`total = 150000
+batas_gratis_ongkir = 100000
+gratis_ongkir = total >= batas_gratis_ongkir
+print(gratis_ongkir)
+print(type(gratis_ongkir))`},
+  'aritmetika':{j:'Tujuh operator aritmetika',k:`a = 17
+b = 5
+print(a + b)
+print(a - b)
+print(a * b)
+print(a / b)
+print(a // b)
+print(a % b)
+print(a ** 2)`},
+  'urutan':{j:'Kurung mengubah urutan',k:`harga = 50000
+potongan = 10000
+jumlah = 3
+print(harga - potongan * jumlah)
+print((harga - potongan) * jumlah)`},
+  'persen':{j:'Menghitung persen',k:`subtotal = 250000
+pajak = subtotal * 11 / 100
+print(pajak)
+print(subtotal * 0.11)
+print(45000 * 1.11)
+print(17 % 5)`},
+  'teks-op':{j:'Operator pada teks',k:`print("Kopi" + "Susu")
+print("Kopi " + "Susu")
+print("Ha" * 3)
+print("=" * 20)`},
+  'input-teks':{j:'input() selalu teks',m:['20'],k:`umur = input("Umur Anda: ")
+print(type(umur))
+print(umur + umur)`},
+  'konversi':{j:'Fungsi konversi',k:`print(int("45000") + 5000)
+print(float("12.5") * 2)
+print(str(45000) + " rupiah")
+print(int(12.9))`},
+  'lupa-int':{j:'Lupa int(): tanpa pesan, hasil keliru',m:['45000','10000'],k:`harga = input("Harga produk: ")
+ongkir = input("Ongkos kirim: ")
+total = harga + ongkir
+print("Total bayar:", total)`},
+  'koma-desimal':{j:'int() pada bilangan berkoma',m:['12.5'],k:`diskon = int(input("Diskon (%): "))
+print("Diskon:", diskon, "%")`},
+  'titik-ribuan':{j:'Pengguna mengetik titik ribuan',m:['45.000'],k:`harga = int(input("Harga: "))
+print(harga * 2)`},
+  'pajak':{j:'Tagihan dengan pajak 11%',m:['45000','3'],k:`harga = int(input("Harga satuan: "))
+jumlah = int(input("Jumlah barang: "))
+subtotal = harga * jumlah
+pajak = subtotal * 11 / 100
+total = subtotal + pajak
+print(f"Subtotal : Rp{subtotal}")
+print(f"Pajak    : Rp{pajak}")
+print(f"Total    : Rp{total}")`},
+  'print-koma':{j:'print() dengan beberapa nilai',k:`produk = "Teh Melati"
+harga = 25000
+print("Produk:", produk)
+print("Harga:", harga, "rupiah")
+print(produk, harga, True)`},
+  'plus-galat':{j:'Teks + bilangan',k:`total = 135000
+print("Total: " + total)`},
+  'tiga-cara':{j:'Tiga cara menampilkan teks dan angka',k:`total = 135000
+print("Total:", total)
+print("Total: " + str(total))
+print(f"Total: {total}")`},
+  'fstring':{j:'f-string',k:`produk = "Kopi Arabika"
+harga = 45000
+jumlah = 3
+print(f"{jumlah} x {produk} @ Rp{harga}")
+print(f"Total: Rp{harga * jumlah}")`},
+  'tanpa-f':{j:'Lupa huruf f',k:`produk = "Kopi Arabika"
+print("Produk: {produk}")
+print(f"Produk: {produk}")`},
+  'rupiah':{j:'Format rupiah',k:`total = 1250000
+print(f"Rp{total}")
+print(f"Rp{total:,}")
+print(f"Rp{total:,}".replace(",", "."))`},
+  'desimal':{j:'Format angka desimal',k:`rata_rata = 85250.5
+print(f"{rata_rata:.2f}")
+print(f"{rata_rata:,.2f}")
+pajak = 14850.0
+print(f"Rp{pajak}")
+print(f"Rp{pajak:,.0f}".replace(",", "."))`},
+  'e-syntax':{j:'SyntaxError',k:`print("Total belanja)`},
+  'e-name':{j:'NameError',k:`total_belanja = 90000
+print(Total_belanja)`},
+  'e-type':{j:'TypeError',m:['45000','10000'],k:`harga = int(input("Harga produk: "))
+ongkir = input("Ongkos kirim: ")
+total = harga + ongkir
+print("Total bayar:", total)`},
+  'e-value':{j:'ValueError',m:['tiga'],k:`jumlah = int(input("Jumlah barang: "))
+print(jumlah)`},
+  'e-logika':{j:'Kesalahan logika',k:`produk = "Kopi Arabika"
+harga = 45000
+print("Produk {produk} seharga Rp{harga}")`},
+  'e-indent':{j:'IndentationError',k:`harga = 45000
+  jumlah = 2`}
+};
+
+/* ============ KOTAK CONTOH ============ */
+function renderContoh(el){
+  const id=el.dataset.contoh,C=CONTOH[id];if(!C)return;
+  const h=jalankanProgram(C.k,C.m||[]),akhir=h.jejak[h.jejak.length-1];
+  const kelas={};if(h.galat)kelas[h.galat.baris]='galat';
+  el.innerHTML=`<div class="contoh-kepala"><span>Contoh: <b style="color:var(--text)">${esc(C.j)}</b></span><button class="sec" data-lab="${id}">Telusuri di Lab ▶</button></div>
+  <div class="contoh-isi"><div class="kode">${kodeHTML(C.k.split('\n'),kelas)}</div><pre class="konsol">${layarHTML(akhir.layar)}</pre></div>
+  ${C.m&&C.m.length?`<div class="contoh-ketik">Ketikan pengguna: ${C.m.map(x=>`<code>${esc(x)}</code>`).join(', ')}</div>`:''}`;
+}
+
+/* ============ SIMULATOR LANGKAH DEMI LANGKAH ============ */
+let LAB=null;
+function buatSimulator(el){
+  const ids=el.dataset.sim==='*'?Object.keys(CONTOH):el.dataset.sim.split(','),bisaUbah=!!el.dataset.ubah;
+  el.innerHTML=`<div class="sim-alat">
+    <select class="sim-pilih" aria-label="Pilih program">${ids.map(id=>`<option value="${id}">${esc(CONTOH[id].j)}</option>`).join('')}${bisaUbah?'<option value="__sendiri">(program saya sendiri)</option>':''}</select>
+    <button class="sec sim-ulang">⟲ Ulangi</button><button class="sec sim-mundur">◀ Mundur</button><button class="act sim-maju">Langkah ▶</button><button class="sec sim-semua">Jalankan semua ⏭</button>
+    ${bisaUbah?'<button class="sec sim-ubah">✎ Ubah kode</button>':''}
+    <span class="sim-langkah"></span></div>
+  <div class="grid2"><div>
+    <div class="label">Kode</div><div class="kode sim-kode-v"></div><textarea class="sim-kode" spellcheck="false" autocapitalize="off" hidden aria-label="Kode program"></textarea>
+    <div class="label" style="margin-top:10px">Ketikan pengguna (satu baris untuk setiap input())</div>
+    <textarea class="sim-ketik" spellcheck="false" autocapitalize="off" rows="3" placeholder="(program ini tidak memakai input())" aria-label="Ketikan pengguna"></textarea>
+  </div><div>
+    <div class="label">Gudang memori</div><canvas class="layar sim-kanvas" width="256" height="176" aria-label="Gudang memori: peti berlabel berisi nilai setiap variabel"></canvas>
+    <div class="label" style="margin-top:10px">Layar</div><pre class="konsol sim-layar"></pre>
+  </div></div>
+  <div class="cerita sim-cerita" aria-live="polite"></div>`;
+  const q=s=>el.querySelector(s);
+  const S={kode:'',hasil:null,i:0,snap:null,prev:null,tUbah:null,edit:false};
+  const pilih=q('.sim-pilih'),kodeV=q('.sim-kode-v'),kodeE=q('.sim-kode'),ketik=q('.sim-ketik'),layar=q('.sim-layar'),cerita=q('.sim-cerita'),info=q('.sim-langkah');
+  const bUlang=q('.sim-ulang'),bMundur=q('.sim-mundur'),bMaju=q('.sim-maju'),bSemua=q('.sim-semua'),bUbah=q('.sim-ubah');
+  const daftarKetik=()=>{const a=ketik.value.replace(/\r/g,'').split('\n');if(a.length&&a[a.length-1]==='')a.pop();return a};
+  function hitung(){S.hasil=jalankanProgram(S.kode,daftarKetik())}
+  function tampil(){
+    const J=S.hasil.jejak;S.i=jepit(S.i,0,J.length-1);
+    const sn=J[S.i];S.prev=S.i>0?J[S.i-1]:null;S.snap=sn;S.tUbah=null;
+    const kelas={};if(sn.ln>0)kelas[sn.ln]=sn.galat?'galat':'jalan';
+    kodeV.innerHTML=kodeHTML(S.hasil.P.baris,kelas);
+    layar.innerHTML=layarHTML(sn.layar);
+    cerita.innerHTML=sn.cerita.map(h=>`<div>${h}</div>`).join('');
+    info.textContent=`Langkah ${S.i} dari ${J.length-1}`;
+    bMundur.disabled=bUlang.disabled=S.i===0||S.edit;
+    bMaju.disabled=bSemua.disabled=S.i===J.length-1||S.edit;
+  }
+  function aturEdit(on){
+    S.edit=on;kodeE.hidden=!on;kodeV.hidden=on;
+    if(bUbah)bUbah.textContent=on?'✓ Jalankan kode ini':'✎ Ubah kode';
+    if(on){kodeE.value=S.kode;kodeE.focus();cerita.innerHTML='<div>Ubah kode sesuka Anda, lalu tekan <b>✓ Jalankan kode ini</b>.</div>';bMaju.disabled=bSemua.disabled=bMundur.disabled=bUlang.disabled=true}
+  }
+  function muat(id,kode,m){
+    if(id&&CONTOH[id]){S.kode=CONTOH[id].k;ketik.value=(CONTOH[id].m||[]).join('\n');pilih.value=id}
+    else{S.kode=kode;if(m)ketik.value=m.join('\n');if(bisaUbah)pilih.value='__sendiri'}
+    if(S.edit)aturEdit(false);
+    hitung();S.i=0;tampil();
+  }
+  pilih.onchange=()=>{if(pilih.value==='__sendiri'){aturEdit(true)}else muat(pilih.value)};
+  const bunyiLangkah=()=>{const sn=S.snap,pv=S.prev;bunyi(sn.galat?'galat':sn.ln===-1?'selesai':sn.ubah.length?'simpan':pv&&JSON.stringify(sn.layar)!==JSON.stringify(pv.layar)?'cetak':'langkah')};
+  bMaju.onclick=()=>{S.i++;tampil();bunyiLangkah()};
+  bMundur.onclick=()=>{S.i--;tampil();bunyi('klik')};
+  bUlang.onclick=()=>{S.i=0;tampil();bunyi('klik')};
+  bSemua.onclick=()=>{S.i=S.hasil.jejak.length-1;tampil();bunyi(S.snap.galat?'galat':'selesai')};
+  if(bUbah)bUbah.onclick=()=>{bunyi('klik');if(S.edit){S.kode=kodeE.value;pilih.value='__sendiri';aturEdit(false);hitung();S.i=0;tampil()}else aturEdit(true)};
+  let tunda;ketik.oninput=()=>{clearTimeout(tunda);tunda=setTimeout(()=>{if(S.edit)return;hitung();tampil()},250)};
+  adegan(q('.sim-kanvas'),(g,t,dt)=>gambarRak(g,t,dt,S));
+  S.muat=muat;
+  muat(ids[0]);
+  return S;
+}
+let RAK_LANTAI=null;
+function lantaiRak(){
+  return RAK_LANTAI||(RAK_LANTAI=latar(256,176,q=>{
+    lukisLantaiKayu(q,0,0,256,176,acakTetap(5));
+  }));
+}
+function posPeti(i,n){const b=Math.max(1,Math.ceil(n/3)),ys=b===1?[50]:b===2?[20,76]:[6,50,94];return {x:8+(i%3)*87,y:ys[Math.floor(i/3)],w:66,h:40}}
+function gambarPeti(g,P,nama,v,kilau){
+  const {x,y,w,h}=P;
+  g.globalAlpha=.25;kotak(g,x+2,y+h-1,w,3,0);g.globalAlpha=1;
+  kotak(g,x,y,w,h,GB.kayuGG);
+  kotak(g,x+2,y+2,w-4,16,'#2a1a10');kotak(g,x+2,y+2,w-4,2,'#1a0f08');kotak(g,x+1,y+1,w-2,1,GB.kayuT);
+  kotak(g,x+1,y+18,w-2,h-19,GB.kayu);kotak(g,x+1,y+18,w-2,1,GB.kayuT);kotak(g,x+1,y+h-3,w-2,1,GB.kayuG);
+  for(const bx of [x+1,x+w-4]){kotak(g,bx,y+18,3,h-19,'#7a8aa0');kotak(g,bx+1,y+20,1,1,'#e6eef5');kotak(g,bx+1,y+h-5,1,1,'#e6eef5')}
+  kotak(g,x+7,y+21,w-14,14,GB.kertasG);kotak(g,x+8,y+22,w-16,12,GB.kertas);
+  tulis(g,potong(nama,w-18),x+w/2,y+23,'#3a2410',{rata:'tengah',tebal:true});
+  if(v){const ik=ikonTipe(v),iw=ik?ukuranSprite(ik).w+3:0;if(ik)spr(g,ik,x+5,Math.round(y+10-ukuranSprite(ik).h/2));tulis(g,potong(pyRepr(v),w-12-iw),x+5+iw,y+4,TEKS_TIPE[v.t]||'#ffffff')}
+  if(kilau){bingkai(g,x-1,y-1,w+2,h+2,'#ffe36e');bingkai(g,x-2,y-2,w+4,h+4,'#fff7b0')}
+}
+function teksDialog(sn,pv){
+  if(sn.galat)return [`Aduh! ${sn.galat.jenis} di baris ${sn.galat.baris}.`,'Baca penjelasannya di bawah.'];
+  if(sn.ln===0)return ['Halo, saya PAMN!','Tekan Langkah ▶ untuk mulai.'];
+  if(sn.ln===-1)return ['Selesai! Semua baris','sudah saya jalankan.'];
+  if(sn.ubah.length){const n=sn.ubah[0],v=sn.vars.find(x=>x.n===n).v,lama=pv&&pv.vars.find(x=>x.n===n);return [lama?`Isi kotak ${n} saya ganti:`:`Kotak ${n} saya isi:`,potong(pyRepr(v),170)+`  (${v.t})`]}
+  const a=pv?pv.layar.map(x=>x.t).join(''):'',b=sn.layar.map(x=>x.t).join('');
+  if(b!==a)return ['Saya tampilkan di layar:',potong(b.slice(a.length).replace(/\n$/,'').split('\n').pop(),226)];
+  return [`Baris ${sn.ln} sudah saya jalankan.`];
+}
+function gambarRak(g,t,dt,S){
+  if(!S.snap)return;
+  const sn=S.snap,vars=sn.vars.slice(0,9),n=vars.length;
+  if(!S.pamn)S.pamn={x:236,y:134,kiri:true};
+  if(S.tUbah==null){
+    S.tUbah=t;
+    const nama=sn.ubah[0],i=nama!=null?vars.findIndex(v=>v.n===nama):-1,lama=S.prev&&S.prev.vars.find(v=>v.n===nama);
+    S.anim=i>=0?{i,baru:vars[i].v,lama:lama?lama.v:null,tiba:GERAK?null:t-5}:null;
+  }
+  g.drawImage(lantaiRak(),0,0);
+  if(!n)tulis(g,'Gudang masih kosong',128,62,'#4a2c16',{rata:'tengah',tebal:true});
+  const A=S.anim;
+  vars.forEach((d,i)=>{
+    let v=d.v,kilau=false;
+    if(A&&A.i===i){const p=A.tiba==null?0:(t-A.tiba)/.45;if(p<1)v=A.lama;else kilau=t-A.tiba<1.6&&Math.floor((t-A.tiba)*6)%2===0}
+    gambarPeti(g,posPeti(i,n),d.n,v,kilau);
+  });
+  if(sn.vars.length>9)tulis(g,`+${sn.vars.length-9} kotak lagi`,128,134,'#4a2c16',{rata:'tengah',uk:8});
+  let tx=S.pamn.x,ty=S.pamn.y,kiriTuju=S.pamn.kiri;
+  if(A){const P=posPeti(A.i,n),kanan=(A.i%3)<2;tx=kanan?P.x+P.w+10:P.x-11;ty=P.y+P.h+1;kiriTuju=kanan}
+  const dx=tx-S.pamn.x,dy=ty-S.pamn.y,jarak=Math.hypot(dx,dy),langkah=GERAK?150*dt:1e9;
+  let jalan=false;
+  if(jarak>.5){if(jarak<=langkah){S.pamn.x=tx;S.pamn.y=ty}else{S.pamn.x+=dx/jarak*langkah;S.pamn.y+=dy/jarak*langkah;jalan=true;S.pamn.kiri=dx<0}}
+  else{S.pamn.kiri=kiriTuju;if(A&&A.tiba==null)A.tiba=t}
+  const u=A&&A.tiba!=null?t-A.tiba:9;
+  const goy=sn.galat&&t-S.tUbah<.6?Math.round(Math.sin(t*60)*2):0;
+  const pose=jalan?(Math.floor(t*8)%2?'samping1':'samping2'):u<.5?'sorak':u<1.4?'samping1':sn.galat?'diam':(Math.sin(t*1.7)>.985?'kedip':'diam');
+  pamn(g,S.pamn.x+goy,S.pamn.y,pose,{balik:pose.startsWith('samping')&&S.pamn.kiri});
+  if(A&&u<.45){
+    const P=posPeti(A.i,n),p=mulus(u/.45),ik=ikonTipe(A.baru);
+    if(ik){const {w,h}=ukuranSprite(ik);spr(g,ik,lerp(S.pamn.x,P.x+P.w/2,p)-w/2,lerp(S.pamn.y-30,P.y+10,p)-Math.sin(p*Math.PI)*16-h/2)}
+    if(A.lama)for(let k=0;k<6;k++){const r=u*30,a=k*Math.PI/3;g.globalAlpha=1-u/.45;kotak(g,P.x+P.w/2+Math.cos(a)*r-2,P.y+10+Math.sin(a)*r*.6-2,4,4,'#e6e6e6');g.globalAlpha=1}
+  }
+  if(sn.galat){const bx=S.pamn.x+8,by=S.pamn.y-36;panel(g,bx,by,12,12,'#ffffff',GB.garis);tulis(g,'!',bx+6,by,'#e83a3a',{rata:'tengah',tebal:true})}
+  kotakDialog(g,6,142,244,31,'PAMN',teksDialog(sn,S.prev),t-S.tUbah);
+}
+const BUG_SYN={X:'#ff9a3c',Y:'#c0561a',Z:'#ffd08a'},BUG_ABU={X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'};
+const WARNA_BUG={SyntaxError:BUG_SYN,IndentationError:BUG_SYN,NameError:{X:'#b58cff',Y:'#7a4fd1',Z:'#e0ccff'},TypeError:{X:'#ff5a5a',Y:'#b8263a',Z:'#ffb3b3'},ValueError:{X:'#4fb0ff',Y:'#2266c8',Z:'#bfe3ff'},EOFError:BUG_ABU,ZeroDivisionError:{X:'#ff77a8',Y:'#c0457a',Z:'#ffc6dc'},AttributeError:{X:'#d9a05a',Y:'#9a6a2a',Z:'#f3d3a3'},OverflowError:BUG_ABU};
+
+/* ============ ADEGAN: TOKO KOPI ============ */
+function gelembung(g,teks,x,y){
+  const w=lebarTeks(teks)+10;
+  panel(g,x,y,w,15,7,0);kotak(g,x+2,y+15,4,2,7);kotak(g,x,y+17,3,2,7);
+  tulis(g,teks,x+5,y+2,0);
+}
+function adeganToko(){
+  const P=18,kertas=['Dua Kopi Arabika, ya.'];
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(7);
+    lukisRumput(q,0,0,256,144,a);
+    lukisJalan(q,54,58,18,40,a);lukisJalan(q,54,92,202,16,a);
+    kotak(q,54,91,202,1,GB.tanahG);kotak(q,54,108,202,1,GB.rumputG);
+    for(const [x,y,c] of [[12,70,'#ffffff'],[20,76,'#ff8fb1'],[30,68,'#ffffff'],[38,80,'#ffffff'],[16,86,'#ff8fb1'],[44,72,'#ffffff'],[26,84,'#ffffff'],[84,116,'#ffffff'],[100,122,'#ff8fb1'],[140,118,'#ffffff'],[200,120,'#ffffff'],[226,114,'#ff8fb1']])bunga(q,x,y,c);
+    lukisPondok(q,6,0,112);
+    lukisPeti(q,80,62);lukisPeti(q,96,64);
+    pohon(q,128,10,13);
+    for(let r=0;r<4;r++)for(let k=0;k<3;k++)semak(q,220+k*14,12+r*16,6,true);
+    for(let x=208;x<256;x+=8){kotak(q,x,74,3,10,GB.kayuGG);kotak(q,x+1,75,1,8,GB.kayuT)}
+    kotak(q,208,77,48,2,GB.kayu);
+    kotak(q,138,56,3,26,GB.kayuGG);kotak(q,200,56,3,26,GB.kayuGG);
+    for(let i=0;i<9;i++){kotak(q,136+i*8,44,8,10,i%2?GB.putih:GB.tenda);kotak(q,137+i*8,54,6,2,i%2?GB.putih:GB.tenda)}
+    kotak(q,136,43,72,1,GB.garis);kotak(q,136,44,72,1,GB.tendaG);
+  });
+  const meja=latar(256,144,q=>{
+    kotak(q,133,75,74,16,GB.garis);kotak(q,134,76,72,4,GB.kayuT);kotak(q,134,80,72,10,GB.kayu);
+    for(let x=140;x<206;x+=9)kotak(q,x,81,1,9,GB.kayuG);
+    kotak(q,186,70,14,7,GB.garis);kotak(q,187,71,12,5,'#8a5a2b');kotak(q,187,71,12,1,'#ffd34d');
+    for(const x of [146,160]){kotak(q,x,71,7,6,GB.garis);kotak(q,x+1,72,5,4,GB.putih);kotak(q,x+1,72,5,1,'#5a3418');kotak(q,x+6,73,2,2,GB.putih)}
+  });
+  adegan($('#kv-toko'),(g,t)=>{
+    const T=GERAK?t%P:12.2,putaran=GERAK?Math.floor(t/P):0;
+    g.drawImage(bawah,0,0);
+    const kerja=T>6.4&&T<11.8,sorak=T>12&&T<13.4;
+    const bob=kerja&&Math.floor(T*4)%2?1:0;
+    pamn(g,170,86+bob,sorak?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    if(kerja&&Math.floor(T*6)%2)kotak(g,169,62+bob,2,1,'#fff7b0');
+    g.drawImage(meja,0,0);
+    if(GERAK)for(const x of [148,162])for(let i=0;i<2;i++){const p=(t*.9+i/2+x/50)%1;kotak(g,x+i*2+Math.round(Math.sin((p+i)*6)),69-p*9,1,1,'#ffffff')}
+    let cx,pose='samping',balik=true;
+    if(T<3.2){cx=lerp(272,170,T/3.2);pose='jalan'}
+    else if(T<13.6){cx=170;pose='belakang'}
+    else{cx=lerp(170,276,(T-13.6)/2.6);pose='jalan';balik=false}
+    if(pose==='jalan')pose=Math.floor(t*7)%2?'jalan':'samping';
+    warga(g,cx,104,pose,{balik});
+    if(T>11.8&&T<12.6){const p=(T-11.8)/.8;for(let k=0;k<3;k++){const q=jepit(p*1.6-k*.3,0,1);if(q>0&&q<1)spr(g,'kepeng',lerp(168,190,q)-4,lerp(86,70,q)-Math.sin(q*Math.PI)*14-4)}}
+    if(GERAK){const bx=40+Math.sin(t*.7)*24,by=78+Math.sin(t*1.3)*8;kotak(g,bx,by,1,1,'#ffe066');kotak(g,bx-1-(Math.floor(t*8)%2),by-1,1,1,'#ffffff');kotak(g,bx+1+(Math.floor(t*8)%2),by-1,1,1,'#ffffff')}
+    hatiHUD(g,4,4,3);
+    const uang=putaran*90000+(T>12.4?90000:0),tx='Rp'+ribuanID(uang);
+    g.globalAlpha=.75;kotak(g,252-lebarTeks(tx,10,true)-16,3,lebarTeks(tx,10,true)+15,12,'#1c2340');g.globalAlpha=1;
+    spr(g,'kepeng',252-lebarTeks(tx,10,true)-13,5);tulis(g,tx,252,3,'#ffffff',{rata:'kanan',tebal:true});
+    tulis(g,'KOPI',32,40,'#4a2c16',{rata:'tengah',tebal:true});
+    const D=[[3.6,6.2,'Pelanggan',kertas],[6.4,9,'PAMN',['harga = 45000','jumlah = 2']],[9.2,11.8,'PAMN',['total = harga * jumlah','print(total)   # 90000']],[12,13.4,'PAMN',['Totalnya Rp90.000.','Terima kasih!']]];
+    for(const [a,b,n,l] of D)if(T>a&&T<b)kotakDialog(g,6,110,244,31,n,l,T-a);
+  });
+}
+const ribuanID=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+
+/* ============ ADEGAN: PENERJEMAH PSEUDOCODE ============ */
+function adeganTerjemah(){
+  const P=[['MULAI','# (tidak ditulis)'],['BACA nama_produk','nama_produk = input("Nama produk: ")'],['BACA harga','harga = int(input("Harga: "))'],['HITUNG total = harga * jumlah','total = harga * jumlah'],['TAMPILKAN total','print(total)'],['SELESAI','# (tidak ditulis)']];
+  const bg=latar(256,144,q=>{
+    lukisLantaiKayu(q,0,0,256,144,acakTetap(3));
+    kotak(q,44,40,168,54,'#5a1820');kotak(q,46,42,164,50,'#a8323f');bingkai(q,50,46,156,42,'#ffd34d');
+    for(let x=56;x<204;x+=12){kotak(q,x,66,4,2,'#ffd34d');kotak(q,x+1,65,2,4,'#ffd34d')}
+    kotak(q,14,4,228,32,'#8a6a3a');kotak(q,15,5,226,30,GB.kertas);kotak(q,15,31,226,4,'#e0cc94');
+    for(const ex of [8,240]){kotak(q,ex,3,8,34,'#8a6a3a');kotak(q,ex+1,4,6,32,'#c9b27a');kotak(q,ex+2,4,2,32,'#e6d39c')}
+    kotak(q,8,98,240,32,GB.garis);kotak(q,9,99,238,30,'#2b2f3a');kotak(q,9,99,238,1,'#4b5068');bingkai(q,11,101,234,26,'#3a3f52');
+  });
+  adegan($('#kv-terjemah'),(g,t)=>{
+    const D=3.6,T=GERAK?t%(D*P.length):D*2+3,i=Math.floor(T/D),u=T-i*D,[ps,py]=P[i];
+    g.drawImage(bg,0,0);
+    tulis(g,'PSEUDOCODE',18,6,'#8a6a3a',{uk:8,tebal:true});
+    if(u>.15)tulis(g,ps,128,19,'#3a2410',{rata:'tengah',tebal:true});
+    const proses=u>.6&&u<1.5,sudut=proses&&GERAK?t*6:0;
+    gigi(g,92,62,7,sudut);gigi(g,164,62,7,-sudut);
+    if(proses&&GERAK)for(let k=0;k<6;k++){const a=t*4+k;kotak(g,128+Math.cos(a)*22,66+Math.sin(a*1.3)*16,1,1,'#fff7b0')}
+    pamn(g,128,94,proses?'sorak':(Math.sin(t*1.5)>.98?'kedip':'diam'),{skala:2});
+    tulis(g,'PYTHON',16,102,'#7dff8a',{uk:8,tebal:true});
+    const n=Math.floor(jepit((u-1.4)/1.2,0,1)*py.length);
+    tulis(g,py.slice(0,n),128-lebarTeks(py)/2,113,py.startsWith('#')?'#8a8fa3':'#e6eef5',{bayang:'#0b0f22'});
+    for(let k=0;k<P.length;k++){const x=128-P.length*6+k*12;kotak(g,x+1,133,4,6,k===i?'#ffd34d':'#5c5e6e');kotak(g,x,134,6,4,k===i?'#ffd34d':'#5c5e6e');if(k===i)kotak(g,x+2,134,1,1,'#fff7b0')}
+  });
+}
+
+/* ============ PASANGKAN BARIS ============ */
+const PASANGAN=[['BACA nama_produk','nama_produk = input("Nama produk: ")'],['BACA harga','harga = int(input("Harga: "))'],['TETAPKAN tarif_pajak = 11','tarif_pajak = 11'],['HITUNG total = harga * jumlah','total = harga * jumlah'],['TAMPILKAN total','print(total)'],['TAMPILKAN "Terima kasih"','print("Terima kasih")']];
+function permainanPasang(){
+  const wadah=$('#pasang'),pesan=$('#pasang-pesan');let pil=null,salah=0,cocok=0;
+  const terbaik=()=>{const b=lsAmbil('materi6:pasang',null);$('#pasang-terbaik').textContent=b==null?'':`Terbaik: ${b} kesalahan`};
+  function mulai(){
+    pil=null;salah=0;cocok=0;pesan.innerHTML='';
+    const kiri=acakSalin(PASANGAN.map((_,i)=>i)),kanan=acakSalin(PASANGAN.map((_,i)=>i));
+    wadah.innerHTML=`<div><div class="label">Pseudocode</div>${kiri.map(i=>`<button data-k="${i}">${esc(PASANGAN[i][0])}</button>`).join('')}</div>
+      <div><div class="label">Python</div>${kanan.map(i=>`<button data-n="${i}">${esc(PASANGAN[i][1])}</button>`).join('')}</div>`;
+  }
+  wadah.onclick=e=>{
+    const b=e.target.closest('button');if(!b||b.classList.contains('y'))return;
+    if(b.dataset.k!=null){$$('[data-k]',wadah).forEach(x=>x.classList.remove('pil'));b.classList.add('pil');pil=b;return}
+    if(!pil){pesan.innerHTML='<span style="color:var(--muted)">Pilih baris pseudocode di kiri lebih dahulu.</span>';return}
+    if(pil.dataset.k===b.dataset.n){
+      pil.classList.remove('pil');pil.classList.add('y');b.classList.add('y');pil=null;cocok++;bunyi(cocok===PASANGAN.length?'menang':'benar');
+      pesan.innerHTML='<span style="color:var(--tp)">✓ Cocok.</span>';
+      if(cocok===PASANGAN.length){
+        pesan.innerHTML=`<div class="ok"><b>Selesai.</b> Semua baris terpasang dengan ${salah} kesalahan.</div>`;
+        const b0=lsAmbil('materi6:pasang',null);if(b0==null||salah<b0)lsSimpan('materi6:pasang',salah);terbaik();
+      }
+    }else{salah++;bunyi('salah');b.classList.add('n');setTimeout(()=>b.classList.remove('n'),500);pesan.innerHTML='<span style="color:var(--fn)">✗ Belum cocok. Perhatikan kata kuncinya: BACA, TETAPKAN, HITUNG, atau TAMPILKAN.</span>'}
+  };
+  $('#pasang-ulang').onclick=mulai;mulai();terbaik();
+}
+
+/* ============ PERMAINAN: STEMPEL LABEL ============ */
+const LABEL_GAME=[
+  {n:'harga_satuan',s:1,w:'Huruf kecil dan garis bawah: sah dan sesuai kebiasaan Python.'},
+  {n:'total_belanja',s:1,w:'Huruf kecil dan garis bawah: sah.'},
+  {n:'_diskon',s:1,w:'Nama boleh diawali garis bawah.'},
+  {n:'harga2',s:1,w:'Angka boleh dipakai, asalkan tidak di awal.'},
+  {n:'stok_gudang_2024',s:1,w:'Huruf, angka, dan garis bawah: sah.'},
+  {n:'Total',s:1,w:'Sah, tetapi Total dan total adalah dua nama yang berbeda.'},
+  {n:'jumlahBarang',s:1,w:'Sah menurut Python, meski kebiasaan Python adalah jumlah_barang.'},
+  {n:'ppn_11',s:1,w:'Sah: angka tidak di awal.'},
+  {n:'nama_pelanggan',s:1,w:'Sah dan menjelaskan isinya.'},
+  {n:'PAJAK',s:1,w:'Sah. Huruf kapital boleh dipakai.'},
+  {n:'2harga',s:0,w:'Nama variabel tidak boleh diawali angka.'},
+  {n:'total belanja',s:0,w:'Nama variabel tidak boleh mengandung spasi.'},
+  {n:'harga-satuan',s:0,w:'Tanda - dibaca Python sebagai tanda kurang.'},
+  {n:'harga%',s:0,w:'Tanda % tidak diizinkan dalam nama.'},
+  {n:'class',s:0,w:'class adalah kata kunci Python.'},
+  {n:'for',s:0,w:'for adalah kata kunci Python.'},
+  {n:'diskon!',s:0,w:'Tanda ! tidak diizinkan dalam nama.'},
+  {n:'nama.pelanggan',s:0,w:'Titik punya arti khusus dalam Python, jadi tidak boleh dipakai dalam nama.'},
+  {n:'True',s:0,w:'True adalah kata kunci Python.'},
+  {n:'harga$',s:0,w:'Tanda $ tidak diizinkan dalam nama.'},
+  {n:'import',s:0,w:'import adalah kata kunci Python.'},
+  {n:'1st_order',s:0,w:'Nama variabel tidak boleh diawali angka.'}
+];
+function hud(g,label,skor,hati,maksHati=3){
+  if(maksHati)hatiHUD(g,4,4,hati,maksHati);
+  const lx=maksHati?6+maksHati*9:4;
+  if(label){const w=lebarTeks(label,10,true)+6;g.globalAlpha=.8;kotak(g,lx,2,w,13,'#1c2340');g.globalAlpha=1;tulis(g,label,lx+2,3,'#ffffff',{tebal:true,bayang:'#0b0f22'})}
+  const tx=String(skor),w2=lebarTeks(tx,10,true)+15;g.globalAlpha=.8;kotak(g,252-w2,2,w2+2,13,'#1c2340');g.globalAlpha=1;
+  spr(g,'kepeng',252-w2+3,5);tulis(g,tx,252,3,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+}
+function layarJudul(g,judul,baris,t=0){
+  g.globalAlpha=.55;kotak(g,0,0,256,144,'#0b0f22');g.globalAlpha=1;
+  const w=204,h=36+baris.length*12,x=26,y=Math.round(70-h/2);
+  bingkaiRPG(g,x,y,w,h);
+  tulis(g,judul,128,y+7,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+  baris.forEach((b,i)=>tulis(g,b,128,y+31+i*12,'#ffffff',{rata:'tengah',bayang:'#0b0f22'}));
+  pamn(g,240,y+h+2,Math.sin(t*2)>.6?'sorak':'diam');
+}
+function simpanTerbaik(kunci,skor,el,fmt){const b=lsAmbil(kunci,0);if(skor>b)lsSimpan(kunci,skor);const t=Math.max(b,skor);el.textContent=t?fmt(t):''}
+function permainanStempel(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0},bS=$('#stempel-sah'),bT=$('#stempel-tidak'),pesan=$('#stempel-pesan'),bMulai=$('#stempel-mulai');
+  const fmt=s=>`Skor terbaik: ${s}`;simpanTerbaik('materi6:stempel',0,$('#stempel-terbaik'),fmt);
+  const aktif=()=>{const on=G.status==='jalan';bS.disabled=bT.disabled=!on};aktif();
+  function mulai(){
+    const sah=acakSalin(LABEL_GAME.filter(x=>x.s)).slice(0,5),tidak=acakSalin(LABEL_GAME.filter(x=>!x.s)).slice(0,5);
+    Object.assign(G,{status:'jalan',skor:0,hati:3,i:0,daftar:acakSalin([...sah,...tidak]),tKartu:null,stempel:null});
+    pesan.innerHTML='';bMulai.textContent='Mulai ulang';aktif();
+  }
+  function pilih(sah,habis){
+    if(G.status!=='jalan')return;
+    const L=G.daftar[G.i],ok=!habis&&(sah===!!L.s);
+    G.status='stempel';G.stempel={t0:G.t,sah,ok,habis};aktif();bunyi('stempel');setTimeout(()=>bunyi(ok?'benar':'salah'),160);
+    if(ok)G.skor+=10;else G.hati--;
+    pesan.innerHTML=habis?`<span style="color:var(--fn)">⏱ Waktu habis.</span> <code>${esc(L.n)}</code> ${L.s?'sah':'tidak sah'}: ${esc(L.w)}`
+      :ok?`<span style="color:var(--tp)">✓ Tepat.</span> <code>${esc(L.n)}</code>: ${esc(L.w)}`:`<span style="color:var(--fn)">✗ Keliru.</span> <code>${esc(L.n)}</code> ${L.s?'sah':'tidak sah'}: ${esc(L.w)}`;
+  }
+  bS.onclick=()=>pilih(true);bT.onclick=()=>pilih(false);bMulai.onclick=mulai;
+  G.kunci=k=>{if(k==='s')pilih(true);else if(k==='t')pilih(false)};
+  const mejaStempel=latar(256,144,q=>{
+    const a=acakTetap(21);
+    kotak(q,0,0,256,144,'#6b4426');
+    for(let y=0;y<144;y+=6)kotak(q,0,y,256,1,'#5a3820');
+    for(let i=0;i<70;i++)kotak(q,Math.floor(a()*256),Math.floor(a()*144),3+Math.floor(a()*6),1,a()<.5?'#7d5233':'#4e301a');
+    for(const [x,c,d] of [[196,'#2f9e44','#1a5a2a'],[226,'#c0392b','#7a1c14']]){kotak(q,x,114,26,18,GB.garis);kotak(q,x+1,115,24,16,'#3a3f5a');kotak(q,x+3,117,20,12,c);kotak(q,x+3,117,20,2,d)}
+    kotak(q,8,100,22,12,GB.garis);kotak(q,9,101,20,10,'#2b2f3a');kotak(q,13,94,2,10,'#f4f1e6');kotak(q,14,90,4,6,'#f4f1e6');
+  });
+  adegan($('#kv-stempel'),(g,t)=>{
+    G.t=t;
+    g.drawImage(mejaStempel,0,0);
+    hud(g,G.status==='awal'?'Stempel Label':`Label ${Math.min(G.i+1,10)}/10`,G.skor,G.hati);
+    if(G.status==='awal'){layarJudul(g,'STEMPEL LABEL',['Tekan "Mulai main".','S = sah, T = tidak sah'],t);return}
+    const L=G.daftar[G.i];let reaksi='diam';
+    if(L&&(G.status==='jalan'||G.status==='stempel')){
+      if(G.tKartu==null)G.tKartu=t;
+      const u=t-G.tKartu,batas=Math.max(5,8-G.i*.3);
+      let cx=lerp(320,128,mulus(u/.35)),cy=30;
+      const s=G.stempel,us=s?t-s.t0:0;
+      if(s&&us>.9)cy+=Math.pow(us-.9,2)*900;
+      if(s&&!s.ok&&us>.25&&us<.7)cx+=Math.sin(us*60)*3;
+      if(s&&us>.25&&us<1.2)reaksi=s.ok?'sorak':'kaget';
+      const w=Math.max(120,lebarTeks(L.n,10,true)*2+30),h=48,x=Math.round(cx-w/2);
+      g.globalAlpha=.3;kotak(g,x+3,cy+4,w,h,0);g.globalAlpha=1;
+      kotak(g,x,cy,w,h,'#8a6a3a');kotak(g,x+1,cy+1,w-2,h-2,GB.kertas);kotak(g,x+1,cy+h-5,w-2,4,'#e0cc94');
+      kotak(g,x+6,cy+19,6,6,'#8a6a3a');kotak(g,x+7,cy+20,4,4,'#6b4426');kotak(g,x-10,cy+21,16,1,'#c9b27a');
+      tulis(g,L.n,cx+4,cy+11,'#3a2410',{rata:'tengah',skala:2,tebal:true});
+      if(!s){
+        const sisa=jepit(1-(u-.35)/batas,0,1);
+        kotak(g,38,88,180,9,'#5a3a10');kotak(g,39,89,178,7,'#1c2340');kotak(g,40,90,176*sisa,5,sisa>.5?'#55d36b':sisa>.25?'#ffb84d':'#ff5a5a');kotak(g,40,90,176*sisa,1,'#ffffff');
+        if(u-.35>batas)pilih(false,true);
+      }else{
+        const turun=us<.12?us/.12:us<.25?1:Math.max(0,1-(us-.25)/.15),sy=lerp(-40,cy-6,turun);
+        const c=s.habis?'#7a7f94':s.sah?'#2f9e44':'#c0392b';
+        if(us>=.12){
+          const teks=s.habis?'WAKTU HABIS':s.sah?'SAH':'TIDAK SAH',tw=lebarTeks(teks,10,true)+12;
+          g.globalAlpha=.88;bingkai(g,cx-tw/2,cy+h-18,tw,15,c);bingkai(g,cx-tw/2+1,cy+h-17,tw-2,13,c);tulis(g,teks,cx,cy+h-16,c,{rata:'tengah',tebal:true});g.globalAlpha=1;
+        }
+        if(turun>0){kotak(g,cx-5,sy-24,10,14,GB.kayuGG);kotak(g,cx-4,sy-23,8,12,GB.kayu);kotak(g,cx-4,sy-23,2,12,GB.kayuT);kotak(g,cx-11,sy-10,22,5,'#5c6178');kotak(g,cx-13,sy-5,26,6,c)}
+        if(us>.3&&us<1.1)tulis(g,s.ok?'+10':'✗',cx+w/2-6,cy-10-(us-.3)*12,s.ok?'#7dff8a':'#ff5a5a',{rata:'tengah',skala:s.ok?1:2,tebal:true,bayang:'#0b0f22'});
+        if(us>1.2){
+          G.i++;G.tKartu=null;G.stempel=null;
+          if(G.hati<=0||G.i>=10){G.status='selesai';bunyi(G.hati>0?'menang':'kalah');simpanTerbaik('materi6:stempel',G.skor,$('#stempel-terbaik'),fmt);bMulai.textContent='Main lagi'}
+          else G.status='jalan';
+          aktif();
+        }
+      }
+    }
+    pamn(g,48+(reaksi==='kaget'?Math.round(Math.sin(t*50)):0),136,reaksi==='kaget'?'diam':reaksi,{});
+    if(G.status==='selesai')layarJudul(g,G.hati>0?'SELESAI':'HATI HABIS',[`Skor ${G.skor} dari 100`,G.skor>=80?'Hebat, penamaan Anda rapi.':'Baca lagi aturan penamaan, lalu coba lagi.'],t);
+  });
+  return G;
+}
+
+/* ============ KARTU TIPE & ADEGAN TELEPON ============ */
+const KARTU_TIPE=[
+  {t:'int',ik:'kepeng',j:'Bilangan bulat',d:'Tanpa titik desimal; dapat positif, negatif, atau nol.',c:['45000','-3','0'],b:'jumlah barang, stok, harga rupiah'},
+  {t:'float',ik:'ramuan',j:'Bilangan berkoma',d:'Ditulis dengan titik desimal, bukan koma.',c:['12.5','0.11','45000.0'],b:'diskon persen, berat, rating'},
+  {t:'str',ik:'gulungan',j:'Teks',d:'Rangkaian karakter yang diapit tanda kutip, termasuk angka yang tidak dihitung.',c:['"Gula Aren"',"'081234567890'"],b:'nama, nomor telepon, kode produk'},
+  {t:'bool',ik:'lentera',j:'Benar atau salah',d:'Hanya True atau False, dengan huruf awal kapital.',c:['True','False'],b:'status lunas, anggota premium'}
+];
+function adeganTelepon(){
+  const bg=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,34);
+    lukisLantaiKayu(q,0,34,256,110,acakTetap(9));
+    kotak(q,0,66,100,6,GB.kayuGG);kotak(q,0,67,100,4,GB.kayu);kotak(q,0,67,100,1,GB.kayuT);
+    kotak(q,156,66,100,6,GB.kayuGG);kotak(q,156,67,100,4,GB.kayu);kotak(q,156,67,100,1,GB.kayuT);
+    kotak(q,60,4,136,18,GB.kayuGG);kotak(q,61,5,134,16,GB.kayuT);kotak(q,61,18,134,3,GB.kayu);
+  });
+  adegan($('#kv-telepon'),(g,t)=>{
+    const T=GERAK?t%9:4.8;
+    g.drawImage(bg,0,0);
+    tulis(g,'int("081234567890")',128,7,'#3a2410',{rata:'tengah',tebal:true});
+    const proses=T>2&&T<3.4;
+    g.save();g.beginPath();g.rect(0,0,102,144);g.clip();
+    if(T<2.4)tokenNilai(g,nS('081234567890'),lerp(-60,112,mulus(T/2.2)),60);
+    g.restore();
+    mesinKuningan(g,100,34,56,62,'int()',{goy:proses?Math.round(Math.sin(t*50)):0,sudut:proses&&GERAK?t*7:0,lampu:proses&&Math.floor(t*8)%2?'#ff5a5a':'#55d36b'});
+    g.save();g.beginPath();g.rect(156,0,100,144);g.clip();
+    if(T>3.2)tokenNilai(g,nI(81234567890),lerp(120,206,mulus((T-3.2)/1.2)),60);
+    g.restore();
+    pamn(g,40,108,T>3.3&&T<4.6?'sorak':'samping1',{});
+    if(T>3.3){
+      const u=T-3.3,x=lerp(126,74,jepit(u/1.2,0,1));
+      const y=u<.5?lerp(94,82,u/.5):u<1.1?lerp(82,100,(u-.5)/.6):100-Math.abs(Math.sin((u-1.1)*7))*8*Math.exp(-(u-1.1)*3);
+      tulis(g,'0',x,y,'#ff5a5a',{uk:20,tebal:true,bayang:'#0b0f22'});
+    }
+    if(T>4.4)kotakDialog(g,6,112,244,29,'PAMN',['Angka 0 di depan hilang!','Simpan nomor telepon sebagai teks.'],T-4.4);
+  });
+}
+
+/* ============ PERMAINAN: GUDANG SORTIR ============ */
+const DATA_GUDANG=[
+  {d:'Stok di gudang',v:'120',t:'int',w:'Stok dihitung per buah, tidak pernah pecahan.'},
+  {d:'Harga kopi',v:'45000',t:'int',w:'Harga rupiah adalah bilangan bulat yang akan dihitung.'},
+  {d:'Jumlah karyawan',v:'8',t:'int',w:'Karyawan dihitung per orang.'},
+  {d:'Jumlah pengunjung',v:'1532',t:'int',w:'Pengunjung dihitung per orang.'},
+  {d:'Total transaksi',v:'1250000',t:'int',w:'Rupiah tanpa pecahan.'},
+  {d:'Jumlah pesanan',v:'3',t:'int',w:'Pesanan dihitung per buah.'},
+  {d:'Rating produk',v:'4.5',t:'float',w:'Rating dapat bernilai pecahan.'},
+  {d:'Berat paket (kg)',v:'1.25',t:'float',w:'Berat dapat bernilai pecahan.'},
+  {d:'Diskon (%)',v:'12.5',t:'float',w:'Persentase diskon dapat bernilai pecahan.'},
+  {d:'Kurs dolar',v:'15750.25',t:'float',w:'Kurs memuat angka di belakang koma.'},
+  {d:'Margin (%)',v:'17.5',t:'float',w:'Persentase dapat bernilai pecahan.'},
+  {d:'Rata-rata belanja',v:'85250.5',t:'float',w:'Hasil rata-rata hampir selalu berkoma.'},
+  {d:'Nomor HP',v:'081234567890',t:'str',w:'Tidak pernah dihitung, dan angka nol di depannya harus tetap ada.'},
+  {d:'Kode pos',v:'80361',t:'str',w:'Kode pos tidak pernah dijumlahkan atau dikalikan.'},
+  {d:'Nama pelanggan',v:'Made Adi',t:'str',w:'Nama adalah rangkaian karakter.'},
+  {d:'Kode produk',v:'PRD-0187',t:'str',w:'Memuat huruf dan tanda hubung.'},
+  {d:'Nomor rekening',v:'0012345678',t:'str',w:'Tidak pernah dihitung; angka nol di depan harus tetap ada.'},
+  {d:'NIM mahasiswa',v:'2401010001',t:'str',w:'NIM tidak pernah dihitung, meski seluruhnya angka.'},
+  {d:'Alamat email',v:'adi@mail.com',t:'str',w:'Rangkaian karakter.'},
+  {d:'Nomor faktur',v:'INV-2025-001',t:'str',w:'Memuat huruf dan tanda hubung.'},
+  {d:'Status lunas',v:'ya / tidak',t:'bool',w:'Hanya dua kemungkinan: benar atau salah.'},
+  {d:'Member premium?',v:'ya / tidak',t:'bool',w:'Hanya dua kemungkinan: benar atau salah.'},
+  {d:'Stok habis?',v:'ya / tidak',t:'bool',w:'Hanya dua kemungkinan: benar atau salah.'},
+  {d:'Sudah verifikasi?',v:'ya / tidak',t:'bool',w:'Hanya dua kemungkinan: benar atau salah.'}
+];
+const URUT_TIPE=['int','float','str','bool'];
+function permainanGudang(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0,efek:[]},pesan=$('#gudang-pesan'),bMulai=$('#gudang-mulai'),tombol=$$('#gudang-tombol button');
+  const fmt=s=>`Skor terbaik: ${s}`;simpanTerbaik('materi6:gudang',0,$('#gudang-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>b.disabled=G.status!=='jalan');aktif();
+  const binX=i=>3+i*64;
+  function peti(){const it=G.daftar[G.i],w=Math.max(lebarTeks(it.d,10,true),lebarTeks(it.v))+16;G.peti={it,x:-w,w}}
+  function mulai(){
+    const per=URUT_TIPE.map(tp=>acakSalin(DATA_GUDANG.filter(d=>d.t===tp)).slice(0,3)).flat();
+    Object.assign(G,{status:'jalan',skor:0,hati:3,i:0,daftar:acakSalin(per),terbang:null,efek:[]});
+    peti();pesan.innerHTML='';bMulai.textContent='Mulai ulang';aktif();
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=G.daftar.length){G.status='selesai';bunyi(G.hati>0?'menang':'kalah');simpanTerbaik('materi6:gudang',G.skor,$('#gudang-terbaik'),fmt);bMulai.textContent='Main lagi'}
+    else{G.status='jalan';peti()}
+    aktif();
+  }
+  function nilaiJawab(pil){
+    const it=G.peti.it,ok=pil===it.t;bunyi(pil==null?'jatuh':ok?'koin':'salah');
+    if(ok)G.skor+=10;else G.hati--;
+    pesan.innerHTML=pil==null?`<span style="color:var(--fn)">✗ Peti jatuh.</span> <b>${esc(it.d)}</b> seharusnya <span class="tp ${it.t}">${it.t}</span>: ${esc(it.w)}`
+      :ok?`<span style="color:var(--tp)">✓ Tepat.</span> <b>${esc(it.d)}</b> → <span class="tp ${it.t}">${it.t}</span>: ${esc(it.w)}`
+      :`<span style="color:var(--fn)">✗ Keliru.</span> <b>${esc(it.d)}</b> seharusnya <span class="tp ${it.t}">${it.t}</span>, bukan <span class="tp ${pil}">${pil}</span>: ${esc(it.w)}`;
+    return ok;
+  }
+  function pilih(tp){
+    if(G.status!=='jalan')return;
+    G.status='terbang';aktif();bunyi('lempar');
+    const bi=URUT_TIPE.indexOf(tp);
+    G.terbang={t0:G.t,pil:tp,x0:G.peti.x,y0:22,x1:binX(bi)+29-G.peti.w/2,y1:94};
+  }
+  tombol.forEach(b=>b.onclick=()=>pilih(b.dataset.tipe));
+  bMulai.onclick=mulai;
+  G.kunci=k=>{const i='1234'.indexOf(k);if(i>=0)pilih(URUT_TIPE[i])};
+  function gambarKardus(g,x,y,w,it,merah){
+    x=Math.round(x);y=Math.round(y);
+    g.globalAlpha=.25;kotak(g,x+2,y+29,w-2,3,0);g.globalAlpha=1;
+    kotak(g,x,y,w,30,GB.kayuGG);kotak(g,x+1,y+1,w-2,28,merah?'#c0392b':GB.kayu);kotak(g,x+1,y+1,w-2,1,merah?'#ff8a8a':GB.kayuT);
+    kotak(g,x+4,y+3,w-8,24,GB.kertasG);kotak(g,x+5,y+4,w-10,22,GB.kertas);
+    tulis(g,it.d,x+w/2,y+4,'#3a2410',{rata:'tengah',tebal:true});tulis(g,it.v,x+w/2,y+15,'#8a4a10',{rata:'tengah'});
+  }
+  const latarGudang=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,46);
+    lukisLantaiKayu(q,0,46,256,98,acakTetap(13));
+    kotak(q,0,52,256,10,GB.garis);kotak(q,0,53,256,8,'#2a1a10');
+    for(let x=4;x<256;x+=16){kotak(q,x,62,4,6,'#5c6178');kotak(q,x,62,4,1,'#9aa7b8')}
+    kotak(q,0,62,256,1,GB.garis);
+  });
+  adegan($('#kv-gudang'),(g,t,dt)=>{
+    G.t=t;
+    g.drawImage(latarGudang,0,0);
+    const geser=G.status==='jalan'&&GERAK?(t*20)%8:0;
+    for(let x=-8;x<264;x+=8){kotak(g,x+geser,55,4,1,'#4a2c16');kotak(g,x+geser+1,58,2,1,'#4a2c16')}
+    let sorot=-1;
+    if(G.status==='terbang')sorot=URUT_TIPE.indexOf(G.terbang.pil);
+    URUT_TIPE.forEach((tp,i)=>{
+      const x=binX(i),efek=G.efek.find(e=>e.x===x+29&&t-e.t0<.6);
+      petiHarta(g,x,98,58,36,tp,{kilau:sorot===i||(efek&&efek.ok)});
+      tulis(g,tp,x+29,100,'#ffffff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+      const ik=ikonTipe({t:tp,v:true});const {w,h}=ukuranSprite(ik);spr(g,ik,x+29-w/2,121-h/2);
+      tulis(g,String(i+1),x+51,124,'#ffffff',{rata:'tengah',uk:8,tebal:true,bayang:'#0b0f22'});
+    });
+    const baru=G.efek.find(e=>t-e.t0<.9);
+    pamn(g,14,92,baru?(baru.ok?'sorak':'diam'):(G.status==='jalan'?'samping1':'diam'),{});
+    hud(g,G.status==='awal'?'Gudang Sortir':`Peti ${Math.min(G.i+1,12)}/12`,G.skor,G.hati);
+    if(G.status==='awal'){layarJudul(g,'GUDANG SORTIR',['Tekan "Mulai main".','1 int · 2 float · 3 str · 4 bool'],t);return}
+    if(G.status==='jalan'&&G.peti){
+      G.peti.x+=(16+G.i*2.4)*dt;
+      gambarKardus(g,G.peti.x,22,G.peti.w,G.peti.it);
+      if(G.peti.x>256){nilaiJawab(null);G.status='jeda';G.tJeda=t;aktif()}
+    }
+    if(G.status==='terbang'){
+      const f=G.terbang,u=(t-f.t0)/.45,p=jepit(u,0,1);
+      gambarKardus(g,lerp(f.x0,f.x1,p),lerp(f.y0,f.y1,p)-Math.sin(p*Math.PI)*24,G.peti.w,G.peti.it);
+      if(u>=1){const ok=nilaiJawab(f.pil);G.efek.push({t0:t,x:binX(URUT_TIPE.indexOf(f.pil))+29,ok});G.status='jeda';G.tJeda=t;aktif()}
+    }
+    if(G.status==='jeda'&&t-G.tJeda>.8)lanjut();
+    G.efek=G.efek.filter(e=>t-e.t0<1);
+    for(const e of G.efek){const u=t-e.t0;if(!e.ok)asap(g,e.x,104,u);tulis(g,e.ok?'+10':'✗',e.x,82-u*18,e.ok?'#7dff8a':'#ff5a5a',{rata:'tengah',skala:e.ok?1:2,tebal:true,bayang:'#0b0f22'})}
+    if(G.status==='selesai')layarJudul(g,G.hati>0?'SELESAI':'HATI HABIS',[`Skor ${G.skor} dari 120`,G.skor>=100?'Gudang Anda tertata rapi.':'Ingat uji sederhana: akan dihitung atau tidak?'],t);
+  });
+  return G;
+}
+
+/* ============ LABORATORIUM OPERATOR ============ */
+const OP_KIRI=[nI(100),nI(17),nF(2.5),nS('100'),nS('Kopi')],OP_TANDA=['+','-','*','/','//','%'],OP_KANAN=[nI(200),nI(5),nI(3),nF(2.5),nS('200'),nS('Susu')];
+const tulisNilai=v=>v.t==='str'?`"${v.v}"`:pyRepr(v);
+function labOperator(){
+  const sk=$('#op-kiri'),st=$('#op-tanda'),sn=$('#op-kanan');
+  sk.innerHTML=OP_KIRI.map((v,i)=>`<option value="${i}">${esc(tulisNilai(v))} (${v.t})</option>`).join('');
+  st.innerHTML=OP_TANDA.map((o,i)=>`<option value="${i}">${o}</option>`).join('');
+  sn.innerHTML=OP_KANAN.map((v,i)=>`<option value="${i}">${esc(tulisNilai(v))} (${v.t})</option>`).join('');
+  sn.value='0';
+  const A={t0:null};
+  function hitung(suara){
+    const a=OP_KIRI[+sk.value],o=OP_TANDA[+st.value],b=OP_KANAN[+sn.value],kode=`print(${tulisNilai(a)} ${o} ${tulisNilai(b)})`;
+    const h=jalankanProgram(kode),akhir=h.jejak[h.jejak.length-1];
+    let r=null;try{r=hitungBin(o,a,b)}catch(e){}
+    $('#op-kode').innerHTML=kodeHTML([kode],h.galat?{1:'galat'}:{});
+    $('#op-layar').innerHTML=layarHTML(akhir.layar);
+    let jelas;
+    if(h.galat)jelas=`<div class="galat-c"><b>${h.galat.jenis}</b>: ${esc(penjelasanGalat(h.galat))}</div>`;
+    else if(angkaT(a)&&angkaT(b)){
+      jelas='Kedua nilai bilangan, jadi operasi hitung biasa.';
+      if(o==='/')jelas+=' Pembagian <code>/</code> selalu menghasilkan <code>float</code>.';
+      else if(a.t==='float'||b.t==='float')jelas+=' Bila salah satu nilai <code>float</code>, hasilnya <code>float</code>.';
+      if(o==='//')jelas+=' <code>//</code> membuang sisa pembagian.';
+      if(o==='%')jelas+=' <code>%</code> menghasilkan sisa pembagian, bukan persen.';
+    }else if(a.t==='str'&&b.t==='str')jelas='Kedua nilai teks: tanda <code>+</code> menyambung tanpa menambahkan spasi.';
+    else jelas='Teks dikali bilangan bulat: teks diulang sebanyak bilangan itu.';
+    $('#op-cerita').innerHTML=`<div>${chip(a)} ${esc(o)} ${chip(b)} → ${r?chip(r):`<b style="color:var(--fn)">${h.galat.jenis}</b>`}</div><div>${jelas}</div>`;
+    Object.assign(A,{a,b,o,r,galat:h.galat,t0:null});
+    if(suara){bunyi('lempar');setTimeout(()=>bunyi(h.galat?'galat':'koin'),GERAK?700:0)}
+  }
+  $('#op-hitung').onclick=hitung;[sk,st,sn].forEach(s=>s.onchange=hitung);
+  hitung();
+  const latarOp=latar(256,144,q=>{
+    lukisDindingBatu(q,0,0,256,38);
+    lukisLantaiBatu(q,0,38,256,106,acakTetap(17));
+    kotak(q,196,12,52,3,GB.kayuGG);kotak(q,196,12,52,1,GB.kayuT);
+    for(const [x,c] of [[200,'#5cc8ff'],[212,'#7dff8a'],[224,'#ff9ccb'],[236,'#ffd34d']]){kotak(q,x,5,6,7,GB.garis);kotak(q,x+1,6,4,5,c);kotak(q,x+2,3,2,2,'#b07a3e')}
+  });
+  adegan($('#kv-operator'),(g,t)=>{
+    if(A.t0==null)A.t0=t;
+    const u=GERAK?t-A.t0:3;
+    g.drawImage(latarOp,0,0);
+    obor(g,24,18,t);obor(g,172,18,t);
+    const galat=!A.r,goy=galat&&u>.7&&u<1.3?Math.round(Math.sin(t*50)*1.5):0;
+    const cair=u<.7?'#5cc8ff':galat?'#ff5a5a':(TEKS_TIPE[A.r.t]||'#7dff8a');
+    kuali(g,128,96,t,cair,{goy,rune:A.o,runeWarna:u>.6&&u<1?'#fff7b0':'#ffd34d',gelembung:galat&&u>.7?'#ffb3b3':'#ffffff'});
+    pamn(g,34,132,u>.7&&u<1.3&&!galat?'sorak':'diam',{skala:2});
+    const p=mulus(u/.6);
+    if(u<.7){
+      tokenNilai(g,A.a,lerp(-40,104,p),lerp(44,76,p)-Math.sin(p*Math.PI)*22,{maks:84});
+      tokenNilai(g,A.b,lerp(296,152,p),lerp(44,76,p)-Math.sin(p*Math.PI)*22,{maks:84});
+    }else if(u<1){letup(g,128,86,(u-.7)/.3,cair)}
+    if(u>.9){
+      const q=mulus((u-.9)/.5);
+      if(A.r)tokenNilai(g,A.r,128,lerp(86,52,q),{maks:180});
+      else{asap(g,128,82,jepit((u-.9)/1.2,0,1),10);spr(g,'bugG',128-16,lerp(80,38,q)+Math.round(Math.sin(t*9)*2),2,{ganti:WARNA_BUG.TypeError});if(u>1.3)tulis(g,A.galat.jenis,128,22,'#ff5a5a',{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+    }
+    tulis(g,'KUALI OPERATOR',128,128,'#c3c7d6',{rata:'tengah',uk:8,tebal:true,bayang:'#0b0f22'});
+  });
+}
+
+/* ============ PERMAINAN: MESIN KONVERSI ============ */
+const SKENARIO_MESIN=[
+  {l:'Harga satuan',k:'45000',n:'harga',p:'harga * 2',v:{int:['tepat','Harga rupiah adalah bilangan bulat yang akan dihitung.'],float:['kurang','Berjalan, tetapi muncul .0 di belakang. Rupiah tidak memakai angka di belakang koma, jadi int() lebih tepat.'],teks:['salah','Teks dikali 2 berarti diulang. Tidak ada pesan kesalahan, tetapi hasilnya keliru.']}},
+  {l:'Diskon (%)',k:'12.5',n:'diskon',p:'diskon / 100',v:{int:['salah','int() tidak dapat mengubah teks berkoma, jadi program berhenti dengan ValueError.'],float:['tepat','Diskon dapat bernilai pecahan.'],teks:['salah','Teks tidak dapat dibagi, jadi program berhenti dengan TypeError.']}},
+  {l:'Nomor HP',k:'081234567890',n:'telepon',p:'telepon',v:{int:['salah','Angka 0 di depan hilang. Nomor HP tidak pernah dihitung, jadi biarkan sebagai teks.'],float:['salah','Angka 0 di depan hilang dan muncul .0 di belakang.'],teks:['tepat','Nomor HP tersimpan apa adanya, termasuk angka 0 di depan.']}},
+  {l:'Jumlah barang',k:'3',n:'jumlah',p:'jumlah + 1',v:{int:['tepat','Jumlah barang adalah bilangan bulat.'],float:['kurang','Berjalan, tetapi hasilnya memakai .0. Jumlah barang tidak pernah pecahan.'],teks:['salah','Teks tidak dapat dijumlahkan dengan bilangan, jadi program berhenti dengan TypeError.']}},
+  {l:'Nama produk',k:'Gula Aren',n:'produk',p:'produk',v:{int:['salah','Huruf tidak dapat diubah menjadi bilangan, jadi program berhenti dengan ValueError.'],float:['salah','Huruf tidak dapat diubah menjadi bilangan, jadi program berhenti dengan ValueError.'],teks:['tepat','Nama produk adalah teks.']}},
+  {l:'Berat paket (kg)',k:'2.75',n:'berat',p:'berat * 2',v:{int:['salah','int() tidak dapat mengubah teks berkoma, jadi program berhenti dengan ValueError.'],float:['tepat','Berat dapat bernilai pecahan.'],teks:['salah','Teks dikali 2 berarti diulang. Tidak ada pesan kesalahan, tetapi hasilnya keliru.']}},
+  {l:'Nomor rekening',k:'0012345678',n:'rekening',p:'rekening',v:{int:['salah','Dua angka 0 di depan hilang. Nomor rekening tidak pernah dihitung.'],float:['salah','Angka 0 di depan hilang dan muncul .0 di belakang.'],teks:['tepat','Nomor rekening tersimpan apa adanya.']}},
+  {l:'Uang dibayar',k:'100000',n:'bayar',p:'bayar - 90000',v:{int:['tepat','Uang dibayar adalah bilangan bulat; kembaliannya dapat dihitung.'],float:['kurang','Berjalan, tetapi muncul .0 di belakang.'],teks:['salah','Teks tidak dapat dikurangi, jadi program berhenti dengan TypeError.']}}
+];
+function permainanMesin(){
+  const G={status:'awal',skor:0,i:0,daftar:[],t:0},hasil=$('#mesin-hasil'),bMulai=$('#mesin-mulai'),tombol=$$('#mesin-tombol button');
+  const fmt=s=>`Skor terbaik: ${s} dari 8`;simpanTerbaik('materi6:mesin',0,$('#mesin-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>b.disabled=G.status!=='tanya');aktif();
+  const kodeUntuk=(S,k)=>`${S.n} = ${k==='teks'?`input("${S.l}: ")`:`${k}(input("${S.l}: "))`}\nprint(${S.p})`;
+  function mulai(){Object.assign(G,{status:'tanya',skor:0,i:0,daftar:acakSalin(SKENARIO_MESIN),t0:null,pil:null});hasil.innerHTML=soal();bMulai.textContent='Mulai ulang';aktif()}
+  const soal=()=>{const S=G.daftar[G.i];return `<div class="hint" style="margin-bottom:0">Soal ${G.i+1}/8 · <b>${esc(S.l)}</b>: pengguna mengetik <code>${esc(S.k)}</code>. Nilai ini kemudian dipakai dalam <code>print(${esc(S.p)})</code>. Pilih mesinnya.</div>`};
+  function pilih(k){
+    if(G.status!=='tanya')return;
+    const S=G.daftar[G.i],kode=kodeUntuk(S,k),h=jalankanProgram(kode,[S.k]),akhir=h.jejak[h.jejak.length-1],[nilaiV,alasan]=S.v[k];
+    let simpan=null;const s=h.jejak.find(j=>j.vars.length);if(s)simpan=s.vars[0].v;
+    if(nilaiV==='tepat')G.skor++;
+    Object.assign(G,{status:'proses',pil:k,t0:G.t,hasilV:simpan,galat:h.galat,keluar:akhir.layar.map(x=>x.t).join('').trim()});aktif();
+    bunyi('mesin');setTimeout(()=>bunyi(h.galat&&h.galat.baris===1?'galat':'koin'),GERAK?1150:0);
+    const label={tepat:['ok','✓ Tepat.'],kurang:['hint','◐ Kurang tepat.'],salah:['gagal','✗ Keliru.']}[nilaiV];
+    const terbaik=Object.keys(S.v).find(x=>S.v[x][0]==='tepat');
+    setTimeout(()=>{
+      bunyi(nilaiV==='tepat'?'benar':nilaiV==='kurang'?'langkah':'salah');
+      hasil.innerHTML=`<div class="grid2" style="margin-top:10px"><div><div class="label">Kode</div><div class="kode">${kodeHTML(kode.split('\n'),h.galat?{[h.galat.baris]:'galat'}:{})}</div></div><div><div class="label">Layar</div><pre class="konsol">${layarHTML(akhir.layar)}</pre></div></div>
+        <div class="${label[0]}"><b>${label[1]}</b> ${esc(alasan)}${nilaiV!=='tepat'?` Pilihan terbaik: <b>${terbaik==='teks'?'biarkan teks':terbaik+'()'}</b>.`:''}</div>
+        <div class="row"><button class="act" id="mesin-lanjut">${G.i<7?'Soal berikutnya →':'Lihat hasil'}</button></div>`;
+      $('#mesin-lanjut').onclick=lanjut;
+    },GERAK?1700:0);
+  }
+  function lanjut(){
+    G.i++;
+    if(G.i>=G.daftar.length){G.status='selesai';bunyi(G.skor>=6?'menang':'selesai');hasil.innerHTML=`<div class="${G.skor>=6?'ok':'hint'}">Anda memilih mesin yang tepat pada <b>${G.skor} dari 8</b> soal.</div>`;simpanTerbaik('materi6:mesin',G.skor,$('#mesin-terbaik'),fmt);bMulai.textContent='Main lagi'}
+    else{G.status='tanya';G.pil=null;hasil.innerHTML=soal()}
+    aktif();
+  }
+  tombol.forEach(b=>b.onclick=()=>pilih(b.dataset.k));bMulai.onclick=mulai;
+  const latarMesin=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,34);
+    lukisLantaiKayu(q,0,34,256,110,acakTetap(23));
+    kotak(q,22,58,44,30,GB.kayuGG);kotak(q,23,59,42,28,GB.kayu);kotak(q,23,59,42,2,GB.kayuT);kotak(q,39,88,10,12,GB.kayuGG);kotak(q,30,100,28,3,GB.kayuGG);
+    kotak(q,25,62,38,14,'#8a6a3a');kotak(q,26,63,36,12,GB.kertas);
+    kotak(q,66,66,46,6,GB.kayuGG);kotak(q,66,67,46,4,GB.kayu);kotak(q,66,67,46,1,GB.kayuT);
+    kotak(q,180,66,76,6,GB.kayuGG);kotak(q,180,67,76,4,GB.kayu);kotak(q,180,67,76,1,GB.kayuT);
+  });
+  adegan($('#kv-mesin'),(g,t)=>{
+    G.t=t;
+    g.drawImage(latarMesin,0,0);
+    tulis(g,'input()',44,64,'#3a2410',{rata:'tengah',uk:8});
+    hud(g,G.status==='awal'?'Mesin Konversi':`Soal ${Math.min(G.i+1,8)}/8`,G.skor,0,0);
+    if(G.status==='awal'){mesinKuningan(g,112,34,68,58,'?',{});layarJudul(g,'MESIN KONVERSI',['Tekan "Mulai main".','Pilih int(), float(), atau biarkan teks.'],t);return}
+    if(G.status==='selesai'){
+      mesinKuningan(g,112,34,68,58,'✓',{});
+      bingkaiRPG(g,40,40,176,62);spr(g,'pialaG',122,48,1);tulis(g,`${G.skor} dari 8 tepat`,128,64,'#ffd34d',{rata:'tengah',skala:1,tebal:true,bayang:'#0b0f22'});
+      tulis(g,G.skor>=6?'Mesin Anda bekerja rapi!':'Coba lagi untuk skor lebih tinggi.',128,80,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});pamn(g,226,126,'sorak');return;
+    }
+    const S=G.daftar[G.i];
+    const lw=lebarTeks(S.l,10,true)+10;g.globalAlpha=.85;kotak(g,128-lw/2,18,lw,13,'#1c2340');g.globalAlpha=1;tulis(g,S.l,128,19,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    warga(g,10,104,'samping',{});
+    const u=G.status==='tanya'||G.t0==null?0:t-G.t0,k=G.pil;
+    const nama=k==null?'?':k==='teks'?'teks':k+'()',goy=u>.6&&u<1.2?Math.round(Math.sin(t*50)*1.5):0;
+    const putar=u>.6&&u<1.2;
+    mesinKuningan(g,112,34,68,58,nama,{goy,sudut:putar&&GERAK?t*7:0,lampu:G.galat&&u>1.2&&G.galat.baris===1?'#ff5a5a':putar&&Math.floor(t*8)%2?'#ffd34d':'#55d36b'});
+    const tiket=nS(S.k),bob=G.status==='tanya'&&GERAK?Math.sin(t*4)*2:0;
+    g.save();g.beginPath();g.rect(0,0,112,144);g.clip();
+    if(u<.7)tokenNilai(g,tiket,lerp(80,170,mulus(u/.6)),56+bob,{maks:70});
+    g.restore();
+    pamn(g,206,112,u>1.2&&!(G.galat&&G.galat.baris===1)?'sorak':'diam');
+    if(u>1.2&&G.status!=='tanya'){
+      const p=mulus((u-1.2)/.5);
+      if(G.galat&&G.galat.baris===1){asap(g,146,30,jepit((u-1.2)/1.2,0,1),10);tulis(g,G.galat.jenis,218,50,'#ff5a5a',{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+      else if(G.hasilV){g.save();g.beginPath();g.rect(180,0,76,144);g.clip();tokenNilai(g,G.hasilV,lerp(150,218,p),56,{maks:56});g.restore()}
+      if(u>1.7){
+        const kel=G.keluar.split('\n').pop()||'';
+        kotakDialog(g,6,112,244,29,'PAMN',[`print(${S.p})`,potong(kel,226)],u-1.7);
+      }
+    }
+  });
+}
+
+/* ============ MESIN STRUK ============ */
+const PRODUK_STRUK=['Kopi Arabika','Teh Hijau','Gula Aren','Madu Hutan','Kopi Robusta','Cokelat Bubuk'];
+function kodeStruk(o){
+  const f=o.f?'f':'',fmt=o.koma?':,':'',fmtF=o.koma?':,.0f':'',rep=o.koma&&o.indo?'.replace(",", ".")':'';
+  const k=[`produk = "${o.produk}"`,`harga = ${o.harga}`,`jumlah = ${o.jumlah}`,'total = harga * jumlah','','print("=" * 24)','print("  TOKO KOPI NUSANTARA")','print("=" * 24)',
+    `print(${f}"{produk} x{jumlah}")`,`print(${f}"Harga : Rp{harga${fmt}}"${rep})`,`print(${f}"Total : Rp{total${fmt}}"${rep})`];
+  if(o.pajak)k.push('pajak = total * 11 / 100','bayar = total + pajak',`print(${f}"Pajak : Rp{pajak${fmtF}}"${rep})`,`print(${f}"Bayar : Rp{bayar${fmtF}}"${rep})`);
+  k.push('print("=" * 24)');
+  return k.join('\n');
+}
+CONTOH.struk={j:'Struk belanja',k:kodeStruk({produk:'Kopi Arabika',harga:45000,jumlah:2,f:true,koma:true,indo:true,pajak:false})};
+function mesinStruk(){
+  $('#struk-produk').innerHTML=PRODUK_STRUK.map(p=>`<option>${p}</option>`).join('');
+  const A={baris:[],galat:false,t0:null};
+  function perbarui(suara){
+    const koma=$('#struk-koma').checked;$('#struk-indo').disabled=!koma;
+    const o={produk:$('#struk-produk').value,harga:jepit(parseInt($('#struk-harga').value)||0,0,99999999),jumlah:jepit(parseInt($('#struk-jumlah').value)||0,0,999),f:$('#struk-f').checked,koma,indo:$('#struk-indo').checked,pajak:$('#struk-pajak').checked};
+    const kode=kodeStruk(o),h=jalankanProgram(kode);
+    $('#struk-kode').innerHTML=kodeHTML(kode.split('\n'),h.galat?{[h.galat.baris]:'galat'}:{});
+    A.baris=h.c.layar.map(s=>s.t).join('').replace(/\n$/,'').split('\n');A.galat=!!h.galat;A.t0=null;
+    if(suara)for(let i=0;i<A.baris.length;i++)nada(1700+(i%2)*250,.025,{vol:.025,tunda:GERAK?i*.16:0});
+  }
+  $$('#t-b6 .game input,#t-b6 .game select').forEach(el=>el.addEventListener('input',perbarui));
+  perbarui();
+  const latarStruk=latar(256,192,q=>{
+    lukisLantaiKayu(q,0,0,256,192,acakTetap(29));
+    kotak(q,0,0,256,30,GB.kayuGG);kotak(q,0,1,256,26,GB.kayu);kotak(q,0,1,256,3,GB.kayuT);for(let x=10;x<256;x+=22)kotak(q,x,5,1,22,GB.kayuG);
+    kotak(q,40,2,176,24,GB.garis);kotak(q,41,3,174,22,'#c98a3a');kotak(q,41,3,174,2,'#f0c070');bingkai(q,44,6,168,16,'#5a3a10');
+    for(let i=0;i<8;i++){kotak(q,140+i*8,9,6,5,'#f4f1e6');kotak(q,140+i*8,13,6,1,'#b3c2d1')}
+    kotak(q,50,9,80,10,'#1c2340');kotak(q,40,26,176,4,GB.garis);kotak(q,52,26,152,2,'#1a0f08');
+  });
+  adegan($('#kv-struk'),(g,t)=>{
+    if(A.t0==null)A.t0=t;
+    g.drawImage(latarStruk,0,0);
+    const n=GERAK?Math.min(A.baris.length,Math.floor((t-A.t0)/.16)+1):A.baris.length;
+    const lebar=Math.max(...A.baris.map(b=>lebarTeks(b,10,false,true)),100),pw=jepit(lebar+16,110,200),x=Math.round(128-pw/2),h=n*11+8;
+    g.globalAlpha=.25;kotak(g,x+3,30,pw,h+3,0);g.globalAlpha=1;
+    kotak(g,x,28,pw,h,'#fff8e8');kotak(g,x,28,1,h,'#e8dcc0');kotak(g,x+pw-1,28,1,h,'#e8dcc0');
+    for(let i=0;i<pw;i+=4)kotak(g,x+i,28+h,2,2,'#fff8e8');
+    A.baris.slice(0,n).forEach((b,i)=>tulis(g,b,x+8,31+i*11,A.galat?'#c0392b':'#3a2410',{mono:true}));
+    tulis(g,'PAMN-PRINT',90,10,'#7dff8a',{rata:'tengah',uk:8,tebal:true});
+    const cetak=n<A.baris.length;
+    kotak(g,207,9,4,4,cetak&&Math.floor(t*8)%2?'#ffd34d':'#55d36b');
+    pamn(g,232,140,!cetak&&t-A.t0<A.baris.length*.16+1.2?'sorak':'diam');
+  });
+}
+
+/* ============ PESAN KESALAHAN: KARTU & PEMBURU BUG ============ */
+const DAFTAR_GALAT=[
+  {j:'SyntaxError',w:WARNA_BUG.SyntaxError,c:'e-syntax',s:'Penulisan melanggar aturan Python: tanda kutip atau kurung tidak berpasangan, nama tidak sah, atau tanda yang tidak dikenal. Muncul sebelum satu baris pun dijalankan.',b:'Lengkapi pasangan tanda kutip dan kurung; periksa penulisan pada baris yang ditunjuk.'},
+  {j:'NameError',w:WARNA_BUG.NameError,c:'e-name',s:'Nama dipakai sebelum diberi nilai, atau ejaannya berbeda, termasuk huruf besar dan kecil.',b:'Samakan penulisan nama, atau beri nilai lebih dahulu pada baris sebelumnya.'},
+  {j:'TypeError',w:WARNA_BUG.TypeError,c:'e-type',s:'Operasi dilakukan pada tipe yang tidak cocok, misalnya bilangan dijumlahkan dengan teks hasil input().',b:'Konversi dengan int() atau float(); untuk menampilkan, gunakan koma atau f-string.'},
+  {j:'ValueError',w:WARNA_BUG.ValueError,c:'e-value',s:'Tipenya benar, tetapi isinya tidak dapat dikonversi, misalnya int("tiga") atau int("12.5").',b:'Gunakan fungsi konversi yang sesuai, atau pastikan ketikan pengguna berupa angka yang sah.'},
+  {j:'Kesalahan logika',hantu:true,c:'e-logika',s:'Program berjalan sampai selesai tanpa pesan apa pun, tetapi hasilnya keliru. Paling berbahaya karena tidak ketahuan.',b:'Hitung manual, lalu bandingkan dengan keluaran program baris demi baris.'}
+];
+function kartuGalat(){
+  $('#daftar-galat').innerHTML=DAFTAR_GALAT.map(d=>`<div style="border-top:1px solid var(--row);padding:14px 0">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><img class="ikon" src="${d.hantu?ikonURL('hantuG',3):ikonURL('bugG',3,d.w)}" alt=""><b style="font-size:14px">${d.j}</b></div>
+    <p><b>Penyebab:</b> ${esc(d.s)}</p><div class="contoh" data-contoh="${d.c}"></div><p style="margin:0"><b>Perbaikan:</b> ${esc(d.b)}</p></div>`).join('')+
+    `<div style="border-top:1px solid var(--row);padding-top:14px"><p style="margin:0">Kerabat <code>SyntaxError</code> yang juga sering muncul adalah <code>IndentationError</code>: baris diawali spasi yang tidak semestinya.</p><div class="contoh" data-contoh="e-indent"></div></div>`;
+}
+const KASUS_BUG=[
+  {k:'print("Total belanja)',j:'SyntaxError',w:'Tanda kutip pembuka tidak ditutup. Perbaikan: print("Total belanja").'},
+  {k:'harga = 45000\njumlah = 2\nprint("Total:", harga * jumlah',j:'SyntaxError',w:'Kurung buka pada print( tidak ditutup. Tambahkan ) di akhir baris 3.'},
+  {k:'2harga = 45000\nprint(2harga)',j:'SyntaxError',w:'Nama variabel tidak boleh diawali angka. Ganti menjadi harga2 atau harga.'},
+  {k:'subtotal = 250000\npajak = subtotal * 11%\nprint(pajak)',j:'SyntaxError',w:'Tanda % bukan persen. Tulis subtotal * 11 / 100.'},
+  {k:'print("Total:", 90000))',j:'SyntaxError',w:'Ada kurung tutup yang berlebih.'},
+  {k:'total_belanja = 90000\nprint(Total_belanja)',j:'NameError',w:'Total_belanja (T kapital) berbeda dengan total_belanja. Samakan penulisannya.'},
+  {k:'harga = 45000\nprint(hrga)',j:'NameError',w:'Salah ketik: hrga seharusnya harga.'},
+  {k:'print(produk)\nproduk = "Teh Hijau"',j:'NameError',w:'produk dipakai pada baris 1, padahal baru diberi nilai pada baris 2. Tukar urutan kedua baris.'},
+  {k:'total = 90000\nprint("Total: " + total)',j:'TypeError',w:'Teks tidak dapat disambung dengan bilangan. Gunakan print("Total:", total) atau f-string.'},
+  {k:'harga = int(input("Harga: "))\nongkir = input("Ongkir: ")\nprint(harga + ongkir)',m:['45000','10000'],j:'TypeError',w:'ongkir masih berupa teks. Bungkus input() pada baris 2 dengan int().'},
+  {k:'bayar = input("Uang dibayar: ")\nkembalian = bayar - 90000\nprint(kembalian)',m:['100000'],j:'TypeError',w:'bayar masih berupa teks, dan teks tidak dapat dikurangi. Gunakan int(input(...)).'},
+  {k:'diskon = int(input("Diskon (%): "))\nprint(diskon)',m:['12.5'],j:'ValueError',w:'int() tidak dapat mengubah "12.5". Gunakan float().'},
+  {k:'harga = int(input("Harga: "))\nprint(harga * 2)',m:['45.000'],j:'ValueError',w:'Pengguna mengetik titik ribuan. int() hanya menerima angka tanpa titik, misalnya 45000.'},
+  {k:'berat = float(input("Berat (kg): "))\nprint(berat)',m:['dua'],j:'ValueError',w:'Kata "dua" tidak dapat diubah menjadi bilangan.'},
+  {k:'produk = "Kopi Arabika"\nprint("Produk: {produk}")',j:'logika',h:'Produk: Kopi Arabika',w:'Huruf f terlupa sehingga {produk} dicetak apa adanya. Tulis print(f"Produk: {produk}").'},
+  {k:'harga = input("Harga: ")\nongkir = input("Ongkir: ")\nprint("Total bayar:", harga + ongkir)',m:['45000','10000'],j:'logika',h:'Total bayar: 55000',w:'Kedua nilai masih teks sehingga + menyambung. Bungkus kedua input() dengan int().'},
+  {k:'harga = 45000\njumlah = 3\ntotal = harga * jumlah\nprint("Total:", harga)',j:'logika',h:'Total: 135000',w:'Variabel yang dicetak keliru: harga, seharusnya total.'},
+  {k:'subtotal = 200000\ndiskon = subtotal * 10 / 100\nbayar = subtotal + diskon\nprint("Bayar:", bayar)',j:'logika',h:'Bayar: 180000.0',w:'Diskon seharusnya dikurangkan, bukan ditambahkan.'}
+];
+const PILIHAN_BUG=[['SyntaxError','SyntaxError'],['NameError','NameError'],['TypeError','TypeError'],['ValueError','ValueError'],['logika','Tanpa pesan (logika)']];
+function permainanBuru(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0},hasil=$('#buru-hasil'),bMulai=$('#buru-mulai');
+  $('#buru-tombol').innerHTML=PILIHAN_BUG.map(([v,l],i)=>`<button class="pilih" data-j="${v}" style="font-size:12px">${l}<small>tombol ${i+1}</small></button>`).join('');
+  const tombol=$$('#buru-tombol button');
+  const fmt=s=>`Skor terbaik: ${s}`;simpanTerbaik('materi6:buru',0,$('#buru-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>{b.disabled=G.status!=='tanya';b.classList.remove('y','n')});
+  aktif();
+  $('#buru-kode').innerHTML='<div class="ln"><span class="no"> </span><span class="cm"># tekan "Mulai berburu"</span></div>';$('#buru-layar').innerHTML=layarHTML([]);
+  function tampilKasus(){
+    const K=G.daftar[G.i],h=jalankanProgram(K.k,K.m||[]);
+    $('#buru-kode').innerHTML=kodeHTML(K.k.split('\n'));
+    $('#buru-layar').innerHTML=layarHTML(h.jejak[h.jejak.length-1].layar);
+    hasil.innerHTML=K.h?`<div class="hint" style="margin-bottom:0">Keluaran yang seharusnya: <code>${esc(K.h)}</code></div>`:'';
+    G.partikel=Array.from({length:22},()=>({vx:(Math.random()-.5)*140,vy:-Math.random()*120-20}));
+  }
+  function mulai(){
+    const ambil=(j,n)=>acakSalin(KASUS_BUG.filter(k=>k.j===j)).slice(0,n);
+    Object.assign(G,{status:'tanya',skor:0,hati:3,i:0,daftar:acakSalin([...ambil('SyntaxError',2),...ambil('NameError',1),...ambil('TypeError',2),...ambil('ValueError',1),...ambil('logika',2)]),tTembak:null});
+    tampilKasus();bMulai.textContent='Mulai ulang';aktif();
+  }
+  function jawab(j){
+    if(G.status!=='tanya')return;
+    const K=G.daftar[G.i],ok=j===K.j;
+    if(ok)G.skor+=10;else G.hati--;
+    G.status='tembak';G.ok=ok;G.tTembak=G.t;aktif();
+    if(ok){bunyi('tembak');setTimeout(()=>bunyi('ledak'),550)}else{bunyi('salah');setTimeout(()=>bunyi('hehe'),350)}
+    tombol.forEach(b=>{if(b.dataset.j===K.j)b.classList.add('y');else if(b.dataset.j===j)b.classList.add('n')});
+    const nama=K.j==='logika'?'kesalahan logika (tanpa pesan)':K.j;
+    hasil.innerHTML=(K.h?`<div class="hint">Keluaran yang seharusnya: <code>${esc(K.h)}</code></div>`:'')+
+      `<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Tepat':'✗ Keliru'}: ${nama}.</b> ${esc(K.w)}</div>
+      <div class="row"><button class="act" id="buru-lanjut">${G.i<7&&G.hati>0?'Kasus berikutnya →':'Lihat hasil'}</button></div>`;
+    $('#buru-lanjut').onclick=lanjut;
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=G.daftar.length){G.status='selesai';bunyi(G.skor>=60&&G.hati>0?'menang':'kalah');hasil.innerHTML=`<div class="${G.skor>=60?'ok':'hint'}">Perburuan selesai. Skor <b>${G.skor} dari 80</b>.</div>`;simpanTerbaik('materi6:buru',G.skor,$('#buru-terbaik'),fmt);bMulai.textContent='Main lagi'}
+    else{G.status='tanya';tampilKasus()}
+    aktif();
+  }
+  tombol.forEach(b=>b.onclick=()=>jawab(b.dataset.j));bMulai.onclick=mulai;
+  G.kunci=k=>{const i='12345'.indexOf(k);if(i>=0)jawab(PILIHAN_BUG[i][0])};
+  const latarBuru=latar(256,144,q=>{
+    lukisDindingBatu(q,0,0,256,42);
+    lukisLantaiBatu(q,0,42,256,102,acakTetap(31));
+    kotak(q,104,10,48,32,'#1b1b2f');kotak(q,106,12,44,30,'#0b0f22');for(let x=108;x<150;x+=6)kotak(q,x,12,2,30,'#343648');
+  });
+  adegan($('#kv-buru'),(g,t)=>{
+    G.t=t;
+    g.drawImage(latarBuru,0,0);
+    obor(g,40,22,t);obor(g,216,22,t);
+    hud(g,G.status==='awal'?'Pemburu Bug':`Kasus ${Math.min(G.i+1,8)}/8`,G.skor,G.hati);
+    if(G.status==='awal'){spr(g,'bugG',176,64,3,{ganti:BUG_ABU});pamn(g,48,126,'diam',{skala:2});layarJudul(g,'PEMBURU BUG',['Tekan "Mulai berburu".','Tebak jenis kesalahannya.'],t);return}
+    if(G.status==='selesai'){
+      pamn(g,48,126,'sorak',{skala:2});bingkaiRPG(g,64,46,176,66);spr(g,'pialaG',146,54,1);
+      tulis(g,`Skor ${G.skor} dari 80`,152,70,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+      tulis(g,G.skor>=60?'Pemburu bug andal!':'Baca lagi Bab 7, coba lagi.',152,86,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return;
+    }
+    const K=G.daftar[G.i],u=G.status==='tembak'?t-G.tTembak:0,ungkap=G.status==='tembak';
+    const hit=!G.ok&&u>.2&&u<.6,px=48+(hit?Math.round(Math.sin(u*80)*2):0);
+    pamn(g,px,126,ungkap&&G.ok&&u<.45?'sorak':'diam',{skala:2,ganti:hit?{b:'#ff8a8a',c:'#e04848',d:'#8a1c1c',h:'#ffc8c8',m:'#ff9a9a'}:null});
+    const bx=176,by=60+(GERAK?Math.round(Math.sin(t*3)*3):0);
+    const meledak=ungkap&&G.ok&&u>.6;
+    if(!meledak){
+      const kedip=ungkap&&G.ok&&u>.25&&Math.floor(u*20)%2===0;
+      g.globalAlpha=.3;kotak(g,bx+6,108,36,4,0);g.globalAlpha=1;
+      if(ungkap&&K.j==='logika')spr(g,'hantuG',bx+3,by,3,{alpha:.9,ganti:kedip?{w:'#fff7b0'}:null});
+      else spr(g,'bugG',bx,by,3,{ganti:kedip?{X:'#ffffff',Y:'#ffffff',Z:'#ffffff'}:ungkap?WARNA_BUG[K.j]:BUG_ABU});
+      if(!ungkap)tulis(g,'?',bx+24,by-26,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+      const hp=ungkap&&G.ok?jepit(1-(u-.25)/.3,0,1):1;
+      kotak(g,bx,by-10,48,7,GB.garis);kotak(g,bx+1,by-9,46,5,'#3a1a1a');kotak(g,bx+1,by-9,46*hp,5,'#55d36b');kotak(g,bx+1,by-9,46*hp,1,'#b8ffc4');
+      if(ungkap&&!G.ok&&u>.2)tulis(g,'hehe',bx+24,by-24+Math.sin(u*14)*2,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    }else{
+      const c=K.j==='logika'?'#eef2ff':WARNA_BUG[K.j].X,v=u-.6;
+      for(const q of G.partikel||[])kotak(g,bx+24+q.vx*v,by+20+q.vy*v+160*v*v,3,3,c);
+      if(v<.3)letup(g,bx+24,by+20,v/.3,c);
+    }
+    if(ungkap&&G.ok&&u<.3){
+      const x0=px+18,y0=96,x1=bx+20,y1=by+20;
+      for(let k=0;k<=20;k++){const q=k/20;kotak(g,lerp(x0,x1,q)-1,lerp(y0,y1,q)-1+(k%2?Math.sin(t*60+k):0),3,3,k%3?'#6ff7ff':'#ffffff')}
+    }
+    if(ungkap&&u>.3)tulis(g,K.j==='logika'?'logika':K.j,bx+24,118,K.j==='logika'?'#eef2ff':WARNA_BUG[K.j].X,{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+  });
+  return G;
+}
+
+/* ============ KUIS ============ */
+const KUIS=[
+  {q:'Hasil input() selalu bertipe …',o:['str','int','float','Tergantung yang diketik'],w:'input() selalu menghasilkan teks, sekalipun yang diketik berupa angka.'},
+  {q:'Tipe yang tepat untuk nomor telepon pelanggan adalah …',o:['str','int','float','bool'],w:'Nomor telepon tidak pernah dihitung, dan angka nol di depannya harus tetap ada.'},
+  {q:'Apa yang ditampilkan?',k:'print("5" + "5")',o:['55','10','5 5','TypeError'],w:'Kedua nilai teks sehingga + menyambung.'},
+  {q:'Apa yang ditampilkan?',k:'print(10 / 2)',o:['5.0','5','5.5','2'],w:'Pembagian / selalu menghasilkan float.'},
+  {q:'Berapa isi x setelah kedua baris dijalankan?',k:'x = 4\nx = x * 3',o:['12','4','7','Kesalahan: x tidak boleh muncul di kedua ruas'],w:'Ruas kanan dihitung dengan isi x saat itu (4), lalu hasilnya disimpan kembali ke x.'},
+  {q:'Nama variabel manakah yang sah?',o:['total_belanja','2total','total-belanja','total belanja'],w:'Hanya huruf, angka, dan garis bawah; tidak diawali angka; tanpa spasi.'},
+  {q:"Pesan NameError: name 'Harga' is not defined berarti …",o:['Nama Harga belum diberi nilai atau ejaannya berbeda','Nilai Harga bukan bilangan','Kurung belum ditutup','Teks tidak dapat diubah menjadi bilangan'],w:'NameError muncul bila nama belum ada. Ingat: Harga dan harga berbeda.'},
+  {q:'Apa yang terjadi?',k:'jumlah = int("12.5")',o:['ValueError','jumlah berisi 12','jumlah berisi 12.5','TypeError'],w:'int() tidak dapat mengubah teks berkoma. Gunakan float().'},
+  {q:'Apa yang terjadi?',k:'total = 5000\nprint("Total: " + total)',o:['TypeError','Tampil Total: 5000','Tampil Total:5000','NameError'],w:'Teks tidak dapat disambung dengan bilangan. Gunakan koma, str(), atau f-string.'},
+  {q:'Apa yang ditampilkan?',k:'total = 90000\nprint("Total: Rp{total}")',o:['Total: Rp{total}','Total: Rp90000','Total: Rp90.000','SyntaxError'],w:'Tanpa huruf f, kurung kurawal dicetak apa adanya.'},
+  {q:'Apa yang ditampilkan?',k:'total = 1250000\nprint(f"{total:,}")',o:['1,250,000','1.250.000','1250000','1,250,000.00'],w:':, menambahkan pemisah ribuan berupa koma. Untuk format Indonesia, tambahkan .replace(",", ".").'},
+  {q:'Padanan TAMPILKAN dalam Python adalah …',o:['print()','input()','=','show()'],w:'TAMPILKAN menjadi print(), BACA menjadi input().'},
+  {q:'Apa yang ditampilkan?',k:'print(17 % 5)',o:['2','3','3.4','0.17'],w:'% adalah sisa pembagian: 17 = 3 × 5 + 2.'},
+  {q:'Apa yang ditampilkan?',k:'harga = 45000\ntotal = harga * 2\nharga = 50000\nprint(total)',o:['90000','100000','50000','45000'],w:'total dihitung saat harga masih 45000. Variabel menyimpan nilai, bukan rumus.'},
+  {q:'Kesalahan manakah yang paling berbahaya?',o:['Kesalahan logika yang tidak memicu pesan','SyntaxError','NameError','TypeError'],w:'Kesalahan tanpa pesan hanya ketahuan bila keluaran dibandingkan dengan hitungan manual.'},
+  {q:'Apa yang ditampilkan?',k:'print("Ha" * 3)',o:['HaHaHa','Ha3','Ha Ha Ha','TypeError'],w:'Teks dikali bilangan bulat berarti diulang.'},
+  {q:'Penulisan pajak 11% dari subtotal yang benar adalah …',o:['subtotal * 11 / 100','subtotal * 11%','subtotal % 11','subtotal x 0.11'],w:'Dalam Python, % bukan persen dan tanda kali adalah *.'},
+  {q:'Tipe nilai True adalah …',o:['bool','str','int','float'],w:'True dan False adalah dua nilai tipe bool.'}
+];
+function kuis(){
+  const wadah=$('#kuis'),hasil=$('#kuis-hasil'),KS={hasil:[],tSelesai:null,selesai:false};let benar=0,dijawab=0,soal=[];
+  const fmt=s=>`Skor terbaik: ${s} dari 10`;simpanTerbaik('materi6:kuis',0,$('#kuis-terbaik'),fmt);
+  function baru(){
+    benar=0;dijawab=0;hasil.innerHTML='';KS.hasil=[];KS.selesai=false;KS.tSelesai=null;
+    soal=acakSalin(KUIS).slice(0,10).map(s=>({...s,urut:acakSalin(s.o.map((_,i)=>i))}));
+    wadah.innerHTML=soal.map((s,n)=>`<div class="soal-kuis" data-n="${n}"><div class="tanya">${n+1}. ${esc(s.q)}</div>
+      ${s.k?`<div class="kode" style="margin-bottom:8px">${kodeHTML(s.k.split('\n'))}</div>`:''}
+      <div class="opsi">${s.urut.map(i=>`<button data-i="${i}">${esc(s.o[i])}</button>`).join('')}</div><div class="jelas"></div></div>`).join('');
+  }
+  wadah.onclick=e=>{
+    const b=e.target.closest('button');if(!b||b.disabled)return;
+    const box=b.closest('.soal-kuis'),s=soal[+box.dataset.n],ok=b.dataset.i==='0';
+    $$('button',box).forEach(x=>{x.disabled=true;if(x.dataset.i==='0')x.classList.add('y')});
+    if(!ok)b.classList.add('n');
+    box.querySelector('.jelas').innerHTML=(ok?'<span style="color:var(--tp)">✓ Tepat.</span> ':'<span style="color:var(--fn)">✗ Belum tepat.</span> ')+esc(s.w);
+    dijawab++;if(ok)benar++;bunyi(ok?'benar':'salah');KS.hasil[+box.dataset.n]=ok;
+    if(dijawab===soal.length){
+      setTimeout(()=>bunyi(benar>=8?'menang':'selesai'),350);
+      hasil.innerHTML=`<div class="${benar>=8?'ok':'hint'}" style="display:flex;gap:14px;align-items:center">${benar>=8?`<img class="ikon" src="${ikonURL('pialaG',4)}" alt="">`:''}<div><b>Skor Anda: ${benar} dari 10.</b> ${benar>=8?'Anda siap mengerjakan Praktikum Modul 6.':'Baca kembali bab yang soalnya masih keliru, lalu coba soal baru.'}</div></div>`;
+      simpanTerbaik('materi6:kuis',benar,$('#kuis-terbaik'),fmt);KS.selesai=true;
+    }
+  };
+  const latarKuis=latar(256,96,q=>{lukisDindingBatu(q,0,0,256,30);lukisLantaiBatu(q,0,30,256,66,acakTetap(41))});
+  adegan($('#kv-kuis'),(g,t)=>{
+    g.drawImage(latarKuis,0,0);
+    obor(g,16,14,t);obor(g,240,14,t);
+    g.globalAlpha=.85;kotak(g,40,4,176,18,'#1c2340');g.globalAlpha=1;bingkai(g,40,4,176,18,'#4b5aa0');
+    for(let k=0;k<10;k++){const x=48+k*16,h=KS.hasil[k],c=h===true?'#55d36b':h===false?'#ff5a5a':'#3a3f5a',l=h===true?'#b8ffc4':h===false?'#ffb3b3':'#5c6178';
+      kotak(g,x+2,8,6,10,GB.garis);kotak(g,x,10,10,6,GB.garis);kotak(g,x+3,9,4,8,c);kotak(g,x+1,11,8,4,c);kotak(g,x+3,10,2,2,l)}
+    if(KS.selesai&&KS.tSelesai==null)KS.tSelesai=t;
+    const u=KS.tSelesai==null?0:t-KS.tSelesai,lulus=benar>=8;
+    petiHarta(g,150,52,48,32,'int',{kilau:KS.selesai&&lulus&&Math.floor(u*4)%2===0});
+    if(KS.selesai&&lulus){const q=mulus(u/.8);spr(g,'pialaG',162,lerp(56,26,q),2);for(let k=0;k<6;k++){const a=t*3+k;kotak(g,174+Math.cos(a)*18,38+Math.sin(a)*12,1,1,'#fff7b0')}}
+    pamn(g,90,88,KS.selesai?(lulus?'sorak':'diam'):(Math.sin(t*1.6)>.97?'kedip':'diam'),{skala:2});
+    const tx=`${benar}/${dijawab||0}`;tulis(g,tx,250,60,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+    if(KS.selesai&&!lulus)tulis(g,'Coba lagi!',128,76,'#ffffff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+  });
+  $('#kuis-ulang').onclick=baru;baru();
+}
+
+/* ============ NAVIGASI, TEMA, AWAL ============ */
+const PETA=[['b1','pamnD','1 · Pseudocode ke Python','Menerjemahkan algoritma menjadi program dan aturan menulis Python.','Pasangkan Baris'],
+  ['b2','petiKayu','2 · Variabel','Kotak berlabel, makna tanda =, dan aturan penamaan.','Stempel Label'],
+  ['b3','kepeng','3 · Tipe Data','int, float, str, bool, dan cara memilihnya untuk data bisnis.','Gudang Sortir'],
+  ['b4','kuali','4 · Operator','Aritmetika, urutan pengerjaan, persen, dan operator pada teks.','Laboratorium Operator'],
+  ['b5','gulungan','5 · Masukan & Konversi','input() selalu teks; int() dan float() untuk mengubahnya.','Mesin Konversi'],
+  ['b6','struk','6 · Keluaran','print(), f-string, dan format rupiah.','Mesin Struk'],
+  ['b7','bugG','7 · Pesan Kesalahan','Membaca pesan kesalahan dan menemukan penyebabnya.','Pemburu Bug'],
+  ['lab','ramuan','Lab · Simulator','Menjalankan program sendiri baris demi baris.',''],
+  ['kuis','pialaG','Kuis & Rangkuman','Lembar contekan dan sepuluh soal acak.','']];
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=$('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+}
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+let STEMPEL=null,GUDANG=null,BURU=null;
+(function awal(){
+  $$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+  document.addEventListener('click',e=>{
+    const g=e.target.closest('[data-go]');if(g){goTab(g.dataset.go);return}
+    const l=e.target.closest('[data-lab]');if(l&&LAB){bunyi('klik');LAB.muat(l.dataset.lab);goTab('lab')}
+  });
+  $('#btn-tema').onclick=()=>{const t=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=t;try{localStorage.setItem('tema',t)}catch(e){}labelTema()};
+  labelTema();
+  const labelSuara=()=>{$('#btn-suara').textContent=SUARA.aktif?'🔊 Suara aktif':'🔇 Suara mati'};
+  $('#btn-suara').onclick=()=>{SUARA.aktif=!SUARA.aktif;lsSimpan('materi6:suara',SUARA.aktif);labelSuara();bunyi('benar')};
+  labelSuara();
+  $$('#stempel-mulai,#gudang-mulai,#mesin-mulai,#buru-mulai,#kuis-ulang,#pasang-ulang').forEach(b=>b.addEventListener('click',()=>bunyi('klik')));
+  $('#peta').innerHTML=PETA.map(([id,ik,j,d,m])=>`<div class="kartu"><div class="judul"><img class="ikon" src="${ikonURL(ik,ik==='pamnD'?2:['kepeng','ramuan','struk'].includes(ik)?4:ik==='gulungan'?3:3,ik==='bugG'?WARNA_BUG.TypeError:null)}" alt="">${esc(j)}</div><p>${esc(d)}</p>${m?`<p style="font-size:11.5px">Permainan: <b>${esc(m)}</b></p>`:''}<button class="sec" data-go="${id}">Buka →</button></div>`).join('');
+  $('#kartu-tipe').innerHTML=KARTU_TIPE.map(k=>`<div class="kartu"><div class="judul"><img class="ikon" src="${ikonURL(k.ik,4)}" alt=""><span class="tp ${k.t}" style="font-size:13px">${k.t}</span>${esc(k.j)}</div><p>${esc(k.d)}</p><p>Contoh: ${k.c.map(c=>`<code>${esc(c)}</code>`).join(' ')}</p><p>Data bisnis: ${esc(k.b)}</p></div>`).join('');
+  kartuGalat();
+  $$('img[data-ikon]').forEach(im=>im.src=ikonURL(im.dataset.ikon,+im.dataset.skala||3));
+  $$('[data-contoh]').forEach(renderContoh);
+  $$('.sim').forEach(el=>{const s=buatSimulator(el);if(el.id==='lab-sim')LAB=s});
+  adeganToko();adeganTerjemah();adeganTelepon();
+  permainanPasang();STEMPEL=permainanStempel();GUDANG=permainanGudang();labOperator();permainanMesin();mesinStruk();BURU=permainanBuru();kuis();
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select'))return;
+    const tab=($('.tab.on')||{}).id,k=e.key.toLowerCase();
+    const G=tab==='t-b2'?STEMPEL:tab==='t-b3'?GUDANG:tab==='t-b7'?BURU:null;
+    if(G&&G.kunci)G.kunci(k);
+  });
+  const awalTab=location.hash.slice(1);if(awalTab&&$('#t-'+awalTab))goTab(awalTab);
+  requestAnimationFrame(putar);
+})();
+</script>
+</body>
+</html>
