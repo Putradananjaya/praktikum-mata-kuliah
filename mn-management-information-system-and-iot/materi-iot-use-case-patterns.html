@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT Use Case Patterns — Session 5 Material</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7' fill='%2318181b' stroke='%233f3f46'/%3E%3Cpath d='M8 10l6 6-6 6' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 22h7' stroke='%23e8e8ea' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --int:#ffb000; --float:#29adff; --str:#4ade80; --bool:#ff77a8;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  --int:#b45309; --float:#0369a1; --str:#15803d; --bool:#be185d;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.infobar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.infobar a{color:var(--text)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 12px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card>h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.card p b,.card li b{color:var(--text)}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-size:12.5px;vertical-align:top}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+.wide table{min-width:520px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--code-text)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+textarea{font-family:var(--mono);width:100%;resize:vertical;line-height:1.6}
+button.act,a.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-block}
+button.act:hover,a.act:hover{opacity:.85}
+button.act:disabled{opacity:.35;cursor:default}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+button.sec:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:11px 0}
+.hint{background:color-mix(in srgb,var(--fp) 8%,transparent);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:color-mix(in srgb,var(--tp) 8%,transparent);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.gagal{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+.label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px}
+/* kode bernomor */
+.kode{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:8px 0;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--code-text);overflow-x:auto}
+.kode .ln{display:flex;white-space:pre;padding-right:12px;min-height:1.75em}
+.kode .no{width:34px;text-align:right;padding-right:10px;color:var(--muted);user-select:none;flex:none}
+.kode .ln.jalan{background:color-mix(in srgb,var(--fp) 22%,transparent)}
+.kode .ln.galat{background:color-mix(in srgb,var(--fn) 25%,transparent)}
+.kode .cm{color:var(--muted)}
+.kode .s{color:var(--str)}
+/* layar keluaran: selalu gelap seperti terminal */
+.konsol{background:#0c0c0e;color:#e4e4e7;font-family:var(--mono);font-size:12.5px;line-height:1.6;padding:9px 12px;white-space:pre-wrap;word-break:break-word;margin:0;border:1px solid var(--line);border-radius:6px;min-height:44px}
+.konsol .k{color:#4ade80}
+.konsol .g{color:#f87171}
+.konsol .kosong{color:#71717a;font-style:italic}
+/* kanvas pixel art */
+.layar{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line);background:#1d2b53}
+.layar-wrap{max-width:760px}
+.ikon{image-rendering:pixelated;vertical-align:middle;flex:none}
+/* kartu tipe & peta */
+.kartu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.kartu{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--panel2);display:flex;flex-direction:column;gap:6px}
+.kartu .judul{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px}
+.kartu p{margin:0;font-size:12.5px}
+.kartu .sec{align-self:flex-start;margin-top:auto}
+/* permainan & simulator: jendela bergaya RPG, selalu gelap di kedua tema */
+.game,.sim{--bg:#141a33;--panel:#1c2340;--panel2:#232c52;--line:#4b5aa0;--row:#2b3460;--text:#eef2ff;--muted:#a9b3d6;--accent:#ffffff;--accent-ink:#000;
+  --tp:#55d36b;--fp:#ffc940;--fn:#ff6b6b;--hint-text:#e6eaf8;--code-bg:#10152b;--code-text:#e6eaf8;--hover:#f4f1e6;
+  --int:#ffd34d;--float:#5cc8ff;--str:#7dff8a;--bool:#ff9ccb;
+  color:var(--text);background:#1c2340;border:3px solid #f4f1e6;border-radius:10px;box-shadow:inset 0 0 0 2px #4b5aa0;padding:14px}
+.game .label,.sim .label{color:#c9d2f2}
+.game code,.sim code{background:#2b3460;color:#eef2ff}
+.game .kode .s,.sim .kode .s{color:#7dff8a}
+button.pilih{border-radius:4px;box-shadow:0 3px 0 #0b0f22}
+button.pilih:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.tombol-game{display:grid;gap:8px;margin-top:10px}
+.tombol-game.dua{grid-template-columns:1fr 1fr}
+.tombol-game.tiga{grid-template-columns:repeat(3,1fr)}
+.tombol-game.empat{grid-template-columns:repeat(4,1fr)}
+.tombol-game.lima{grid-template-columns:repeat(5,1fr)}
+@media(max-width:640px){.tombol-game.lima{grid-template-columns:1fr 1fr}.tombol-game.empat{grid-template-columns:1fr 1fr}}
+button.pilih{background:var(--panel);color:var(--text);border:2px solid var(--line);border-radius:7px;padding:10px 8px;cursor:pointer;font-size:13px;font-family:var(--mono);font-weight:600;touch-action:manipulation}
+button.pilih:hover:not(:disabled){border-color:var(--hover)}
+button.pilih:disabled{opacity:.45;cursor:default}
+button.pilih.int{border-color:color-mix(in srgb,var(--int) 60%,transparent);color:var(--int)}
+button.pilih.float{border-color:color-mix(in srgb,var(--float) 60%,transparent);color:var(--float)}
+button.pilih.str{border-color:color-mix(in srgb,var(--str) 60%,transparent);color:var(--str)}
+button.pilih.bool{border-color:color-mix(in srgb,var(--bool) 60%,transparent);color:var(--bool)}
+button.pilih.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 14%,transparent)}
+button.pilih.n{border-color:var(--fn);background:color-mix(in srgb,var(--fn) 14%,transparent)}
+button.pilih small{display:block;font-weight:400;font-size:10.5px;color:var(--muted);font-family:system-ui,sans-serif}
+.pesan-game{min-height:22px;font-size:12.5px;margin-top:8px}
+.skor-terbaik{font-size:12px;color:var(--muted)}
+/* pasangkan */
+.pasang{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pasang>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.pasang button{text-align:left;font-family:var(--mono);font-size:12px;padding:8px 10px;border-radius:6px;border:2px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;white-space:normal;word-break:break-word}
+.pasang button.pil{border-color:var(--fp)}
+.pasang button.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 12%,transparent);cursor:default}
+.pasang button.n{border-color:var(--fn)}
+@media(max-width:640px){.pasang button{font-size:11px;padding:7px}}
+/* kuis */
+.soal-kuis{border-top:1px solid var(--row);padding:12px 0}
+.soal-kuis:first-child{border-top:none}
+.soal-kuis .tanya{font-size:13.5px;font-weight:600;margin-bottom:8px}
+.soal-kuis .opsi{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+/* patterns */
+.pola-kartu{border-left:4px solid var(--warna,var(--line))}
+.pola-kartu .tanya{font-size:13.5px;font-weight:600;color:var(--text);margin:2px 0 6px}
+.chip{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--muted);margin:0 4px 4px 0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:12.5px;margin-top:6px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;color:var(--text)}
+.catatan-kanvas{font-size:12px;color:var(--muted);margin-top:6px}
+blockquote{border-left:3px solid var(--accent);padding:6px 12px;margin:6px 0;font-size:13.5px;color:var(--text)}
+/* chapters 2–5 */
+.lanjut{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:4px 0 18px}
+button.sec.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+button.pilih.pil{border-color:var(--fp)}
+table.matriks{border-collapse:collapse;width:100%;font-size:12.5px}
+table.matriks th,table.matriks td{border-bottom:1px solid var(--row);padding:6px;vertical-align:top;text-align:left}
+table.matriks th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+table.matriks button.sel{width:100%;min-width:120px;min-height:44px;text-align:left;background:var(--panel);color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:6px 8px;cursor:pointer;font-size:12px;line-height:1.35;touch-action:manipulation}
+table.matriks button.sel.buka{color:var(--text);border-style:solid}
+table.matriks button.sel.dipilih{border:2px solid var(--fp);background:color-mix(in srgb,var(--fp) 12%,transparent)}
+.lapis{margin:12px 0}
+.biaya-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0}
+.biaya-grid label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.biaya-grid input,.biaya-grid select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:13px;max-width:100%}
+.bar-biaya{height:12px;background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:3px}
+.bar-biaya i{display:block;height:100%}
+.pill-y,.pill-n,.pill-b{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:10px}
+.pill-y{background:color-mix(in srgb,var(--tp) 16%,transparent);color:var(--tp)}
+.pill-n{background:color-mix(in srgb,var(--fn) 16%,transparent);color:var(--fn)}
+.pill-b{background:color-mix(in srgb,var(--fp) 16%,transparent);color:var(--fp)}
+.soal-kuis .opsi button{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:8px 10px;text-align:left;cursor:pointer;font-size:13px;touch-action:manipulation}
+.soal-kuis .opsi button:hover:not(:disabled){border-color:var(--hover)}
+.soal-kuis .opsi button:disabled{cursor:default}
+.soal-kuis .opsi button.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 14%,transparent)}
+.soal-kuis .opsi button.n{border-color:var(--fn);background:color-mix(in srgb,var(--fn) 14%,transparent)}
+.soal-kuis .jelas{font-size:12.5px;color:var(--muted);margin-top:6px}
+@media(max-width:640px){
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+  .kv{grid-template-columns:1fr}
+  .soal-kuis .opsi{grid-template-columns:1fr}
+  .biaya-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Management Information System &amp; IoT</a>
+    <h1>Session 5: IoT Use Case Patterns, Business Value, and Readiness</h1>
+    <div class="sub">Management Information System &amp; IoT · Semester 5 · Sub-CLO4.2.1 → CLO4.2 → PLO-4 — Management Study Programme, Faculty of Economics and Business, Universitas Pendidikan Nasional</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="sec" id="btn-suara"></button><button class="sec" id="btn-tema"></button></div>
+</header>
+
+<nav>
+  <button class="on" data-t="mulai">Start</button>
+  <button data-t="b1">1 · Five Patterns</button>
+  <button data-t="b2">2 · Sector Matrix</button>
+  <button data-t="b3">3 · Four-Layer Builder</button>
+  <button data-t="b4">4 · Business Value</button>
+  <button data-t="b5">5 · Readiness</button>
+  <button data-t="kuis">★ Quiz &amp; Summary</button>
+</nav>
+
+<!-- ========== START ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Session 5 material</div>
+    <h2>IoT Use Case Patterns, Business Value, and Readiness</h2>
+    <p>Session 4 explained how an IoT deployment works. This session asks a managerial question instead: where is it worth deploying at all? No coding and no hardware are involved; the decisions here are business decisions.</p>
+  </div>
+  <div class="card">
+    <div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-mulai" width="256" height="144" aria-label="Animation: PAMN walks past a minimarket, a delivery truck and a coffee farm in Bali, asking where IoT is worth deploying"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Meet PAMN, Your IoT Advisor</h2>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <img class="ikon" data-ikon="pamnD" data-skala="4" alt="PAMN">
+      <div>
+        <p><b>PAMN</b> is the robot who looks after Toko Kopi Nusantara. Today PAMN advises four kinds of businesses in Bali that are considering IoT: a <b>minimarket chain</b>, a <b>distribution company</b>, a <b>coffee plantation in Kintamani</b>, and a <b>resort hotel</b>.</p>
+        <p style="margin:0">PAMN does not ask "Which sensor is the newest?" PAMN asks three questions: <b>Which pattern is this?</b> <b>What value can we prove?</b> <b>Is the organisation ready to act?</b> This page follows the same three questions.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Learning Objectives</h2>
+    <p>After this session you should be able to:</p>
+    <ol class="lst">
+      <li><b>Compare</b> IoT use cases across at least three industry sectors. <span class="chip">C4</span></li>
+      <li><b>Identify</b> the business value generated by each use case in measurable terms. <span class="chip">C4</span></li>
+      <li><b>Assess</b> the readiness conditions required before IoT adoption is feasible. <span class="chip">C5</span></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>From Session 4 to Session 5</h2>
+    <div class="wide"><table>
+      <tr><th>Session 4 asked</th><th>Session 5 asks</th></tr>
+      <tr><td><b>How</b> does an IoT deployment work? (engineering description)</td><td><b>Where</b> is it worth deploying at all? (managerial judgment)</td></tr>
+    </table></div>
+    <blockquote>Across every sector, IoT use cases fall into a small number of recurring patterns. What changes is the <i>business context</i>, not the underlying logic. Accumulating anecdotes does not transfer; pattern recognition does.</blockquote>
+  </div>
+  <div class="card">
+    <h2>Session Map</h2>
+    <p>Work through the chapters in order. Each chapter ends with a game or an interactive exercise.</p>
+    <div class="kartu-grid" id="peta"></div>
+  </div>
+  <div class="card">
+    <h2>How to Use This Page</h2>
+    <ul class="lst">
+      <li><b>Read, then play.</b> Games draw their questions at random, so every round is different. Your best score is saved in this browser only.</li>
+      <li><b>Presenting in class?</b> A presentation remote works: PageDown or → moves to the next section, PageUp or ← moves back.</li>
+      <li><b>Sound effects</b> can be switched off with the 🔊 button at the top right.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== CHAPTER 1 ========== -->
+<div class="tab" id="t-b1">
+  <div class="card">
+    <div class="eyebrow">Chapter 1</div>
+    <h2>The Five Patterns</h2>
+    <p>Nearly every IoT use case belongs to one of five patterns. Each pattern is defined by the <b>question it answers</b>, not by the sensor it uses. Two use cases that answer the same question are the same pattern, however different their sector or hardware looks.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-tur" width="256" height="144" aria-label="Animation touring the five patterns: a chiller crossing its temperature range, a truck being tracked, room meters counting energy, a pump drifting away from its baseline, and people counted at a doorway"></canvas></div>
+    <p class="catatan-kanvas">The animation cycles through the five patterns, about five seconds each.</p>
+  </div>
+  <div class="card">
+    <h2>Pattern by Pattern</h2>
+    <div id="daftar-pola"></div>
+  </div>
+  <div class="card">
+    <h2>Quick Reference</h2>
+    <div class="wide"><table>
+      <tr><th>Pattern</th><th>Core question</th><th>Decision enabled</th><th>Time to value</th></tr>
+      <tr><td><b>Condition Monitoring</b></td><td>Is it within range?</td><td>Intervene before loss</td><td>Immediate</td></tr>
+      <tr><td><b>Location Tracking</b></td><td>Where is it?</td><td>Reroute, reallocate, confirm</td><td>Immediate; history compounds</td></tr>
+      <tr><td><b>Usage Measurement</b></td><td>How much, how often?</td><td>Charge, size, schedule accurately</td><td>One billing cycle</td></tr>
+      <tr><td><b>Predictive Maintenance</b></td><td>Is it degrading?</td><td>Repair on evidence</td><td><b>Delayed: baseline required</b></td></tr>
+      <tr><td><b>Presence and Flow</b></td><td>Who or what moves here?</td><td>Staff, lay out, price to behaviour</td><td>Immediate; patterns over weeks</td></tr>
+    </table></div>
+    <div class="hint">Only <b>Predictive Maintenance</b> has a built-in delay between deployment and benefit, because a baseline of normal behaviour must be learned first. A proposal promising immediate returns from it is not credible.</div>
+  </div>
+  <div class="card">
+    <h2>Game: Pattern Classifier</h2>
+    <p>Each card describes a real use case from one of four Bali businesses. Decide which pattern it belongs to. From card 6 onwards the sector is hidden: rely on the question, not the setting.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-pilah" width="256" height="144" aria-label="Pattern Classifier game"></canvas></div>
+      <div class="tombol-game lima" id="pilah-tombol"></div>
+      <div id="pilah-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="pilah-mulai">Start game</button><span class="skor-terbaik" id="pilah-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><span></span><button class="act" data-go="b2">Chapter 2 · Sector Matrix →</button></div>
+</div>
+
+<!-- ========== CHAPTER 2 ========== -->
+<div class="tab" id="t-b2">
+  <div class="card">
+    <div class="eyebrow">Chapter 2</div>
+    <h2>Sector Matrix: One Pattern, Many Contexts</h2>
+    <p>The same five patterns appear in every sector. What changes is the sensor, the threshold, and the person who acts. What does not change is the pattern. If you understand cold-chain monitoring in logistics, you already understand greenhouse monitoring in agribusiness.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-sektor" width="256" height="144" aria-label="Animation comparing cargo temperature monitoring in a truck with humidity monitoring in a greenhouse: different sensor, threshold and person, same Condition Monitoring pattern"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>The Four Reference Sectors</h2>
+    <div class="kartu-grid" id="daftar-sektor"></div>
+  </div>
+  <div class="card">
+    <h2>Interactive: Sector Matrix Explorer</h2>
+    <p>Each cell is one IoT use case. Choose a mode, then click the cells.</p>
+    <div class="row" id="matriks-mode">
+      <button class="sec" data-mode="jelajah">Explore</button>
+      <button class="sec" data-mode="portabel">Portability test</button>
+      <button class="sec" data-mode="desain">Design test</button>
+    </div>
+    <div id="matriks-petunjuk"></div>
+    <div class="wide"><table class="matriks" id="matriks"></table></div>
+    <div id="matriks-hasil"></div>
+  </div>
+  <div class="card">
+    <h2>The Design Test</h2>
+    <p>Three use cases are genuinely different only if they belong to <b>three different patterns</b>. If two share the same core question, they are the same pattern, however different the sector or sensor appears. A proposal listing "chiller temperature, cargo temperature, and greenhouse humidity" offers one idea three times.</p>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b1">← Chapter 1</button><button class="act" data-go="b3">Chapter 3 · Four-Layer Builder →</button></div>
+</div>
+
+<!-- ========== CHAPTER 3 ========== -->
+<div class="tab" id="t-b3">
+  <div class="card">
+    <div class="eyebrow">Chapter 3</div>
+    <h2>Four Layers, Carried Over from Session 4</h2>
+    <p>Every deployment has the same four layers. A managerial proposal should state each one in plain language.</p>
+    <div class="kartu-grid">
+      <div class="kartu"><div class="judul">1 · Device</div><p>What is measured, and <b>where</b> the sensor sits. Placement follows the business question, not maintenance convenience.</p></div>
+      <div class="kartu"><div class="judul">2 · Connectivity</div><p>How the data leaves the site. Chosen by physical constraint: distance, power, and mobility.</p></div>
+      <div class="kartu"><div class="judul">3 · Platform</div><p>The rule that turns readings into an event, including a <b>tolerance window</b>, not just a threshold.</p></div>
+      <div class="kartu"><div class="judul">4 · Application</div><p>Who receives what, and which decision it supports: an immediate alert and a durable report.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Worked Examples</h2>
+    <div id="contoh-lapisan"></div>
+  </div>
+  <div class="card">
+    <h2>Same Architecture, Opposite Choice</h2>
+    <div class="wide"><table>
+      <tr><th>Layer</th><th>Retail queue monitoring</th><th>Kintamani soil moisture</th></tr>
+      <tr><td><b>Device</b></td><td>Overhead people counters above checkout lanes</td><td>Battery probes at root depth across the fields</td></tr>
+      <tr><td><b>Connectivity</b></td><td><b>Wi-Fi</b>: the store is fixed, mains powered, indoors</td><td><b>LoRaWAN</b>: kilometres from any building, battery powered</td></tr>
+      <tr><td><b>Platform</b></td><td>Queue above 5 people for more than 3 continuous minutes</td><td>Below crop threshold for a defined period, suppressed during and after rain</td></tr>
+      <tr><td><b>Application</b></td><td>Alert to duty supervisor; weekly staffing report</td><td>Alert to field supervisor; seasonal water-use report</td></tr>
+    </table></div>
+    <div class="hint">Connectivity is driven by physical constraint (distance, power, mobility), not by preference or familiarity.</div>
+  </div>
+  <div class="card">
+    <h2>Connectivity Decision Rules</h2>
+    <ol class="lst">
+      <li><b>Does the asset move?</b> If yes, Wi-Fi and Ethernet are ruled out.</li>
+      <li><b>Is there mains power?</b> If no, Wi-Fi and cellular are ruled out.</li>
+      <li><b>How far from infrastructure?</b> If kilometres, Wi-Fi, Bluetooth and Ethernet are ruled out.</li>
+    </ol>
+    <div class="wide"><table>
+      <tr><th>Option</th><th>Range</th><th>Power use</th><th>Cost</th><th>Suited to</th></tr>
+      <tr><td><b>Wi-Fi</b></td><td>about 50 m</td><td>high</td><td>low</td><td>Fixed indoor, mains power</td></tr>
+      <tr><td><b>Bluetooth</b></td><td>about 10–100 m</td><td>very low</td><td>very low</td><td>Short range, battery devices</td></tr>
+      <tr><td><b>Cellular</b></td><td>wide</td><td>high</td><td>recurring fee</td><td>Mobile assets: vehicles, field equipment</td></tr>
+      <tr><td><b>LoRaWAN</b></td><td>several km</td><td>very low</td><td>low recurring</td><td>Wide-area, low-data-rate sensing</td></tr>
+      <tr><td><b>Ethernet</b></td><td>fixed cable</td><td>not applicable</td><td>low</td><td>Stationary industrial, reliability critical</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Game: Connectivity Chooser</h2>
+    <p>For each deployment, choose the connectivity option <b>and</b> the reason. Both must be right to score.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-konek" width="256" height="144" aria-label="Connectivity Chooser game: the chosen network's range is drawn around the device"></canvas></div>
+      <div id="konek-soal" style="margin-top:10px"></div>
+      <div class="label" style="margin-top:8px">1 · Connectivity</div>
+      <div class="tombol-game lima" id="konek-opsi"></div>
+      <div class="label" style="margin-top:10px">2 · Reason</div>
+      <div class="tombol-game" id="konek-alasan"></div>
+      <div id="konek-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="konek-mulai">Start game</button><span class="skor-terbaik" id="konek-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Interactive: Four-Layer Builder</h2>
+    <p>Pick a scenario, choose one option for each layer, then check your design against the reference.</p>
+    <div class="row" id="bangun-skenario"></div>
+    <div id="bangun-isi"></div>
+    <div id="bangun-hasil"></div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b2">← Chapter 2</button><button class="act" data-go="b4">Chapter 4 · Business Value →</button></div>
+</div>
+
+<!-- ========== CHAPTER 4 ========== -->
+<div class="tab" id="t-b4">
+  <div class="card">
+    <div class="eyebrow">Chapter 4</div>
+    <h2>Four Sources of Business Value</h2>
+    <p>Business value comes from four sources. Their evidentiary strength is not equal.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-nilai" width="256" height="144" aria-label="Animation of PAMN weighing value claims on a scale: claims with a stated basis outweigh confident guesses"></canvas></div>
+    <div class="kartu-grid" style="margin-top:12px" id="sumber-nilai"></div>
+  </div>
+  <div class="card">
+    <h2>Compliance Changes the Question</h2>
+    <div class="wide"><table>
+      <tr><th>Without a regulatory obligation</th><th>With a regulatory obligation</th></tr>
+      <tr><td>"Is this worth it?" A cost-benefit judgment.</td><td>"What is the cheapest compliant option?"</td></tr>
+    </table></div>
+    <p style="margin:10px 0 0">This is the regulatory pressure from Session 3: it applies regardless of competitive position or profitability.</p>
+  </div>
+  <div class="card">
+    <h2>The Stated-Basis Rule</h2>
+    <blockquote>An honest unknown with a measurement plan beats a confident fabrication.</blockquote>
+    <div class="wide"><table>
+      <tr><th>Claim</th><th>Verdict</th><th>Why</th></tr>
+      <tr><td>"Improves efficiency by 40%."</td><td><span class="pill-n">Unacceptable</span></td><td>No stated basis; cannot be verified or tracked; collapses when anyone asks where it came from.</td></tr>
+      <tr><td>"Currently 8% of order lines stock out; this is the figure the investment must move."</td><td><span class="pill-y">Acceptable</span></td><td>Tied to a measurable current baseline.</td></tr>
+      <tr><td>"We cannot estimate the revenue effect reliably, but monthly spoilage cost is the metric to track."</td><td><span class="pill-y">Acceptable</span></td><td>An honest unknown with a measurement plan.</td></tr>
+    </table></div>
+    <p style="margin:10px 0 0">The rule applies to the group assignment, the midterm, and the final project.</p>
+  </div>
+  <div class="card">
+    <h2>Recurring Cost: The Line Proposals Forget</h2>
+    <div class="wide"><table>
+      <tr><th>Cost item</th><th>Nature</th><th>Usually budgeted?</th></tr>
+      <tr><td>Sensors and installation</td><td>One-time</td><td>Yes</td></tr>
+      <tr><td>Connectivity subscription</td><td>Recurring, per device</td><td>Rarely</td></tr>
+      <tr><td>Platform subscription</td><td>Recurring, scales with volume</td><td>Rarely</td></tr>
+      <tr><td>Battery replacement</td><td>Recurring, labour-intensive</td><td>Rarely</td></tr>
+      <tr><td>Training and process change</td><td>Front-loaded, then ongoing</td><td>Sometimes</td></tr>
+    </table></div>
+    <ul class="lst" style="margin-top:10px">
+      <li>20 trucks = 20 cellular subscriptions, every month, every year.</li>
+      <li>40 plantation sensors = 40 batteries someone must physically walk out and replace on a schedule.</li>
+    </ul>
+    <div class="hint"><b>Test question:</b> what does this cost in year three, when nothing is being installed?</div>
+    <h3>Year-three cost calculator</h3>
+    <p>Illustrative figures for practice, not market quotes. Change them to match your own proposal.</p>
+    <div class="row"><button class="sec" data-preset="truk">Preset: 20 trucks, cellular</button><button class="sec" data-preset="kebun">Preset: 40 plantation sensors, LoRaWAN</button></div>
+    <div class="biaya-grid" id="biaya-isian"></div>
+    <div id="biaya-hasil"></div>
+  </div>
+  <div class="card">
+    <h2>Game: Value Claim Auditor</h2>
+    <p>Audit each value claim: give a verdict and the reason. A correctly recognised <b>honest unknown with a measurement plan</b> earns more points than spotting a fabrication, because it is the harder habit to learn.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-audit" width="256" height="144" aria-label="Value Claim Auditor game"></canvas></div>
+      <div class="label" style="margin-top:10px">1 · Verdict</div>
+      <div class="tombol-game dua" id="audit-vonis"></div>
+      <div class="label" style="margin-top:10px">2 · Reason</div>
+      <div class="tombol-game" id="audit-alasan"></div>
+      <div id="audit-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="audit-mulai">Start game</button><span class="skor-terbaik" id="audit-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b3">← Chapter 3</button><button class="act" data-go="b5">Chapter 5 · Readiness →</button></div>
+</div>
+
+<!-- ========== CHAPTER 5 ========== -->
+<div class="tab" id="t-b5">
+  <div class="card">
+    <div class="eyebrow">Chapter 5</div>
+    <h2>Readiness: Three Conditions</h2>
+    <p>A use case failing <b>any one</b> of these conditions is not ready, however attractive the technology is.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-siap" width="256" height="144" aria-label="Animation of three gates: capacity to act, environmental suitability and cost proportionality; a use case must pass all three"></canvas></div>
+    <div id="syarat-siap" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <h2>The Master Test</h2>
+    <blockquote>"If all three sensors work perfectly tomorrow, who does what differently?"</blockquote>
+    <p style="margin:0">A passing answer names <b>a role</b>, <b>a specific action</b>, and <b>a time window</b>. Anything vaguer means the use case is not ready.</p>
+  </div>
+  <div class="card">
+    <h2>Where IoT Does Not Fit</h2>
+    <div class="kartu-grid" id="antipola"></div>
+  </div>
+  <div class="card">
+    <h2>Game: Readiness Gate</h2>
+    <p>Each proposal must pass three gates in order. Judge every gate. If a gate truly fails, the proposal stops there. Proposals that pass all three meet the final boss question.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-gerbang" width="256" height="144" aria-label="Readiness Gate game: PAMN walks through three gates"></canvas></div>
+      <div id="gerbang-soal" style="margin-top:10px"></div>
+      <div class="tombol-game" id="gerbang-opsi"></div>
+      <div id="gerbang-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="gerbang-mulai">Start game</button><span class="skor-terbaik" id="gerbang-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Teaser: Weeks 13–14</h2>
+    <p style="margin:0">The hotel occupancy sensor that saves energy also tells management when a guest is in their room. Presence and Flow is the only pattern whose subject is people. How Indonesia's Personal Data Protection Law (UU 27/2022) shapes such designs is treated fully in Weeks 13–14.</p>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b4">← Chapter 4</button><button class="act" data-go="kuis">Quiz &amp; Summary →</button></div>
+</div>
+
+<!-- ========== QUIZ ========== -->
+<div class="tab" id="t-kuis">
+  <div class="card">
+    <div class="eyebrow">Summary</div>
+    <h2>Session 5 in Five Points</h2>
+    <ol class="lst">
+      <li><b>Five patterns cover nearly all IoT use cases.</b> Recognising the pattern transfers; memorising the example does not.</li>
+      <li><b>Business value has four sources</b> with descending evidentiary strength, and compliance changes the question from <i>whether</i> to <i>which cheapest option</i>.</li>
+      <li><b>Every value claim needs a stated basis.</b> An honest unknown with a measurement plan beats a confident fabrication.</li>
+      <li><b>Recurring cost scales with device count</b>, the line proposals most often omit.</li>
+      <li><b>Three readiness conditions:</b> capacity to act, environmental suitability, cost proportionality. Technology attractiveness is not among them.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Final Quiz</h2>
+    <p>Ten random questions. Every answer is checked straight away with an explanation. Fill all ten gems to open PAMN's treasure chest.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-kuis" width="256" height="96" aria-label="Exam gate: a gem fills each time a question is answered"></canvas></div>
+      <div id="kuis" style="margin-top:6px"></div>
+      <div id="kuis-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="kuis-ulang">New questions</button><span class="skor-terbaik" id="kuis-terbaik"></span></div>
+    </div>
+  </div>
+</div>
+
+<footer>This material runs entirely in the browser. No data is sent anywhere. · v1.0</footer>
+</div>
+
+<script>
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const acakSalin=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const lsAmbil=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSimpan=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const GERAK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const jepit=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mulus=t=>{t=jepit(t,0,1);return t*t*(3-2*t)};
+
+/* ============ EFEK SUARA ============ */
+/* Bunyi 8-bit disintesis langsung dengan Web Audio; tidak ada berkas suara yang diunduh */
+const SUARA={aktif:lsAmbil('mis5:suara',true),ctx:null,derau:null};
+function konteksSuara(){
+  if(!SUARA.aktif)return null;
+  try{
+    if(!SUARA.ctx){
+      const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+      SUARA.ctx=new C();
+      const b=SUARA.ctx.createBuffer(1,Math.floor(SUARA.ctx.sampleRate*.5),SUARA.ctx.sampleRate),d=b.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+      SUARA.derau=b;
+    }
+    if(SUARA.ctx.state==='suspended')SUARA.ctx.resume();
+    return SUARA.ctx;
+  }catch(e){return null}
+}
+function nada(f,dur,o={}){
+  const c=konteksSuara();if(!c)return;
+  const t=c.currentTime+(o.tunda||0),gn=c.createGain();
+  gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(o.vol??.06,t+.008);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  gn.connect(c.destination);
+  let src;
+  if(o.jenis==='derau'){src=c.createBufferSource();src.buffer=SUARA.derau;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=f;src.connect(fl);fl.connect(gn)}
+  else{src=c.createOscillator();src.type=o.jenis||'square';src.frequency.setValueAtTime(f,t);if(o.ke)src.frequency.exponentialRampToValueAtTime(o.ke,t+dur);src.connect(gn)}
+  src.start(t);src.stop(t+dur+.03);
+}
+const BUNYI={
+  klik:()=>nada(880,.04,{vol:.03}),
+  langkah:()=>nada(520,.07,{jenis:'triangle',vol:.09,ke:660}),
+  simpan:()=>{nada(440,.05,{jenis:'triangle',vol:.09});nada(880,.09,{jenis:'triangle',vol:.09,tunda:.05})},
+  cetak:()=>{nada(1200,.03,{vol:.03});nada(1500,.03,{vol:.03,tunda:.05});nada(1200,.03,{vol:.03,tunda:.1})},
+  benar:()=>{nada(660,.07,{vol:.05});nada(880,.07,{vol:.05,tunda:.07});nada(1320,.14,{vol:.05,tunda:.14})},
+  salah:()=>nada(200,.28,{jenis:'sawtooth',vol:.05,ke:90}),
+  galat:()=>{nada(160,.12,{vol:.06});nada(120,.25,{vol:.06,tunda:.12,ke:70})},
+  koin:()=>{nada(988,.06,{vol:.05});nada(1319,.16,{vol:.05,tunda:.06})},
+  lempar:()=>nada(260,.25,{jenis:'triangle',vol:.07,ke:900}),
+  stempel:()=>{nada(500,.12,{jenis:'derau',vol:.25});nada(110,.12,{jenis:'sine',vol:.2,ke:50})},
+  jatuh:()=>nada(700,.4,{vol:.04,ke:80}),
+  mesin:()=>{for(let i=0;i<6;i++)nada(110+(i%2)*35,.1,{jenis:'sawtooth',vol:.035,tunda:i*.1})},
+  tembak:()=>nada(1600,.2,{vol:.045,ke:180}),
+  ledak:()=>nada(1200,.5,{jenis:'derau',vol:.3}),
+  hehe:()=>{nada(900,.07,{vol:.04});nada(700,.07,{vol:.04,tunda:.1});nada(900,.07,{vol:.04,tunda:.2})},
+  menang:()=>[523,659,784,1047].forEach((f,i)=>nada(f,i===3?.3:.1,{vol:.05,tunda:i*.1})),
+  kalah:()=>[392,330,262].forEach((f,i)=>nada(f,.2,{jenis:'triangle',vol:.08,tunda:i*.17})),
+  selesai:()=>{nada(784,.08,{jenis:'triangle',vol:.08});nada(1047,.16,{jenis:'triangle',vol:.08,tunda:.08})}
+};
+function bunyi(n){try{if(SUARA.aktif&&BUNYI[n])BUNYI[n]()}catch(e){}}
+
+/* ============ PIXEL ART ============ */
+/* Palet 16 warna; sprite ditulis sebagai larik string, satu karakter = satu piksel, '.' = transparan */
+const PAL=['#000000','#1d2b53','#7e2553','#008751','#ab5236','#5f574f','#c2c3c7','#fff1e8','#ff004d','#ffa300','#ffec27','#00e436','#29adff','#83769c','#ff77a8','#ffccaa'];
+const WARNA_TIPE={int:10,float:12,str:11,bool:14};
+const FONT='Consolas,Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace';
+const warna=c=>typeof c==='number'?PAL[c]:c;
+function siapLayar(c){const g=c.getContext('2d');g.imageSmoothingEnabled=false;return g}
+function kotak(g,x,y,w,h,c){g.fillStyle=warna(c);g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function bingkai(g,x,y,w,h,c){kotak(g,x,y,w,1,c);kotak(g,x,y+h-1,w,1,c);kotak(g,x,y,1,h,c);kotak(g,x+w-1,y,1,h,c)}
+function panel(g,x,y,w,h,isi,tepi){kotak(g,x+1,y,w-2,h,isi);kotak(g,x,y+1,w,h-2,isi);if(tepi!=null){kotak(g,x+1,y,w-2,1,tepi);kotak(g,x+1,y+h-1,w-2,1,tepi);kotak(g,x,y+1,1,h-2,tepi);kotak(g,x+w-1,y+1,1,h-2,tepi)}}
+
+const SPRITE={
+  pito:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoA:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','5....55....5','555555555555','.5cccccccc5.','.5ca9cc9ac5.','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoK:['.....88.....','.....55.....','..55555555..','.5666666665.','.5666666665.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  orang:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','..1..1..','..1..1..','.00..00.'],
+  orang2:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','.1....1.','.1....1.','00....00'],
+  koin:['..9999..','.9aaaa9.','9aa77aa9','9a7aaaa9','9aaaaaa9','9aaaaaa9','.9aaaa9.','..9999..'],
+  gelas:['6......6','6......6','6......6','6cccccc6','6cccccc6','6c7cccc6','6cccccc6','6cccccc6','.6cccc6.','..6666..'],
+  lampu:['..aaaa..','.aa77aa.','aa7aaaaa','aaaaaaaa','aaaaaaaa','.aaaaaa.','..6666..','..5555..','..6666..','...55...'],
+  lampuMati:['..dddd..','.dd66dd.','dd6ddddd','dddddddd','dddddddd','.dddddd.','..6666..','..5555..','..6666..','...55...'],
+  tag:['..bbbbbbbb','.bb3b3bbbb','bbb3b3bbbb','bbbbbbbbbb','bb7777777b','bbbbbbbbbb','.bbbbbbbbb','..bbbbbbbb'],
+  hati:['.88.88.','8888888','8888888','.88888.','..888..','...8...'],
+  hatiK:['.55.55.','5555555','5555555','.55555.','..555..','...5...'],
+  kumbang:['..5........5..','...5......5...','....XXXXXX....','..XXXXXXXXXX..','.XX77XXXX77XX.','.XX70XXXX70XX.','XXXXXXXXXXXXXX','XYYYYYYYYYYYYX','XYYXYYXXYYXYYX','.XYYYYYYYYYYX.','..XXXXXXXXXX..','.5..5....5..5.'],
+  hantu:['...777777...','..77777777..','.7777777777.','.7700770077.','.7700770077.','.7777777777.','.7777887777.','.7777777777.','.7777777777.','.7777777777.','.77.7777.77.','.7...77...7.'],
+  piala:['aaaaaaaaaaaa','a.a7aaaaaa.a','a.a7aaaaaa.a','.aa7aaaaaaa.','..aaaaaaaa..','...aaaaaa...','....aaaa....','.....99.....','.....99.....','...999999...','..44444444..','..44444444..'],
+  peti:['44444444','49999994','49444494','49499494','49499494','49444494','49999994','44444444'],
+  printer:['..777777..','..700007..','5555555555','566666b665','5666666665','5555555555','..777777..','..777777..'],
+  papanKetik:['5555555555','5767676765','5676767675','5767676765','5677777765','5555555555'],
+  roda:['...66...','.6.66.6.','..6666..','666..666','666..666','..6666..','.6.66.6.','...66...'],
+  tambah:['...aa...','...aa...','...aa...','aaaaaaaa','aaaaaaaa','...aa...','...aa...','...aa...'],
+  labu:['..6666..','...66...','...66...','..6bb6..','.6bbbb6.','6bb7bbb6','6bbbbbb6','6bbbbbb6','.666666.']
+};
+const _spr=new Map();
+function gambarSprite(nama,k,balik,ganti){
+  const key=nama+'|'+k+'|'+(balik?1:0)+'|'+(ganti?JSON.stringify(ganti):'');
+  let c=_spr.get(key);if(c)return c;
+  const S=barisSprite(nama),pal=Array.isArray(SPRITE[nama])?null:SPRITE[nama].p,w=S[0].length,h=S.length;
+  c=document.createElement('canvas');c.width=w*k;c.height=h*k;const q=c.getContext('2d');
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const ch=S[y][x];if(ch==='.')continue;
+    const col=ganti&&ganti[ch]!=null?ganti[ch]:pal?pal[ch]:ch==='X'?6:ch==='Y'?5:parseInt(ch,16);
+    if(col==null)continue;
+    q.fillStyle=warna(col);q.fillRect((balik?w-1-x:x)*k,y*k,k,k);
+  }
+  _spr.set(key,c);return c;
+}
+function spr(g,nama,x,y,k=1,o={}){
+  const c=gambarSprite(nama,k,o.balik,o.ganti);
+  if(o.alpha!=null)g.globalAlpha=o.alpha;
+  g.drawImage(c,Math.round(x),Math.round(y));
+  g.globalAlpha=1;return c;
+}
+const barisSprite=nama=>{const S=SPRITE[nama];return Array.isArray(S)?S:S.d};
+const ukuranSprite=nama=>({w:barisSprite(nama)[0].length,h:barisSprite(nama).length});
+function ikonURL(nama,k=3,ganti){return gambarSprite(nama,k,false,ganti).toDataURL()}
+
+/* ============ PAMN & DUNIA RPG ============ */
+/* Sprite berpalet sendiri: {p: warna per karakter, d: baris piksel} */
+const PAL_PAMN={o:'#1b1b2f',k:'#4a4f63',g:'#ffc940',G:'#d18b1c',h:'#e6eef5',m:'#b3c2d1',n:'#7a8aa0',v:'#23304a',e:'#6ff7ff',E:'#ffffff',b:'#f0b067',c:'#c97a36',d:'#8a4a1e',s:'#3fd1b9',t:'#1f8f80',l:'#6b4426',L:'#4a2c16'};
+const PAL_ORANG={o:'#2a1a14',H:'#7a4a24',S:'#f5c9a0',e:'#ff8fb1',E:'#d9607f',b:'#4a6fd1',B:'#2f4aa0',L:'#3a2a20'};
+Object.assign(SPRITE,{
+  pamnD:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnK:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohvvvvvvvvmo..','..ohveevveevmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnA:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','.kohhhhhhhmmmok.','.kkommmmmmmnokk.','.bc.okkkkkko.cd.','.bcossssssttocd.','.obbbsssstttcdo.','..obbbbeecccco..','..obbbbeecccdo..','..obbbbccccddo..','...obbccccddo...','...oddddddddo...','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnS1:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','...okco.ocko....','..okco...ocko...','.olllo...olllo..','oLlllo..olllLo..','oooooo..oooooo..']},
+  pamnS2:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','.....okco.......','.....okco.......','....olllo.......','....olllLo......','....oooooo......']},
+  warga1:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','...obbobBo......','..obbo.obBo.....','.obbo...obBo....','.oLLo...oLLLo...','.oooo...ooooo...']},
+  warga2:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','....obbbbBo.....','....obbbBo......','.....obBo.......','....oLLLo.......','....ooooo.......']},
+  wargaB:{p:PAL_ORANG,d:['......oooo......','....oHHHHHHo....','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','....oHHHHHHo....','.....oSSSSo.....','....oeeeeeeo....','...oeeeeeeeeo...','..oSeeeeeeeeSo..','..oSeEEEEEEeSo..','...oEEEEEEEEo...','....obbbbbbo....','....obbbbbBo....','....obboobBo....','....obboobBo....','....oLLooLLo....','....oLLooLLo....','....oooooooo....']},
+  kepeng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0'},d:['..oooo..','.owyyyo.','owyooyYo','oyo..oYo','oyo..oYo','oyYooYYo','.oYYYYo.','..oooo..']},
+  ramuan:{p:{o:'#1b1b2f',k:'#b07a3e',K:'#7a4a1f',g:'#d8f0ff',b:'#29adff',B:'#1a6fd1',w:'#ffffff'},d:['..okko..','..oKKo..','..ogBo..','.oggbbo.','ogwbbbBo','obwbbbBo','obbbbbBo','obbbbBBo','.oBBBBo.','..oooo..']},
+  gulungan:{p:{o:'#5a3a1a',P:'#c9b27a',p:'#f1e3b5',l:'#8a6a3a',g:'#2fbf4f',G:'#1a8a35'},d:['.oooooooo.','oPppggppPo','oPlpgGplPo','oPppgGppPo','oPlpgGplPo','oPppggppPo','.oooooooo.']},
+  lentera:{p:{o:'#2a1a0a',m:'#8a5a2b',M:'#b07a3e',g:'#ffd0e4',f:'#ff77a8',F:'#ffffff'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  lenteraMati:{p:{o:'#2a1a0a',m:'#6b4a2a',M:'#8a6a4a',g:'#5f6070',f:'#3c3d4a',F:'#4a4b58'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  hatiG:{p:{o:'#5a0a1a',w:'#ffd0d0',r:'#e83a3a',R:'#a01c2c'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']},
+  hatiGK:{p:{o:'#3a2a3a',w:'#5a4a5a',r:'#4a3a4a',R:'#3a2a3a'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']}
+});
+const ikonTipe=v=>v.t==='int'?'kepeng':v.t==='float'?'ramuan':v.t==='str'?'gulungan':v.t==='bool'?(v.v?'lentera':'lenteraMati'):null;
+const TEKS_TIPE={int:'#ffd34d',float:'#5cc8ff',str:'#7dff8a',bool:'#ff9ccb'};
+const POSE_PAMN={diam:'pamnD',kedip:'pamnK',sorak:'pamnA',samping1:'pamnS1',samping2:'pamnS2'};
+/* PAMN digambar dengan titik tengah x dan telapak kaki y */
+function pamn(g,cx,kaki,pose='diam',o={}){
+  const nama=POSE_PAMN[pose]||'pamnD',k=o.skala||1,{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-6*k,kaki-1*k,12*k,2*k,0);kotak(g,cx-4*k,kaki-2*k,8*k,4*k,0);g.globalAlpha=1;
+  spr(g,nama,cx-w*k/2,kaki-h*k,k,{balik:o.balik,ganti:o.ganti,alpha:o.alpha});
+}
+function warga(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2,kaki-h,1,{balik:o.balik});
+}
+
+
+/* Teks: font piksel "Kepeng" buatan sendiri (huruf kapital 7 piksel, lebar proporsional),
+   digambar pada kisi piksel yang sama dengan sprite agar menyatu dengan gaya gim */
+const GLIF={"A":[5,0,[".###.","#...#","#...#","#####","#...#","#...#","#...#"]],"B":[5,0,["####.","#...#","#...#","####.","#...#","#...#","####."]],"C":[5,0,[".###.","#...#","#....","#....","#....","#...#",".###."]],"D":[5,0,["####.","#...#","#...#","#...#","#...#","#...#","####."]],"E":[5,0,["#####","#....","#....","####.","#....","#....","#####"]],"F":[5,0,["#####","#....","#....","####.","#....","#....","#...."]],"G":[5,0,[".###.","#...#","#....","#.###","#...#","#...#",".####"]],"H":[5,0,["#...#","#...#","#...#","#####","#...#","#...#","#...#"]],"I":[3,0,["###",".#.",".#.",".#.",".#.",".#.","###"]],"J":[5,0,["..###","...#.","...#.","...#.","#..#.","#..#.",".##.."]],"K":[5,0,["#...#","#..#.","#.#..","##...","#.#..","#..#.","#...#"]],"L":[5,0,["#....","#....","#....","#....","#....","#....","#####"]],"M":[5,0,["#...#","##.##","#.#.#","#.#.#","#...#","#...#","#...#"]],"N":[5,0,["#...#","##..#","#.#.#","#..##","#...#","#...#","#...#"]],"O":[5,0,[".###.","#...#","#...#","#...#","#...#","#...#",".###."]],"P":[5,0,["####.","#...#","#...#","####.","#....","#....","#...."]],"Q":[5,0,[".###.","#...#","#...#","#...#","#.#.#","#..#.",".##.#"]],"R":[5,0,["####.","#...#","#...#","####.","#.#..","#..#.","#...#"]],"S":[5,0,[".####","#....","#....",".###.","....#","....#","####."]],"T":[5,0,["#####","..#..","..#..","..#..","..#..","..#..","..#.."]],"U":[5,0,["#...#","#...#","#...#","#...#","#...#","#...#",".###."]],"V":[5,0,["#...#","#...#","#...#","#...#","#...#",".#.#.","..#.."]],"W":[5,0,["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"]],"X":[5,0,["#...#","#...#",".#.#.","..#..",".#.#.","#...#","#...#"]],"Y":[5,0,["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."]],"Z":[5,0,["#####","....#","...#.","..#..",".#...","#....","#####"]],"0":[5,0,[".###.","#...#","#..##","#.#.#","##..#","#...#",".###."]],"1":[5,0,["..#..",".##..","..#..","..#..","..#..","..#..",".###."]],"2":[5,0,[".###.","#...#","....#","...#.","..#..",".#...","#####"]],"3":[5,0,["####.","....#","....#",".###.","....#","....#","####."]],"4":[5,0,["...#.","..##.",".#.#.","#..#.","#####","...#.","...#."]],"5":[5,0,["#####","#....","####.","....#","....#","#...#",".###."]],"6":[5,0,["..##.",".#...","#....","####.","#...#","#...#",".###."]],"7":[5,0,["#####","....#","...#.","..#..",".#...",".#...",".#..."]],"8":[5,0,[".###.","#...#","#...#",".###.","#...#","#...#",".###."]],"9":[5,0,[".###.","#...#","#...#",".####","....#","...#.",".##.."]],"a":[5,2,[".###.","....#",".####","#...#",".####"]],"b":[5,0,["#....","#....","####.","#...#","#...#","#...#","####."]],"c":[4,2,[".###","#...","#...","#...",".###"]],"d":[5,0,["....#","....#",".####","#...#","#...#","#...#",".####"]],"e":[5,2,[".###.","#...#","#####","#....",".###."]],"f":[4,0,["..##",".#..","####",".#..",".#..",".#..",".#.."]],"g":[5,2,[".####","#...#","#...#","#...#",".####","....#",".###."]],"h":[5,0,["#....","#....","#.##.","##..#","#...#","#...#","#...#"]],"i":[1,0,["#",".","#","#","#","#","#"]],"j":[3,0,["..#","...","..#","..#","..#","..#","..#","#.#",".#."]],"k":[4,0,["#...","#...","#..#","#.#.","##..","#.#.","#..#"]],"l":[2,0,["#.","#.","#.","#.","#.","#.",".#"]],"m":[5,2,["##.#.","#.#.#","#.#.#","#.#.#","#.#.#"]],"n":[5,2,["#.##.","##..#","#...#","#...#","#...#"]],"o":[5,2,[".###.","#...#","#...#","#...#",".###."]],"p":[5,2,["####.","#...#","#...#","#...#","####.","#....","#...."]],"q":[5,2,[".####","#...#","#...#","#...#",".####","....#","....#"]],"r":[4,2,["#.##","##..","#...","#...","#..."]],"s":[5,2,[".####","#....",".###.","....#","####."]],"t":[4,0,[".#..",".#..","####",".#..",".#..",".#..","..##"]],"u":[5,2,["#...#","#...#","#...#","#..##",".##.#"]],"v":[5,2,["#...#","#...#","#...#",".#.#.","..#.."]],"w":[5,2,["#...#","#...#","#.#.#","#.#.#",".#.#."]],"x":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"y":[5,2,["#...#","#...#","#...#","#...#",".####","....#",".###."]],"z":[5,2,["#####","...#.","..#..",".#...","#####"]]," ":[3,0,[]],"!":[1,0,["#","#","#","#","#",".","#"]],"\"":[3,0,["#.#","#.#"]],"#":[5,1,[".#.#.","#####",".#.#.","#####",".#.#."]],"$":[5,0,["..#..",".####","#.#..",".###.","..#.#","####.","..#.."]],"%":[5,0,["##...","##..#","...#.","..#..",".#...","#..##","...##"]],"&":[5,0,[".##..","#..#.","#.#..",".#...","#.#.#","#..#.",".##.#"]],"'":[1,0,["#","#"]],"(":[2,0,[".#","#.","#.","#.","#.","#.",".#"]],")":[2,0,["#.",".#",".#",".#",".#",".#","#."]],"*":[5,1,["..#..","#.#.#",".###.","#.#.#","..#.."]],"+":[5,1,["..#..","..#..","#####","..#..","..#.."]],",":[2,5,[".#",".#","#."]],"-":[4,3,["####"]],".":[1,6,["#"]],"/":[5,0,["....#","...#.","...#.","..#..",".#...",".#...","#...."]],":":[1,2,["#",".",".",".","#"]],";":[2,2,[".#","..","..",".#",".#","#."]],"<":[3,1,["..#",".#.","#..",".#.","..#"]],"=":[4,2,["####","....","####"]],">":[3,1,["#..",".#.","..#",".#.","#.."]],"?":[5,0,[".###.","#...#","....#","...#.","..#..",".....","..#.."]],"@":[5,0,[".###.","#...#","#.###","#.#.#","#.###","#....",".###."]],"[":[3,0,["###","#..","#..","#..","#..","#..","###"]],"\\":[5,0,["#....",".#...",".#...","..#..","...#.","...#.","....#"]],"]":[3,0,["###","..#","..#","..#","..#","..#","###"]],"^":[5,0,["..#..",".#.#.","#...#"]],"_":[5,7,["#####"]],"`":[2,0,["#.",".#"]],"{":[4,0,["..##",".#..",".#..","#...",".#..",".#..","..##"]],"|":[1,0,["#","#","#","#","#","#","#","#"]],"}":[4,0,["##..","..#.","..#.","...#","..#.","..#.","##.."]],"~":[5,2,[".#...","#.#.#","...#."]],"▶":[4,1,["#...","##..","###.","##..","#..."]],"▼":[5,2,["#####",".###.","..#.."]],"✓":[5,2,["....#","...#.","#.#..",".#..."]],"✗":[5,1,["#...#",".#.#.","..#..",".#.#.","#...#"]],"×":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"…":[5,6,["#.#.#"]],"→":[5,2,["...#.","#####","...#."]],"←":[5,2,[".#...","#####",".#..."]],"·":[1,3,["#"]],"°":[3,0,[".#.","#.#",".#."]]};
+const _glif=new Map();
+const skalaTeks=uk=>Math.max(1,Math.round(uk/10));
+function kanvasGlif(ch,col,tebal){
+  const key=ch+'|'+col+'|'+(tebal?1:0);let c=_glif.get(key);if(c)return c;
+  const [w,y0,rows]=GLIF[ch]||GLIF['?'];
+  c=document.createElement('canvas');c.width=Math.max(1,w+(tebal?1:0));c.height=10;const q=c.getContext('2d');q.fillStyle=warna(col);
+  rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='#'){q.fillRect(x,y0+y,1,1);if(tebal&&r[x+2]!=='#')q.fillRect(x+1,y0+y,1,1)}});
+  _glif.set(key,c);return c;
+}
+const lebarGlif=(ch,tebal,mono)=>mono?6:(GLIF[ch]||GLIF['?'])[0]+1+(tebal?1:0);
+function lebarTeks(s,uk=10,tebal,mono){
+  let w=0;for(const ch of String(s))w+=lebarGlif(ch,tebal,mono);
+  return Math.max(0,w-1)*skalaTeks(uk)+2;
+}
+function tulis(g,s,x,y,col=7,o={}){
+  s=String(s);if(!s)return 0;
+  const uk=(o.uk||10)*(o.skala||1),k=skalaTeks(uk),w=lebarTeks(s,uk,o.tebal,o.mono);
+  let xx=x+1;if(o.rata==='tengah')xx=x-w/2+1;else if(o.rata==='kanan')xx=x-w+1;
+  xx=Math.round(xx);const yy=Math.round(y)+1;
+  const lapis=o.bayang!=null?[[o.bayang,k],[col,0]]:[[col,0]];
+  for(const [c,d] of lapis){
+    let cx=xx;
+    for(const ch of s){
+      const [gw]=GLIF[ch]||GLIF['?'];
+      if(ch!==' '){const im=kanvasGlif(ch,warna(c),o.tebal),ox=o.mono?Math.floor((5-gw)/2)*k:0;g.drawImage(im,cx+ox+d,yy+d,im.width*k,im.height*k)}
+      cx+=lebarGlif(ch,o.tebal,o.mono)*k;
+    }
+  }
+  return w;
+}
+function potong(s,maks,uk=10){s=String(s);if(lebarTeks(s,uk)<=maks)return s;while(s.length>1&&lebarTeks(s+'…',uk)>maks)s=s.slice(0,-1);return s+'…'}
+
+
+
+/* ============ LATAR GAYA RPG GBA ============ */
+const GB={rumput:'#6cc04a',rumputT:'#8ad65a',rumputG:'#4a9a3a',rumputGG:'#357a2c',tanah:'#d9b26b',tanahG:'#b8894a',tanahT:'#ecd08e',
+  jerami:'#e8b84a',jeramiG:'#c08a2a',jeramiT:'#f7d982',jeramiGG:'#8f5f1a',dinding:'#e8dcc0',dindingG:'#c4b392',batu:'#9a8c70',
+  kayu:'#b07a3e',kayuG:'#7f5428',kayuT:'#d29a55',kayuGG:'#4a2c16',daun:'#2f8a35',daunT:'#55b84f',daunG:'#1d5a22',ceri:'#d23c3c',
+  tenda:'#2bb3a3',tendaG:'#1f8f80',putih:'#f4f1e6',lantai:'#c08b4f',lantaiG:'#946433',lantaiT:'#d7a56a',kertas:'#f1e3b5',kertasG:'#b49a62',garis:'#1b1b2f'};
+function acakTetap(benih){let s=benih>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+function latar(w,h,lukis){const c=document.createElement('canvas');c.width=w;c.height=h;lukis(c.getContext('2d'));return c}
+function bulat(q,cx,cy,r,col){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y)+.35);kotak(q,cx-w,cy+y,2*w+1,1,col)}}
+function lukisRumput(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.rumput);
+  for(let i=0;i<w*h/22;i++){
+    const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h),r=a();
+    if(r<.5){kotak(q,px,py+1,1,1,GB.rumputG);kotak(q,px+1,py,1,1,GB.rumputG);kotak(q,px+2,py+1,1,1,GB.rumputG)}
+    else if(r<.8)kotak(q,px,py,1,1,GB.rumputT);
+    else if(r<.86)kotak(q,px,py,2,1,GB.rumputGG);
+  }
+}
+function lukisJalan(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.tanah);
+  for(let i=0;i<w*h/14;i++){const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h);kotak(q,px,py,1,1,a()<.6?GB.tanahG:GB.tanahT)}
+}
+function bunga(q,x,y,c){kotak(q,x,y-1,1,1,c);kotak(q,x-1,y,3,1,c);kotak(q,x,y+1,1,1,c);kotak(q,x,y,1,1,'#ffe066')}
+function semak(q,x,y,r,buah){
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-1,y-1,r-2,GB.daunT);
+  kotak(q,x-r+2,y-1,1,1,GB.daunG);kotak(q,x+1,y+2,1,1,GB.daunG);
+  if(buah)for(const [dx,dy] of [[-2,1],[2,-1],[0,3],[3,2]])kotak(q,x+dx,y+dy,1,1,GB.ceri);
+}
+function pohon(q,x,y,r){
+  kotak(q,x-3,y+r-2,6,10,GB.kayuG);kotak(q,x-3,y+r-2,2,10,GB.kayu);
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-3,y-3,r-4,GB.daunT);
+  const a=acakTetap(x*7+y);for(let i=0;i<r*3;i++){const px=x+Math.floor((a()-.5)*r*1.6),py=y+Math.floor((a()-.5)*r*1.6);kotak(q,px,py,2,1,GB.daunG)}
+}
+function lukisPondok(q,x,y,w){
+  const ha=34,hd=24;
+  kotak(q,x+4,y+ha,w-8,hd,GB.dinding);
+  const a=acakTetap(11);
+  for(let i=0;i<26;i++)kotak(q,x+6+Math.floor(a()*(w-14)),y+ha+3+Math.floor(a()*(hd-8)),4,2,GB.dindingG);
+  kotak(q,x+4,y+ha+hd-3,w-8,3,GB.batu);bingkai(q,x+3,y+ha,w-6,hd+1,GB.garis);
+  for(let r=0;r<ha;r++){const t=Math.max(0,5-r);kotak(q,x+t,y+r,w-2*t,1,GB.jerami)}
+  for(let b=1;b<ha-3;b+=5)for(let i=x+3+((b/5|0)%2)*2;i<x+w-3;i+=4){kotak(q,i,y+b,1,3,GB.jeramiG);kotak(q,i+1,y+b-1,1,1,GB.jeramiT)}
+  kotak(q,x,y+ha-3,w,3,GB.jeramiGG);kotak(q,x+5,y,w-10,1,GB.garis);
+  for(let r=0;r<6;r++){kotak(q,x+5-r,y+r,1,1,GB.garis);kotak(q,x+w-6+r,y+r,1,1,GB.garis)}
+  kotak(q,x,y+5,1,ha-5,GB.garis);kotak(q,x+w-1,y+5,1,ha-5,GB.garis);kotak(q,x,y+ha,w,1,GB.garis);
+  const dx=x+48;kotak(q,dx,y+ha+6,16,hd-6,GB.kayuG);kotak(q,dx+2,y+ha+8,12,hd-8,GB.kayu);kotak(q,dx+7,y+ha+8,1,hd-8,GB.kayuG);
+  kotak(q,dx+2,y+ha+5,12,2,GB.kayuGG);kotak(q,dx+10,y+ha+15,2,2,'#ffd34d');bingkai(q,dx-1,y+ha+5,18,hd-4,GB.garis);
+  kotak(q,x+78,y+ha+5,16,11,GB.garis);kotak(q,x+79,y+ha+6,14,9,'#7ec8e3');kotak(q,x+85,y+ha+6,1,9,GB.garis);kotak(q,x+79,y+ha+10,14,1,GB.garis);kotak(q,x+80,y+ha+7,3,2,'#d8f4ff');
+  kotak(q,x+10,y+ha+6,32,12,GB.kayuGG);kotak(q,x+11,y+ha+7,30,10,GB.kayuT);kotak(q,x+11,y+ha+15,30,2,GB.kayu);
+}
+function lukisPeti(q,x,y){kotak(q,x,y,14,12,GB.kayuGG);kotak(q,x+1,y+1,12,10,GB.kayu);kotak(q,x+1,y+1,12,3,'#5a3418');for(let i=0;i<5;i++)kotak(q,x+2+i*2,y+2,1,1,'#2a1a10');kotak(q,x+1,y+6,12,1,GB.kayuG)}
+function kotakDialog(g,x,y,w,h,nama,baris,u){
+  bingkaiRPG(g,x,y,w,h);
+  if(nama){const tw=lebarTeks(nama,8,true)+10;panel(g,x+8,y-9,tw,12,GB.tenda,GB.putih);tulis(g,nama,x+13,y-8,'#ffffff',{uk:8,tebal:true,bayang:GB.tendaG})}
+  let sisa=GERAK?Math.floor(u*45):1e9;
+  baris.forEach((b,i)=>{const t=b.slice(0,Math.max(0,sisa));sisa-=b.length;tulis(g,t,x+9,y+5+i*12,'#ffffff',{bayang:'#0b0f22'})});
+  if(sisa>4&&Math.floor(u*3)%2===0){const ax=x+w-12,ay=y+h-9;kotak(g,ax,ay,5,1,'#ffffff');kotak(g,ax+1,ay+1,3,1,'#ffffff');kotak(g,ax+2,ay+2,1,1,'#ffffff')}
+}
+function hatiHUD(g,x,y,isi,maks=3){for(let i=0;i<maks;i++)spr(g,i<isi?'hatiG':'hatiGK',x+i*9,y)}
+
+Object.assign(SPRITE,{
+  bugG:{p:{o:'#1b1b2f',k:'#3a2a3a',e:'#ffffff',p:'#1b1b2f',X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'},d:['...k........k...','....k......k....','....oooooooo....','...oZZXXXXYYo...','..oZeeXXXXeeYo..','..oZepXXXXpeYo..','..oXXXXXXXXXXo..','.ooXYYXXXXYYXoo.','okoXXXXXXXXXXoko','..oXYYXXXXYYXo..','okoXXXXXXXXXXoko','..ooXXXXXXXXoo..','.k..oooooooo..k.','k..............k']},
+  hantuG:{p:{o:'#3a3f5a',w:'#eef2ff',s:'#b8c0e0',p:'#1b1b2f',r:'#ff8fb1'},d:['....oooooo....','..oowwwwwwoo..','.owwwwwwwwwwo.','.owwppwwppwwo.','owwwppwwppwwwo','owwwwwwwwwwwwo','owwwwwrrwwwwwo','owwwwwwwwwwwwo','owswwwwwwwwswo','owswwwwwwwwswo','owwwwwwwwwwwwo','owwoowwwwoowwo','owo..owwo..owo','.o....oo....o.']},
+  petiKayu:{p:{o:'#4a2c16',L:'#d29a55',K:'#b07a3e',d:'#7f5428',m:'#b3c2d1'},d:['oooooooooooo','oLLLLLLLLLLo','oKKKKKKKKKKo','oooooooooooo','oKmKKKKKKmKo','oKmKKKKKKmKo','oKKKKKKKKKKo','oKmKKKKKKmKo','oddddddddddo','oooooooooooo']},
+  kuali:{p:{o:'#1b1b2f',b:'#bfffd0',g:'#7dff8a',a:'#5c6178',i:'#3a3f5a',I:'#7a8aa0'},d:['....b...b...','..oooooooo..','.oggggggggo.','oaaaaaaaaaao','oiiiiiiiiiio','oiIiiiiiiiio','oiIiiiiiiiio','.oiiiiiiiio.','..oooooooo..','..o......o..','.oo......oo.']},
+  struk:{p:{o:'#8a6a3a',w:'#fff8e8',l:'#8a8fa3'},d:['oooooooo','owwwwwwo','owllllwo','owwwwwwo','owlllwwo','owwwwwwo','owllllwo','owwwwwwo','owlwllwo','owwwwwwo','oo.oo.oo']},
+  pialaG:{p:{o:'#7a4a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',b:'#8a5a2b'},d:['..oooooooo..','ooowyyyyYooo','o.owyyyyYo.o','o.oyyyyyYo.o','oo.oyyyYo.oo','...oyyyYo...','....oyYo....','.....oo.....','.....yY.....','...oooooo...','...obbbbo...','...oooooo...']}
+});
+
+/* ============ PUSTAKA ADEGAN RPG ============ */
+const BT={batu:'#7d7f8f',batuT:'#9a9cab',batuG:'#5c5e6e',nat:'#3e4050',dinding:'#4b4e63',dindingT:'#666a82',dindingG:'#343648'};
+function lukisLantaiKayu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.lantai);
+  for(let yy=y;yy<y+h;yy+=8){kotak(q,x,yy,w,1,GB.lantaiG);kotak(q,x,yy+1,w,1,GB.lantaiT);for(let xx=x+((yy-y)/8%2)*24+Math.floor(a()*10);xx<x+w;xx+=48)kotak(q,xx,yy,1,8,GB.lantaiG)}
+  for(let i=0;i<w*h/600;i++)kotak(q,x+Math.floor(a()*w),y+Math.floor(a()*h),2,1,GB.lantaiG);
+}
+function lukisDindingKayu(q,x,y,w,h){
+  kotak(q,x,y,w,h,'#7a4a24');
+  for(let xx=x;xx<x+w;xx+=10){kotak(q,xx,y,1,h,'#4a2c16');kotak(q,xx+1,y,1,h,'#9a6234')}
+  kotak(q,x,y+h-3,w,3,'#4a2c16');kotak(q,x,y+h-3,w,1,'#9a6234');
+}
+function lukisLantaiBatu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,BT.nat);
+  for(let yy=y;yy<y+h;yy+=12){const off=((yy-y)/12%2)*8;for(let xx=x-off;xx<x+w;xx+=16){
+    kotak(q,xx+1,yy+1,15,11,BT.batu);kotak(q,xx+1,yy+1,15,1,BT.batuT);kotak(q,xx+1,yy+1,1,11,BT.batuT);kotak(q,xx+2,yy+11,14,1,BT.batuG);
+    if(a()<.35)kotak(q,xx+4+Math.floor(a()*8),yy+4+Math.floor(a()*5),2,1,BT.batuG);
+  }}
+}
+function lukisDindingBatu(q,x,y,w,h){
+  kotak(q,x,y,w,h,BT.dindingG);
+  for(let yy=y;yy<y+h;yy+=8){const off=((yy-y)/8%2)*6;for(let xx=x-off;xx<x+w;xx+=12){kotak(q,xx+1,yy+1,11,6,BT.dinding);kotak(q,xx+1,yy+1,11,1,BT.dindingT)}}
+  kotak(q,x,y+h-2,w,2,'#24263a');
+}
+function obor(g,x,y,t){
+  kotak(g,x-1,y+4,3,8,GB.kayuGG);kotak(g,x-3,y+2,7,3,'#5c6178');kotak(g,x-3,y+2,7,1,'#9aa7b8');
+  const f=GERAK?Math.floor(t*10)%3:0;
+  g.globalAlpha=.13;bulat(g,x,y-3,13+f,'#ffb84d');g.globalAlpha=1;
+  kotak(g,x-2,y-3+(f===1?1:0),5,5,'#ff7a1c');kotak(g,x-1,y-6+(f===2?1:0),3,5,'#ffd34d');kotak(g,x,y-7+f,1,2,'#fff7b0');
+}
+function gigi(g,cx,cy,r,sudut){
+  for(let i=0;i<8;i++){const a=sudut+i*Math.PI/4;kotak(g,Math.round(cx+Math.cos(a)*(r+1))-1,Math.round(cy+Math.sin(a)*(r+1))-1,3,3,'#6a4210')}
+  bulat(g,cx,cy,r,'#6a4210');bulat(g,cx,cy,r-1,'#e0a040');bulat(g,cx-1,cy-1,Math.max(1,r-3),'#f6c870');bulat(g,cx,cy,1,'#5a3a10');
+}
+function mesinKuningan(g,x,y,w,h,label,o={}){
+  const X=Math.round(x+(o.goy||0));
+  g.globalAlpha=.25;kotak(g,X+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,X,y,w,h,GB.kayuGG);kotak(g,X+1,y+1,w-2,h-2,'#8a5a2b');kotak(g,X+1,y+1,w-2,3,'#b07a3e');
+  kotak(g,X+3,y+5,w-6,h-10,'#c98a3a');kotak(g,X+3,y+5,w-6,1,'#f0c070');bingkai(g,X+3,y+5,w-6,h-10,'#5a3a10');
+  for(const [rx,ry] of [[X+5,y+7],[X+w-6,y+7],[X+5,y+h-7],[X+w-6,y+h-7]])kotak(g,rx,ry,1,1,'#fff3b0');
+  const pw=Math.max(30,lebarTeks(label,10,true)+8);panel(g,Math.round(X+w/2-pw/2),y+8,pw,13,GB.kertas,'#5a3a10');tulis(g,label,X+w/2,y+9,'#3a2410',{rata:'tengah',tebal:true});
+  gigi(g,X+Math.round(w/2)-10,y+h-17,5,o.sudut||0);gigi(g,X+Math.round(w/2)+10,y+h-17,5,-(o.sudut||0));
+  if(o.lampu)kotak(g,X+w-10,y+h-10,3,3,o.lampu);
+  kotak(g,X+3,y+h,4,2,GB.kayuGG);kotak(g,X+w-7,y+h,4,2,GB.kayuGG);
+}
+const WARNA_PETI={int:['#e0a020','#ffd34d','#8a5a10'],float:['#2a7fd8','#5cc8ff','#1a3f8a'],str:['#2f9e44','#7dff8a','#1a5a2a'],bool:['#d9558f','#ff9ccb','#8a2a55']};
+function petiHarta(g,x,y,w,h,tipe,o={}){
+  const [m,t,d]=WARNA_PETI[tipe],lh=14;
+  g.globalAlpha=.25;kotak(g,x+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,x,y,w,h,GB.garis);
+  kotak(g,x+1,y+1,w-2,lh-1,m);kotak(g,x+1,y+1,w-2,2,t);kotak(g,x+1,y+lh-2,w-2,1,d);
+  kotak(g,x+1,y+lh,w-2,h-lh-1,d);kotak(g,x+2,y+lh+1,w-4,h-lh-3,m);kotak(g,x+1,y+lh,w-2,1,GB.garis);
+  for(const bx of [x+4,x+w-7]){kotak(g,bx,y+lh+1,3,h-lh-2,'#ffd34d');kotak(g,bx+2,y+lh+1,1,h-lh-2,'#c09020')}
+  kotak(g,Math.round(x+w/2-3),y+lh-3,6,7,'#ffd34d');kotak(g,Math.round(x+w/2-1),y+lh,2,2,GB.garis);
+  if(o.kilau){bingkai(g,x-1,y-1,w+2,h+2,'#fff7b0');bingkai(g,x-2,y-2,w+4,h+4,t)}
+}
+function kuali(g,cx,cy,t,cair,o={}){
+  const goy=o.goy||0,X=cx+goy;
+  if(GERAK)for(let i=0;i<5;i++){const f=Math.floor(t*12+i*2)%3;kotak(g,X-12+i*5,cy+26-f,3,4+f,f===0?'#ffd34d':'#ff7a1c')}
+  kotak(g,X-15,cy+22,4,6,GB.garis);kotak(g,X+11,cy+22,4,6,GB.garis);
+  bulat(g,X,cy+10,17,GB.garis);bulat(g,X,cy+10,16,'#3a3f5a');bulat(g,X-5,cy+5,7,'#4b5068');
+  kotak(g,X-19,cy-3,38,6,GB.garis);kotak(g,X-18,cy-2,36,4,'#5c6178');kotak(g,X-18,cy-2,36,1,'#9aa7b8');
+  kotak(g,X-16,cy-5,32,3,cair);kotak(g,X-12,cy-6,24,1,cair);
+  if(GERAK)for(let i=0;i<3;i++){const ph=(t*1.4+i/3)%1;kotak(g,X-8+i*8,cy-6-ph*10,2,2,o.gelembung||'#ffffff')}
+  if(o.rune){panel(g,X-9,cy+7,18,14,'#2b2f3a','#ffd34d');tulis(g,o.rune,X,cy+9,o.runeWarna||'#ffd34d',{rata:'tengah',tebal:true})}
+}
+function bingkaiRPG(g,x,y,w,h){
+  kotak(g,x+1,y,w-2,h,GB.putih);kotak(g,x,y+1,w,h-2,GB.putih);
+  kotak(g,x+2,y+2,w-4,h-4,'#1c2340');bingkai(g,x+3,y+3,w-6,h-6,'#4b5aa0');
+}
+function asap(g,x,y,u,n=8){for(let k=0;k<n;k++){const a=k*Math.PI*2/n+u,r=4+u*26;g.globalAlpha=Math.max(0,1-u);kotak(g,x+Math.cos(a)*r-2,y+Math.sin(a)*r*.6-2-u*10,4,4,k%2?'#d0d0d8':'#a8a8b4');g.globalAlpha=1}}
+function letup(g,x,y,u,warnaP){for(let k=0;k<10;k++){const a=k*Math.PI/5,r=u*30;kotak(g,x+Math.cos(a)*r-1,y+Math.sin(a)*r-1,3,3,k%2?warnaP:'#fff7b0')}}
+
+
+/* ============ PENJADWAL ANIMASI ============ */
+const ADEGAN=[];
+const amati=new IntersectionObserver(es=>{for(const e of es){const a=ADEGAN.find(x=>x.c===e.target);if(a)a.lihat=e.isIntersecting}});
+function aturSkala(a){
+  const dpr=window.devicePixelRatio||1,cw=a.c.clientWidth;
+  const S=cw?jepit(Math.ceil(cw*dpr/a.W),2,6):Math.max(a.S,3);
+  if(S!==a.S){a.S=S;a.c.width=a.W*S;a.c.height=a.H*S}
+  a.g.setTransform(S,0,0,S,0,0);a.g.imageSmoothingEnabled=false;
+}
+function adegan(kanvas,gambar){const a={c:kanvas,g:kanvas.getContext('2d'),W:kanvas.width,H:kanvas.height,S:0,gambar,lihat:false,akhir:0,paksa:true};ADEGAN.push(a);amati.observe(kanvas);return a}
+function putar(ms){
+  const t=ms/1000;
+  for(const a of ADEGAN){
+    if(!a.lihat&&!a.paksa)continue;
+    if(!a.paksa&&t-a.akhir<1/30)continue;
+    const dt=a.akhir?Math.min(.1,t-a.akhir):0;a.akhir=t;a.paksa=false;
+    aturSkala(a);a.gambar(a.g,t,dt);
+  }
+  requestAnimationFrame(putar);
+}
+
+/* ============ PUSTAKA BERSAMA (dari materi Python) ============ */
+const BUG_SYN={X:'#ff9a3c',Y:'#c0561a',Z:'#ffd08a'},BUG_ABU={X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'};
+const WARNA_BUG={SyntaxError:BUG_SYN,IndentationError:BUG_SYN,NameError:{X:'#b58cff',Y:'#7a4fd1',Z:'#e0ccff'},TypeError:{X:'#ff5a5a',Y:'#b8263a',Z:'#ffb3b3'},ValueError:{X:'#4fb0ff',Y:'#2266c8',Z:'#bfe3ff'},EOFError:BUG_ABU,ZeroDivisionError:{X:'#ff77a8',Y:'#c0457a',Z:'#ffc6dc'},AttributeError:{X:'#d9a05a',Y:'#9a6a2a',Z:'#f3d3a3'},OverflowError:BUG_ABU};
+function gelembung(g,teks,x,y){
+  const w=lebarTeks(teks)+10;
+  panel(g,x,y,w,15,7,0);kotak(g,x+2,y+15,4,2,7);kotak(g,x,y+17,3,2,7);
+  tulis(g,teks,x+5,y+2,0);
+}
+const ribuanID=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+function hud(g,label,skor,hati,maksHati=3){
+  if(maksHati)hatiHUD(g,4,4,hati,maksHati);
+  const lx=maksHati?6+maksHati*9:4;
+  if(label){const w=lebarTeks(label,10,true)+6;g.globalAlpha=.8;kotak(g,lx,2,w,13,'#1c2340');g.globalAlpha=1;tulis(g,label,lx+2,3,'#ffffff',{tebal:true,bayang:'#0b0f22'})}
+  const tx=String(skor),w2=lebarTeks(tx,10,true)+15;g.globalAlpha=.8;kotak(g,252-w2,2,w2+2,13,'#1c2340');g.globalAlpha=1;
+  spr(g,'kepeng',252-w2+3,5);tulis(g,tx,252,3,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+}
+function layarJudul(g,judul,baris,t=0){
+  g.globalAlpha=.55;kotak(g,0,0,256,144,'#0b0f22');g.globalAlpha=1;
+  const w=204,h=36+baris.length*12,x=26,y=Math.round(70-h/2);
+  bingkaiRPG(g,x,y,w,h);
+  tulis(g,judul,128,y+7,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+  baris.forEach((b,i)=>tulis(g,b,128,y+31+i*12,'#ffffff',{rata:'tengah',bayang:'#0b0f22'}));
+  pamn(g,240,y+h+2,Math.sin(t*2)>.6?'sorak':'diam');
+}
+function simpanTerbaik(kunci,skor,el,fmt){const b=lsAmbil(kunci,0);if(skor>b)lsSimpan(kunci,skor);const t=Math.max(b,skor);el.textContent=t?fmt(t):''}
+
+
+/* ============ SPRITE TAMBAHAN: LONCENG & PENYUSUP ============ */
+Object.assign(SPRITE,{
+  lonceng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',k:'#4a2c16'},d:['....kk....','....oo....','...oyyo...','..oywyYo..','..oyyyYo..','.oywyyYYo.','.oyyyyyYo.','oyyyyyyYYo','oooooooooo','....oo....']},
+  buku:{p:{o:'#4a2c16',k:'#8a5a2b',K:'#b07a3e',p:'#f1e3b5',P:'#c9b27a',l:'#8a6a3a'},d:['oooooooooooo','oKKKKoKKKKKo','oKppppppppKo','oKplllpllpKo','oKppppppppKo','oKplllllppKo','oKppppppppKo','oKpllplllpKo','oKppppppppKo','okkkkokkkkko','oooooooooooo']}
+});
+/* Penyusup memakai sprite warga dengan jubah gelap (pedoman: sprite PAMN tidak dipakai untuk tokoh lain) */
+const JUBAH={H:'#2b2238',e:'#3d3354',E:'#2a2240',b:'#1f1a2b',B:'#16121f',L:'#0f0c16'};
+function penyusup(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2+(o.goy||0),kaki-h,1,{balik:o.balik,ganti:JUBAH,alpha:o.alpha});
+}
+function lonceng(g,cx,y,t,bunyiAktif){
+  kotak(g,cx-1,y-6,2,6,GB.kayuGG);kotak(g,cx-8,y-8,16,3,GB.kayuGG);kotak(g,cx-7,y-8,14,1,GB.kayuT);
+  const goy=bunyiAktif&&GERAK?Math.round(Math.sin(t*28)*2):0;
+  spr(g,'lonceng',cx-5+goy,y-1);
+  if(bunyiAktif){const f=GERAK?Math.floor(t*8)%2:0;for(const s of [-1,1]){kotak(g,cx+s*(9+f),y+2,1,3,'#ffd34d');kotak(g,cx+s*(12+f),y+1,1,5,'#ffd34d')}}
+}
+/* Gerbang ayun dua daun yang melintang di jalan (tampak 3/4 dari selatan; kedalaman digambar miring).
+   gx = tiang utara di tepi belakang jalan; tiang selatan di tepi depan jalan, bergeser ke kiri.
+   buka 0 = tertutup, 1 = terbuka penuh; kedua daun berayun ke barat, ke dalam halaman toko.
+   Gambar gerbangBelakang sebelum tokoh dan gerbangDepan sesudahnya agar urutan kedalaman benar. */
+const GERBANG={yU:90,yS:113,miring:.45,tinggi:12,tiang:18};
+function tiangGerbang(g,x,yb){const h=GERBANG.tiang;kotak(g,x-3,yb-h,7,h,GB.garis);kotak(g,x-2,yb-h+1,5,h-2,BT.batu);kotak(g,x-2,yb-h+1,1,h-2,BT.batuT);kotak(g,x-4,yb-h-2,9,3,GB.garis);kotak(g,x-3,yb-h-1,7,1,BT.batuT)}
+function daunGerbang(g,hx,hy,arah,buka,goy){
+  const {miring,tinggi:h}=GERBANG,tengah=(GERBANG.yS-GERBANG.yU)/2;
+  const cx=-arah*miring,cy=arah,n=Math.hypot(cx,cy),aTutup=Math.atan2(cy,cx);
+  let d=Math.PI-aTutup;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+  const a=aTutup+d*mulus(buka),L=tengah*n,ux=Math.cos(a),uy=Math.sin(a);
+  for(let s=0;s<=L;s+=.5){
+    const bx=Math.round(hx+ux*s+goy),by=Math.round(hy+uy*s),c=Math.floor(s/3)%2?GB.kayu:GB.kayuT;
+    kotak(g,bx,by-h,2,h,c);kotak(g,bx,by-h,2,1,GB.kayuGG);kotak(g,bx,by-h+4,2,1,GB.kayuG);kotak(g,bx,by-5,2,1,GB.kayuG);kotak(g,bx,by-1,2,1,GB.kayuGG);
+  }
+  kotak(g,Math.round(hx+ux*L+goy),Math.round(hy+uy*L)-h,2,h,GB.kayuGG);
+}
+function gerbangBelakang(g,gx,buka,goy=0){tiangGerbang(g,gx,GERBANG.yU);daunGerbang(g,gx,GERBANG.yU,1,buka,goy)}
+function gerbangDepan(g,gx,buka,goy=0){
+  const xs=gx-Math.round((GERBANG.yS-GERBANG.yU)*GERBANG.miring);
+  // pagar batas halaman berlanjut dari tiang selatan ke arah depan
+  let px=xs,py=GERBANG.yS;
+  for(let k=1;k<=4;k++){
+    const fx=xs-Math.round(k*8*GERBANG.miring),fy=GERBANG.yS+k*8;
+    for(const hr of [9,4])for(let q=0;q<=1;q+=.1)kotak(g,Math.round(lerp(px,fx,q)),Math.round(lerp(py,fy,q))-hr,1,2,GB.kayu);
+    kotak(g,fx-1,fy-11,3,11,GB.kayuGG);kotak(g,fx,fy-10,1,9,GB.kayuT);px=fx;py=fy;
+  }
+  daunGerbang(g,xs,GERBANG.yS,-1,buka,goy);tiangGerbang(g,xs,GERBANG.yS);
+}
+
+/* ============ SUARA ADEGAN ============ */
+/* Animasi yang berputar sendiri ikut bersuara (permintaan dosen), tetapi hanya bila suara aktif,
+   kanvasnya sedang terlihat, dan pengunjung sudah berinteraksi dengan halaman (syarat peramban). */
+Object.assign(BUNYI,{
+  lonceng:()=>{for(let i=0;i<3;i++){nada(1568,.32,{jenis:'triangle',vol:.05,tunda:i*.2});nada(2349,.22,{jenis:'sine',vol:.022,tunda:i*.2+.01})}},
+  ding:()=>{nada(1568,.25,{jenis:'triangle',vol:.03});nada(2349,.16,{jenis:'sine',vol:.014,tunda:.01})},
+  tulis:()=>{nada(2600,.03,{jenis:'derau',vol:.05});nada(3400,.025,{jenis:'derau',vol:.04,tunda:.05})},
+  pintu:()=>{nada(220,.16,{jenis:'derau',vol:.14});nada(140,.12,{jenis:'triangle',vol:.05,ke:110})},
+  tutup:()=>{nada(400,.1,{jenis:'derau',vol:.3});nada(70,.2,{jenis:'square',vol:.07,ke:40})}
+});
+SUARA.izin=false;
+['pointerdown','keydown','touchstart'].forEach(n=>addEventListener(n,()=>{SUARA.izin=true},{passive:true,capture:true}));
+function suaraAdegan(A,T,daftar){
+  const kini=performance.now()/1000,p=A.Tlalu,lompat=A.nyata!=null&&kini-A.nyata>.4;
+  A.Tlalu=T;A.nyata=kini;
+  if(p==null||lompat||!A.lihat||!GERAK||!SUARA.aktif||!SUARA.izin||document.hidden)return;
+  for(const [w,n] of daftar)if(p<=T?(w>p&&w<=T):(w>p||w<=T))bunyi(n);
+}
+function garisPx(g,x0,y0,x1,y1,c,tebal=1){const n=Math.max(1,Math.ceil(Math.max(Math.abs(x1-x0),Math.abs(y1-y0))));for(let i=0;i<=n;i++){const q=i/n;kotak(g,lerp(x0,x1,q),lerp(y0,y1,q),tebal,tebal,c)}}
+function bungkus(teks,maks,uk=10){const b=[];let s='';for(const k of teks.split(' ')){const c=s?s+' '+k:k;if(lebarTeks(c,uk)>maks&&s){b.push(s);s=k}else s=c}if(s)b.push(s);return b}
+const fmtID=n=>Math.round(n).toLocaleString('id-ID');
+const persen=(x,d=1)=>(x*100).toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+function belLoncengMini(g,x,y,c,cg){kotak(g,x+1,y,3,1,c);kotak(g,x,y+1,5,3,c);kotak(g,x,y+4,5,1,cg);kotak(g,x+2,y+5,1,1,cg)}
+
+/* Pencocokan syarat: sama persis dengan praktikum (deteksi-serangan.html) agar sintaksis di materi berlaku di praktikum */
+function cocok1(ev,c){
+  let f=ev[c.k];if(f===undefined)return false;
+  const v=c.v;
+  if(v.startsWith('!'))return String(f).toLowerCase()!==v.slice(1).toLowerCase();
+  if(v.startsWith('*')&&v.endsWith('*'))return String(f).toLowerCase().includes(v.slice(1,-1).toLowerCase());
+  if(/^>=/.test(v))return +f>=+v.slice(2);
+  if(/^<=/.test(v))return +f<=+v.slice(2);
+  if(/^>/.test(v))return +f>+v.slice(1);
+  if(/^</.test(v))return +f<+v.slice(1);
+  if(v.includes('|'))return v.split('|').some(x=>String(f).toLowerCase()===x.trim().toLowerCase());
+  return String(f).toLowerCase()===v.toLowerCase();
+}
+const keSyarat=s=>{const i=s.indexOf(':');return {k:s.slice(0,i),v:s.slice(i+1)}};
+
+
+/* ============ DATA: FIVE PATTERNS & SECTOR MATRIX ============ */
+const POLA=[
+  {id:'condition-monitoring',name:'Condition Monitoring',q:'Is it within range?',c:'#ff9a3c',ik:'termometer',
+   what:'Continuously measures whether something stays within an acceptable range, and raises an event when it does not.',
+   logic:['There is a physical state that matters commercially','That state changes over time in measurable ways','Discovering a breach late costs much more than discovering it early'],
+   viab:'Someone must be able to intervene between the breach and the loss. If the product is ruined the moment the threshold is crossed, monitoring produces evidence, not prevention: a different business case that must be argued as one.',
+   sensors:['temperature','humidity','pressure','pH','gas concentration'],decision:'Intervene before loss',ttv:'Immediate'},
+  {id:'location-tracking',name:'Location Tracking',q:'Where is it?',c:'#4fb0ff',ik:'pin',
+   what:'Reports where a moving asset is, and how it got there.',
+   logic:['The business coordinates assets that move','Current position determines the next decision: reroute, reallocate, confirm, or search'],
+   viab:'The position must be actionable. Knowing a truck is delayed matters if the dispatcher can inform the customer or reassign the next drop; it matters far less on a fixed route with no flexibility.',
+   extra:['Often missed','The accumulated location history is often worth more than the live position. It reveals route overruns, stop duration, and where the schedule was optimistic. Live tracking solves today; the history changes the plan.'],
+   sensors:['GPS','RFID gateway','BLE gateway'],decision:'Reroute, reallocate, confirm',ttv:'Immediate; history compounds'},
+  {id:'usage-measurement',name:'Usage Measurement',q:'How much, how often?',c:'#ffd34d',ik:'meteran',
+   what:'Counts how much of something is consumed, or how often something is used.',
+   logic:['A resource is consumed unevenly across units, locations, or customers','The business currently allocates cost or capacity by averaging'],
+   viab:'The measurement must change an allocation decision. Metering energy per hotel room is only worth it if the hotel will act on the difference. Measuring without acting is an expensive way to be better informed.',
+   extra:['Strongest where','Anywhere billing, chargeback, or capacity sizing currently rests on estimates.'],
+   sensors:['smart meter','flow meter','counter'],decision:'Charge, size, schedule accurately',ttv:'One billing cycle'},
+  {id:'predictive-maintenance',name:'Predictive Maintenance',q:'Is it degrading?',c:'#b58cff',ik:'roda',
+   what:'Detects gradual degradation in equipment so repair happens on evidence rather than on a calendar or after breakdown.',
+   logic:['Equipment failure is preceded by measurable change','The cost of unplanned failure substantially exceeds the cost of planned intervention'],
+   viab:'A baseline of normal behaviour is required before deviation means anything. This is the ONLY pattern with a built-in delay between deployment and benefit. A proposal promising immediate returns from predictive maintenance is not credible.',
+   extra:['Challenge questions','What does "normal" look like for this machine? How long does establishing that baseline take?'],
+   sensors:['vibration','current draw','acoustic','thermal'],decision:'Repair on evidence',ttv:'Delayed: baseline required'},
+  {id:'presence-and-flow',name:'Presence and Flow',q:'Who or what moves here?',c:'#55d36b',ik:'orangIkon',
+   what:'Detects people or objects moving through a space, and counts, times, or paths them.',
+   logic:['Behaviour in physical space is currently invisible to the business','Decisions about staffing, layout, and pricing are made on assumption'],
+   viab:'The business must have levers it can pull: staffing flexibility, layout control, or pricing freedom. Footfall data delivered to a manager who cannot change the roster changes nothing.',
+   extra:['Unique dimension','People are the subject of the measurement. This is the only pattern with inherent privacy implications. It is treated fully in Weeks 13-14 under Indonesia\'s Personal Data Protection Law (UU 27/2022), but it should shape use case design from the start.'],
+   sensors:['overhead counter','motion sensor','Wi-Fi presence','BLE presence','occupancy sensor'],decision:'Staff, lay out, price to behaviour',ttv:'Immediate; patterns over weeks'}
+];
+const POLA_ID=Object.fromEntries(POLA.map(p=>[p.id,p]));
+const SEKTOR={retail:{name:'Retail',ctx:'Minimarket or supermarket chain, 10-30 outlets in Bali'},logistics:{name:'Logistics',ctx:'Distribution company, 15-25 vehicles, island-wide'},
+  agribusiness:{name:'Agribusiness',ctx:'Plantation or greenhouse, 5-20 hectares'},hospitality:{name:'Hospitality',ctx:'Hotel or resort, 80-150 rooms'}};
+const MATRIKS={
+  'condition-monitoring':{retail:'Chiller and freezer temperature in store',logistics:'Cargo temperature in transit',agribusiness:'Soil moisture, greenhouse humidity',hospitality:'Walk-in chiller, pool chemistry'},
+  'location-tracking':{retail:'Trolley recovery, inter-outlet stock movement',logistics:'Vehicle position and ETA',agribusiness:'Equipment location across large plots',hospitality:'Housekeeping carts, staff positioning'},
+  'usage-measurement':{retail:'Energy consumption per outlet',logistics:'Fuel consumption per route',agribusiness:'Water consumption per irrigation zone',hospitality:'Energy per room, minibar consumption'},
+  'predictive-maintenance':{retail:'Refrigeration compressor vibration',logistics:'Vehicle engine diagnostics',agribusiness:'Irrigation pump and motor condition',hospitality:'Lift, HVAC, and boiler monitoring'},
+  'presence-and-flow':{retail:'Footfall by zone, queue length',logistics:'Loading bay occupancy',agribusiness:'Livestock movement, pest traps',hospitality:'Room occupancy, facility usage'}};
+
+/* ============ SPRITES: PATTERN ICONS & TRUCK ============ */
+Object.assign(SPRITE,{
+  termometer:{p:{o:'#1b1b2f',g:'#e6eef5',r:'#ff5a5a',R:'#c0392b'},d:['..oo..','.oggo.','.oggo.','.oggo.','.orro.','.orro.','.orro.','oorroo','orrrro','orRRro','.oooo.']},
+  pin:{p:{o:'#1b1b2f',b:'#4fb0ff',B:'#2266c8',w:'#ffffff'},d:['..ooo..','.obbbo.','obbwbbo','obwwwbo','obbwbbo','.obbBo.','..obo..','..oBo..','...o...']},
+  meteran:{p:{o:'#1b1b2f',m:'#c98a3a',M:'#8a5a2b',s:'#0b0f22',y:'#ffd34d'},d:['oooooooooo','ommmmmmmmo','omssssssmo','omsysysymo','omssssssmo','ommmmmmmmo','oMMMMMMMMo','oooooooooo']},
+  orangIkon:{p:{o:'#1b1b2f',s:'#f5c9a0',g:'#55d36b',G:'#2f9e44',b:'#4a6fd1'},d:['..oo..','.osso.','.osso.','..oo..','.oggo.','oggggo','oGggGo','.obbo.','.obbo.','.o..o.']}
+});
+/* ============ PROPS AT HUMAN SCALE ============
+   Scale reference: PAMN 24 px and townspeople 20 px tall (about 1.6 m). Everything else follows:
+   doors ~32 px, a chiller ~40 px, a box truck 64 x 36 px. Text appears only on signs, screens and plates. */
+function trukBox(g,x,kaki,warna='#f4f1e6',kanan=false){ // cab faces the direction of travel: left by default, right when kanan
+  const atas=kaki-36;
+  g.save();if(kanan){g.translate(2*x+64,0);g.scale(-1,1)}
+  kotak(g,x+18,atas,46,30,GB.garis);kotak(g,x+19,atas+1,44,28,warna);kotak(g,x+19,atas+1,44,3,'#ffffff');kotak(g,x+19,atas+18,44,4,GB.tenda);
+  kotak(g,x+2,atas+8,17,22,GB.garis);kotak(g,x+3,atas+9,15,20,'#2bb3a3');kotak(g,x+4,atas+11,10,7,'#bfe9ff');kotak(g,x+4,atas+11,10,1,'#ffffff');
+  kotak(g,x,atas+24,64,6,GB.garis);kotak(g,x+1,atas+25,62,4,'#5c6178');kotak(g,x,atas+21,3,4,'#ffd34d');
+  for(const rx of [x+12,x+50]){bulat(g,rx,kaki-4,5,GB.garis);bulat(g,rx,kaki-4,3,'#5c6178');kotak(g,rx-1,kaki-5,2,2,'#c3c7d6')}
+  g.restore();
+  tulis(g,'KOPI',kanan?x+23:x+41,atas+7,'#4a2c16',{rata:'tengah',tebal:true});
+}
+function perangkat(g,x,y,nyala){kotak(g,x,y,7,6,GB.garis);kotak(g,x+1,y+1,5,4,'#e6eef5');kotak(g,x+2,y+2,2,2,nyala?'#55d36b':'#1d5a22');kotak(g,x+5,y-3,1,3,GB.garis)}
+function gelombang(g,x,y,u){for(let k=0;k<3;k++){const r=2+((u*10+k*3)%9);g.globalAlpha=Math.max(0,1-r/11);kotak(g,x-r,y-r,1,1,'#ffffff');kotak(g,x+r,y-r,1,1,'#ffffff');kotak(g,x,y-r-1,1,1,'#ffffff');g.globalAlpha=1}}
+function awan(g,cx,cy,lbl){bulat(g,cx-18,cy+3,7,'#ffffff');bulat(g,cx-5,cy-1,10,'#ffffff');bulat(g,cx+10,cy,9,'#ffffff');bulat(g,cx+22,cy+4,6,'#ffffff');kotak(g,cx-26,cy+3,54,8,'#ffffff');if(lbl)tulis(g,lbl,cx,cy+1,'#2b3460',{rata:'tengah',uk:8,tebal:true})}
+
+/* ============ SCENE: START ============ */
+function adeganMulaiIoT(){
+  const P=18;
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(131);
+    kotak(q,0,0,256,30,'#8fd3ff');for(let y=22;y<30;y+=2)kotak(q,0,y,256,1,'#a8deff');
+    lukisRumput(q,0,30,256,114,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
+    lukisPondok(q,0,26,104);
+    for(let r=0;r<3;r++)for(let c=0;c<4;c++)semak(q,196+c*15,50+r*13,5,true);
+    kotak(q,200,32,2,14,GB.kayuGG);kotak(q,246,32,2,14,GB.kayuGG);kotak(q,192,25,62,11,GB.kayuGG);kotak(q,193,26,60,9,GB.kayuT);
+    tulis(q,'KINTAMANI',223,27,'#4a2c16',{rata:'tengah',uk:8});
+  });
+  const S=[[.2,'mesin'],[3.6,'ding'],[5.2,'ding'],[6.8,'ding'],[14.4,'mesin']];
+  const A=adegan($('#kv-mulai'),(g,t)=>{
+    const T=GERAK?t%P:9;
+    suaraAdegan(A,T,S);
+    g.drawImage(bawah,0,0);
+    awan(g,128,10,'PLATFORM');
+    const tx=T<3?lerp(260,150,mulus(T/3)):T<14.4?150:lerp(150,-70,(T-14.4)/2.4);
+    // devices: shop wall sensor, truck GPS, soil probe; each sends packets to the platform
+    const alat=[[94,72,3.6,'shop'],[tx+10,52,5.2,'truk'],[222,88,6.8,'kebun']];
+    kotak(g,224,72,2,18,GB.kayuGG);
+    for(const [x,y,mulai,jenis] of alat){
+      if(jenis==='truk'&&(T<3||T>14.4))continue;
+      const aktif=T>mulai;
+      if(jenis==='truk')spr(g,'pin',x-3,y-12);else perangkat(g,x,y,aktif&&Math.floor(t*3)%2===0);
+      if(aktif&&GERAK){gelombang(g,x+3,y-2,t);const q=((t-mulai)*.6)%1;kotak(g,lerp(x+3,128,q),lerp(y-4,18,q),2,2,'#ffd34d')}
+    }
+    pamn(g,128,90,T>10.5&&T<14?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    trukBox(g,tx,106);
+    const D=[[4,10.2,['Session 4 asked: how does','IoT work?']],[10.5,17.6,['Today we ask: where is it','worth deploying at all?']]];
+    for(const [a0,b0,l] of D)if(T>a0&&T<b0)kotakDialog(g,6,110,244,31,'PAMN',l,T-a0);
+  });
+}
+
+/* ============ SCENE: TOUR OF THE FIVE PATTERNS ============
+   Each pattern has its own setting; props stay above the dialog band (y < 108). */
+function adeganTur(){
+  const P=25,LANTAI=104;
+  const L={
+    toko:latar(256,144,q=>{kotak(q,0,0,256,90,'#e8dcc0');for(let x=8;x<256;x+=40){kotak(q,x,46,30,34,GB.kayuG);for(let r=0;r<3;r++){kotak(q,x+1,48+r*11,28,1,GB.kayuGG);for(let k=0;k<6;k++)kotak(q,x+3+k*4,50+r*11,3,7,['#ff5a5a','#ffd34d','#4fb0ff','#55d36b'][(k+r+x)%4])}}
+      for(let y=90;y<144;y+=8)for(let x=-((y/8)%2)*8;x<256;x+=16){kotak(q,x,y,16,8,'#d9d2c4');kotak(q,x,y,16,1,'#bcb3a2');kotak(q,x,y,1,8,'#bcb3a2')}}),
+    jalan:latar(256,144,q=>{const a=acakTetap(141);kotak(q,0,0,256,40,'#8fd3ff');lukisRumput(q,0,40,256,104,a);lukisJalan(q,0,90,256,18,a);kotak(q,0,89,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);pohon(q,30,48,10)}),
+    hotel:latar(256,144,q=>{kotak(q,0,0,256,92,'#c9a77a');kotak(q,0,86,256,6,'#8a5a2b');for(let x=0;x<256;x+=6)kotak(q,x,0,1,86,'#bf9b6c');
+      for(let y=92;y<144;y+=4)kotak(q,0,y,256,4,y%8?'#8a2f3a':'#7a2632');kotak(q,0,92,256,1,'#5a1c24')}),
+    pompa:latar(256,144,q=>{kotak(q,0,0,256,92,'#9aa3ad');for(let y=6;y<92;y+=10)for(let x=((y/10)%2)*12;x<256;x+=24)kotak(q,x,y,23,9,'#a8b0ba');
+      kotak(q,0,92,256,52,'#7a7f8a');for(let x=0;x<256;x+=32)kotak(q,x,92,1,52,'#6a6f7a')}),
+    pintu:latar(256,144,q=>{const a=acakTetap(143);kotak(q,0,0,256,40,'#8fd3ff');lukisRumput(q,0,40,120,52,a);
+      kotak(q,110,40,146,52,'#e8dcc0');kotak(q,110,40,146,6,GB.tenda);kotak(q,110,46,146,2,GB.tendaG);
+      kotak(q,190,52,50,12,GB.kayuGG);kotak(q,191,53,48,10,GB.kayuT);tulis(q,'MART',215,54,'#4a2c16',{rata:'tengah',tebal:true});
+      for(let y=92;y<144;y+=8)for(let x=-((y/8)%2)*8;x<256;x+=16){kotak(q,x,y,16,8,'#c9c2b4');kotak(q,x,y,16,1,'#aaa292');kotak(q,x,y,1,8,'#aaa292')}})
+  };
+  const S=[[2.6,'lonceng'],[3.6,'langkah'],[4.2,'benar'],[5.2,'mesin']];
+  for(let k=0;k<6;k++)S.push([10.4+k*.6,'cetak']);
+  S.push([15.2,'mesin'],[17.6,'galat'],[18.4,'langkah'],[19.2,'benar']);
+  for(let k=0;k<3;k++)S.push([20+k*1.2+1.2,'pintu'],[20+k*1.2+2,'klik']);
+  const A=adegan($('#kv-tur'),(g,t)=>{
+    const T=GERAK?(t%(P*2))/2:2.9,k=Math.floor(T/5),u=T-k*5,p=POLA[k];
+    suaraAdegan(A,T,S);
+    g.drawImage(L[['toko','jalan','hotel','pompa','pintu'][k]],0,0);
+    let pose='diam',px=30,pk=LANTAI,pamnSudah=false;
+    if(k===0){ // inside the minimarket: chiller temperature leaves its range
+      const suhu=u<2.6?4+5*mulus(u/2.6):u<4?9:9-5*mulus((u-4)/.8),lewat=suhu>8;
+      kotak(g,118,62,30,42,GB.garis);kotak(g,119,63,28,40,'#d8e2ea');kotak(g,121,72,24,29,'#9fd6ff');for(let r=0;r<3;r++)kotak(g,122,80+r*8,22,1,'#d8e2ea');
+      for(let r=0;r<3;r++)for(let c=0;c<4;c++)kotak(g,123+c*5,74+r*8,3,5,['#ffffff','#ff5a5a','#55d36b'][(r+c)%3]);
+      panel(g,120,54,26,10,'#0b0f22',lewat?'#ff5a5a':'#55d36b');tulis(g,Math.round(suhu)+'°C',133,55,lewat?'#ff5a5a':'#7dff8a',{rata:'tengah',tebal:true});
+      {const tw=lebarTeks('max 8°C',10)+8;panel(g,153,66,tw,12,'#ffffff','#8a6a3a');tulis(g,'max 8°C',153+tw/2,67,'#c0392b',{rata:'tengah'})}
+      if(lewat&&u<3.8)lonceng(g,206,62,t,true);
+      const sx=u<2.6?280:u<3.6?lerp(280,160,(u-2.6)):160;warga(g,sx,LANTAI,u>2.6&&u<3.6?(Math.floor(t*7)%2?'jalan':'samping'):'samping',{balik:true});
+      pose=u>4.2?'sorak':'diam';px=70;
+    }else if(k===1){ // on the road: the truck drives right; the map shows live position and history
+      const q=jepit(u/4.4,0,1),tx=lerp(-70,240,q);
+      kotak(g,194,4,58,54,GB.garis);kotak(g,195,5,56,52,'#1c2340');bulat(g,214,32,13,'#2f6b3a');bulat(g,234,26,11,'#2f6b3a');kotak(g,202,26,42,14,'#2f6b3a');
+      const rute=[[200,46],[212,38],[224,40],[236,30],[248,22]],titik=t2=>{const s2=t2*(rute.length-1),i2=Math.min(rute.length-2,Math.floor(s2)),f=s2-i2;return [lerp(rute[i2][0],rute[i2+1][0],f),lerp(rute[i2][1],rute[i2+1][1],f)]};
+      for(let s2=0;s2<=1;s2+=.02){const [x,y]=titik(s2);kotak(g,x,y,1,1,'#5c6178')}
+      for(let s2=0;s2<q;s2+=.03){const [x,y]=titik(s2);kotak(g,x,y,2,2,'#4fb0ff')}
+      const [mx,my]=titik(q);spr(g,'pin',mx-3,my-9);tulis(g,'MAP',198,6,'#a9b3d6',{uk:8,tebal:true});tulis(g,'history',198,48,'#4fb0ff',{uk:8});
+      pamn(g,40,86,'diam');pamnSudah=true;
+      trukBox(g,tx,106,'#f4f1e6',true);
+    }else if(k===2){ // hotel corridor: three rooms metered unevenly
+      [[23,'101'],[8,'102'],[15,'103']].forEach(([kwh,no],i)=>{const x=86+i*56,v=Math.round(kwh*jepit(u/3.6,0,1));
+        kotak(g,x,54,20,36,GB.garis);kotak(g,x+1,55,18,35,'#7a4a24');kotak(g,x+3,58,14,14,'#8a5a2b');kotak(g,x+3,74,14,14,'#8a5a2b');kotak(g,x+15,72,2,2,'#ffd34d');
+        {const pw=lebarTeks(no)+8;panel(g,x+10-pw/2,43,pw,11,'#f1e3b5','#8a6a3a');tulis(g,no,x+10,44,'#3a2410',{rata:'tengah'})}
+        panel(g,x+22,54,30,21,'#0b0f22','#4b5aa0');tulis(g,String(v),x+37,56,'#ffd34d',{rata:'tengah',tebal:true});tulis(g,'kWh',x+37,65,'#a9b3d6',{rata:'tengah'});
+        kotak(g,x+23,79,28,4,'#3a2a1a');kotak(g,x+23,79,Math.round(28*v/23),4,'#ffd34d')});
+      px=40;
+    }else if(k===3){ // pump house: vibration drifts from its baseline
+      const getar=u>2.4&&u<4&&GERAK?Math.round(Math.sin(t*40)):0;
+      mesinKuningan(g,60,66,52,38,'PUMP',{sudut:t*5,goy:getar,lampu:u>2.4&&u<4?'#ff5a5a':'#55d36b'});
+      kotak(g,132,44,114,44,GB.garis);kotak(g,133,45,112,42,'#0b0f22');tulis(g,'VIBRATION',137,46,'#a9b3d6',{uk:8,tebal:true});
+      const n=Math.floor(jepit(u/3.2,0,1)*104),dasar=74;
+      for(let i=0;i<n;i++){const naik=i<58?0:(i-58)*.32,y=Math.round(dasar-naik+Math.sin(i*1.9)*2);kotak(g,137+i,y,1,1,i<58?'#55d36b':'#ff9a3c')}
+      for(let x=137;x<195;x+=3)kotak(g,x,dasar+5,1,1,'#2b8a3e');tulis(g,'baseline',140,79,'#55d36b',{uk:8});if(u>2.4)tulis(g,'drift',226,79,'#ff9a3c',{rata:'tengah',uk:8,tebal:true});
+      const tx=u<3.4?280:u<4.2?lerp(280,124,(u-3.4)/.8):124;warga(g,tx,LANTAI,u>3.4&&u<4.2?(Math.floor(t*7)%2?'jalan':'samping'):'samping',{balik:true});
+      if(u>4.2)spr(g,'roda',116,72);pose=u>4.3?'sorak':'diam';px=30;
+    }else{ // shop entrance: visitors walk the pavement, the sliding door opens, they step inside and are counted
+      const TIBA=1.4,MASUK=.6,orang=[0,1.2,2.4].map(m=>u-m);
+      let buka=0;for(const s2 of orang){const f=s2<TIBA-.3?0:s2<TIBA?(s2-TIBA+.3)/.3:s2<TIBA+MASUK?1:s2<TIBA+MASUK+.3?1-(s2-TIBA-MASUK)/.3:0;buka=Math.max(buka,f)}
+      kotak(g,148,58,28,34,GB.garis);kotak(g,150,60,24,32,'#4a3a2a');kotak(g,150,60,24,2,'#6a5a4a');
+      const o=Math.round(buka*10);kotak(g,150-o,60,12,32,'#bfe9ff');kotak(g,162+o,60,12,32,'#bfe9ff');kotak(g,150-o,60,1,32,'#8ab4d0');kotak(g,173+o,60,1,32,'#8ab4d0');
+      kotak(g,138,58,10,34,'#e8dcc0');kotak(g,176,58,10,34,'#e8dcc0');
+      panel(g,148,48,28,10,'#0b0f22','#4b5aa0');
+      const masuk=orang.filter(s2=>s2>=TIBA+MASUK).length;tulis(g,String(36+masuk),162,49,'#7dff8a',{rata:'tengah',tebal:true});
+      for(const s2 of orang){
+        if(s2<0||s2>=TIBA+MASUK)continue;
+        if(s2<TIBA){const x=lerp(-10,162,s2/TIBA);warga(g,x,LANTAI,Math.floor(t*7)%2?'jalan':'samping',{})}
+        else{const q=(s2-TIBA)/MASUK,y=lerp(LANTAI,92,q);g.globalAlpha=.22;kotak(g,157,y-1,10,2,0);g.globalAlpha=1;spr(g,'wargaB',154,y-20,1,{alpha:Math.max(0,1-Math.max(0,q-.5)*2)})}
+      }
+      px=214;pk=LANTAI+2;
+    }
+    if(!pamnSudah)pamn(g,px,pk,pose);
+    const w=lebarTeks(p.name,10,true)+16;bingkaiRPG(g,128-w/2,3,w,19);tulis(g,p.name,128,7,p.c,{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    const qw=lebarTeks('"'+p.q+'"',10,true)+10;g.globalAlpha=.85;kotak(g,128-qw/2,24,qw,12,'#1c2340');g.globalAlpha=1;tulis(g,'"'+p.q+'"',128,25,'#fff3b0',{rata:'tengah',tebal:true});
+    for(let i=0;i<5;i++)kotak(g,108+i*9,38,6,3,i===k?POLA[i].c:'#3a3f5a');
+    if(u>3.2)kotakDialog(g,6,110,244,31,'PAMN',['Decision: '+p.decision,'Time to value: '+p.ttv],99);
+  });
+}
+
+/* ============ PATTERN CARDS ============ */
+function kartuPola(){
+  $('#daftar-pola').innerHTML=POLA.map((p,i)=>`<div class="kartu pola-kartu" style="--warna:${p.c};margin-bottom:12px">
+    <div class="judul"><img class="ikon" src="${ikonURL(p.ik,p.ik==='meteran'?3:4)}" alt="">${i+1}. ${esc(p.name)}</div>
+    <div class="tanya">"${esc(p.q)}"</div>
+    <p>${esc(p.what)}</p>
+    <p style="margin:6px 0 2px"><b>Underlying logic</b></p><ul class="lst" style="margin-top:0">${p.logic.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
+    <div class="hint" style="margin:6px 0"><b>Viability condition.</b> ${esc(p.viab)}</div>
+    ${p.extra?`<p><b>${esc(p.extra[0])}:</b> ${esc(p.extra[1])}</p>`:''}
+    <dl class="kv"><dt>Typical sensors</dt><dd>${p.sensors.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</dd><dt>Decision enabled</dt><dd>${esc(p.decision)}</dd><dt>Time to value</dt><dd>${esc(p.ttv)}</dd></dl>
+  </div>`).join('');
+}
+
+/* ============ GAME: PATTERN CLASSIFIER ============ */
+function permainanPilah(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0,tJawab:null},N=10,hasil=$('#pilah-hasil'),bMulai=$('#pilah-mulai');
+  $('#pilah-tombol').innerHTML=POLA.map((p,i)=>`<button class="pilih" data-p="${p.id}" style="font-size:12px;font-family:system-ui,sans-serif;border-color:color-mix(in srgb,${p.c} 60%,transparent)">${esc(p.name)}<small>"${esc(p.q)}" · key ${i+1}</small></button>`).join('');
+  const tombol=$$('#pilah-tombol button');
+  const fmt=s=>`Best score: ${s}`;simpanTerbaik('mis5:pilah',0,$('#pilah-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>{b.disabled=G.status!=='tanya';b.classList.remove('y','n')});aktif();
+  function mulai(){
+    // two cards per pattern, in different sectors
+    const kartu=[];for(const p of POLA){const sek=acakSalin(Object.keys(SEKTOR)).slice(0,2);sek.forEach(s=>kartu.push({p:p.id,s,teks:MATRIKS[p.id][s]}))}
+    Object.assign(G,{status:'tanya',skor:0,hati:3,i:0,daftar:acakSalin(kartu),tJawab:null,pilih:null});
+    hasil.innerHTML='';bMulai.textContent='Restart';aktif();
+  }
+  function jawab(id){
+    if(G.status!=='tanya')return;
+    const K=G.daftar[G.i],ok=id===K.p,P=POLA_ID[K.p],Q=POLA_ID[id];
+    if(ok)G.skor+=10;else G.hati--;
+    G.status='jawab';G.pilih=id;G.tJawab=G.t;aktif();
+    bunyi(ok?'koin':'salah');
+    tombol.forEach(b=>{if(b.dataset.p===K.p)b.classList.add('y');else if(b.dataset.p===id)b.classList.add('n')});
+    const akhir=G.hati<=0||G.i>=N-1;
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Correct':'✗ Not quite'}: ${esc(P.name)}.</b> "${esc(K.teks)}" (${SEKTOR[K.s].name}) answers the question <b>"${esc(P.q)}"</b>${ok?'.':`, not "${esc(Q.q)}" (${esc(Q.name)}).`} The pattern is decided by the question, not by the sensor or the sector.</div>
+      <div class="row"><button class="act" id="pilah-lanjut">${akhir?'See result':'Next card →'}</button></div>`;
+    $('#pilah-lanjut').onclick=lanjut;
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=N){G.status='selesai';bunyi(G.skor>=70&&G.hati>0?'menang':'kalah');hasil.innerHTML=`<div class="${G.skor>=70?'ok':'hint'}">Game over. Score <b>${G.skor} of ${N*10}</b>. ${G.skor>=70?'You recognise patterns, not anecdotes.':'Re-read the core question of each pattern, then try again.'}</div>`;simpanTerbaik('mis5:pilah',G.skor,$('#pilah-terbaik'),fmt);bMulai.textContent='Play again'}
+    else{G.status='tanya';hasil.innerHTML=''}
+    aktif();
+  }
+  tombol.forEach(b=>b.onclick=()=>jawab(b.dataset.p));bMulai.onclick=mulai;
+  G.kunci=k=>{const i='12345'.indexOf(k);if(i>=0)jawab(POLA[i].id)};
+  const bg=latar(256,144,q=>{lukisDindingKayu(q,0,0,256,30);lukisLantaiKayu(q,0,30,256,114,acakTetap(137))});
+  const BX=POLA.map((_,i)=>18+i*48);
+  adegan($('#kv-pilah'),(g,t)=>{
+    G.t=t;g.drawImage(bg,0,0);
+    hud(g,G.status==='awal'?'Pattern Classifier':G.status==='selesai'?'Result':`Card ${Math.min(G.i+1,N)}/${N}`,G.skor,G.hati);
+    POLA.forEach((p,i)=>{const x=BX[i];kotak(g,x-2,104,44,26,GB.garis);kotak(g,x-1,105,42,24,'#3a2a1a');kotak(g,x-1,105,42,4,p.c);spr(g,p.ik,x+20-ukuranSprite(p.ik).w/2,112);tulis(g,String(i+1),x+4,118,'#fff3b0',{tebal:true})});
+    if(G.status==='awal'){layarJudul(g,'PATTERN CLASSIFIER',['Press "Start game".','Keys 1-5 choose a pattern.'],t);return}
+    if(G.status==='selesai'){bingkaiRPG(g,48,30,160,60);if(G.skor>=70)spr(g,'pialaG',122,36);tulis(g,`Score ${G.skor} of ${N*10}`,128,54,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,G.skor>=70?'Pattern spotter!':'Try again.',128,70,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return}
+    const K=G.daftar[G.i],u=G.status==='jawab'?t-G.tJawab:-1,ok=G.pilih===K.p;
+    const w=200,baris=bungkus(K.teks,w-16),h=20+baris.length*11+(G.i<5?12:12);
+    let cx=128,cy=26;
+    if(u>=0){const tujuan=BX[POLA.findIndex(p=>p.id===(ok?K.p:G.pilih))]+20,q=mulus(jepit((u-.15)/.5,0,1));
+      if(!ok&&u<.4)cx+=Math.sin(u*60)*3;cx=lerp(cx,tujuan,q);cy=lerp(cy,96,q)}
+    const sk=u>=0?1-.7*mulus(jepit((u-.15)/.5,0,1)):1;
+    if(sk>.35){
+      const W=w*sk,H=h*sk,x=Math.round(cx-W/2);
+      g.globalAlpha=.3;kotak(g,x+3,cy+3,W,H,0);g.globalAlpha=1;
+      kotak(g,x,cy,W,H,'#8a6a3a');kotak(g,x+1,cy+1,W-2,H-2,GB.kertas);
+      if(sk>.95){tulis(g,G.i<5?'SECTOR: '+SEKTOR[K.s].name.toUpperCase():'SECTOR: HIDDEN',x+8,cy+5,'#8a6a3a',{uk:8,tebal:true});baris.forEach((b,i)=>tulis(g,b,x+8,cy+17+i*11,'#3a2410'))}
+    }
+    if(u>.65&&u<1.5)tulis(g,ok?'+10':'✗',cx,80-(u-.65)*14,ok?'#7dff8a':'#ff5a5a',{rata:'tengah',skala:ok?1:2,tebal:true,bayang:'#0b0f22'});
+    pamn(g,236,96,u>.65&&u<1.6&&ok?'sorak':'diam');
+  });
+  return G;
+}
+
+/* ============ SHARED HELPERS (CHAPTERS 2–5) ============ */
+const rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+Object.assign(SPRITE,{telepon:{p:{o:'#1b1b2f',k:'#3a3f5a',s:'#9fd6ff',w:'#ffffff'},d:['ooooo','okkko','osswo','ossso','ossso','okkko','okwko','ooooo']}});
+function tanda(g,x,y,ok){bulat(g,x,y,7,GB.garis);bulat(g,x,y,6,ok?'#2f9e44':'#c0392b');tulis(g,ok?'✓':'✗',x,y-4,'#ffffff',{rata:'tengah',tebal:true})}
+function judulKanvas(g,teks,warna='#ffd34d'){const w=lebarTeks(teks,10,true)+16;bingkaiRPG(g,128-w/2,3,w,19);tulis(g,teks,128,7,warna,{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+function pilihTombol(wadah,nilai){$$('button',wadah).forEach(b=>b.classList.toggle('pil',b.dataset.v===nilai))}
+
+/* ============ CHAPTER 2: SCENE — SAME PATTERN, DIFFERENT CONTEXT ============ */
+function adeganSektor(){
+  const P=24;
+  const bg=latar(256,144,q=>{
+    const a=acakTetap(151);
+    kotak(q,0,0,256,40,'#8fd3ff');lukisRumput(q,0,40,256,104,a);lukisJalan(q,0,92,127,16,a);kotak(q,0,91,127,1,GB.tanahG);kotak(q,0,108,127,1,GB.rumputG);
+    kotak(q,150,52,92,50,GB.garis);kotak(q,151,53,90,48,'#d8f4ff');for(let x=151;x<241;x+=15)kotak(q,x,53,1,48,'#9fc8de');kotak(q,151,76,90,1,'#9fc8de');
+    for(let r=0;r<3;r++){const y=84+r*0;for(let c=0;c<5;c++)semak(q,162+c*17,92,4,false)}
+    kotak(q,146,48,100,5,GB.garis);kotak(q,147,49,98,3,'#bfe9ff');
+    kotak(q,127,0,2,144,'#1b1b2f');
+  });
+  const S=[[4.6,'lonceng'],[5.6,'ding'],[9.2,'benar']];
+  const A=adegan($('#kv-sektor'),(g,t)=>{
+    const T=GERAK?t%P:12;
+    suaraAdegan(A,T,S);
+    g.drawImage(bg,0,0);
+    const f=mulus(jepit(T/5,0,1)),suhu=4+5*f,lembab=75-20*f,alarm=T>4.6&&T<9;
+    tulis(g,'LOGISTICS',64,4,'#1c2340',{rata:'tengah',tebal:true});tulis(g,'AGRIBUSINESS',192,4,'#1c2340',{rata:'tengah',tebal:true});
+    trukBox(g,14,104,'#f4f1e6',true);
+    panel(g,20,18,52,13,'#0b0f22',suhu>8?'#ff5a5a':'#55d36b');tulis(g,Math.round(suhu)+'°C max 8',46,20,suhu>8?'#ff5a5a':'#7dff8a',{rata:'tengah'});
+    panel(g,160,18,64,13,'#0b0f22',lembab<60?'#ff5a5a':'#55d36b');tulis(g,Math.round(lembab)+'% min 60',192,20,lembab<60?'#ff5a5a':'#7dff8a',{rata:'tengah'});
+    warga(g,100,104,'samping',{balik:true});warga(g,232,104,'samping',{balik:true});
+    if(alarm&&Math.floor(t*4)%2===0){spr(g,'telepon',104,72);spr(g,'telepon',236,72)}
+    if(T>9){const s='SAME PATTERN',w=lebarTeks(s,10,true)+12;bingkaiRPG(g,128-w/2,36,w,17);tulis(g,s,128,39,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+    if(T>4.6&&T<=9.4)kotakDialog(g,6,110,244,31,'PAMN',['Too warm: alert the driver.','Too dry: alert the supervisor.'],99);
+    if(T>9.4)kotakDialog(g,6,110,244,31,'PAMN',['Different sensor, threshold, person.','Same pattern: Condition Monitoring.'],99);
+  });
+}
+function kartuSektor(){
+  $('#daftar-sektor').innerHTML=Object.values(SEKTOR).map(s=>`<div class="kartu"><div class="judul">${esc(s.name)}</div><p>${esc(s.ctx)}</p></div>`).join('');
+}
+
+/* ============ CHAPTER 2: SECTOR MATRIX EXPLORER ============ */
+function matriksExplorer(){
+  const sek=Object.keys(SEKTOR);let mode='jelajah',buka=new Set(),pilih=[],kolom=sek.slice(),tebak={};
+  const tombolMode=$$('#matriks-mode button');
+  function render(){
+    tombolMode.forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
+    const sembunyi=mode==='portabel';
+    let h='<tr><th>Pattern</th>'+kolom.map((s,i)=>`<th>${sembunyi?'Column '+'ABCD'[i]:esc(SEKTOR[s].name)}</th>`).join('')+'</tr>';
+    for(const p of POLA){
+      h+=`<tr><td style="min-width:130px"><b style="color:var(--text)">${esc(p.name)}</b><br><span style="color:var(--muted);font-size:11.5px">"${esc(p.q)}"</span></td>`;
+      h+=kolom.map(s=>{const id=p.id+'|'+s,tampak=mode!=='jelajah'||buka.has(id);return `<td><button class="sel${pilih.includes(id)?' dipilih':''}${tampak?' buka':''}" data-id="${id}">${tampak?esc(MATRIKS[p.id][s]):'?'}</button></td>`}).join('')+'</tr>';
+    }
+    $('#matriks').innerHTML=h;
+    const P=$('#matriks-petunjuk');
+    if(mode==='jelajah')P.innerHTML='<p style="margin:0 0 8px">Click a cell to reveal the use case. <button class="sec" id="mx-semua">Reveal all</button> <button class="sec" id="mx-tutup">Hide all</button></p>';
+    else if(mode==='portabel')P.innerHTML='<p style="margin:0 0 8px">The sector labels are hidden and the columns are shuffled. Read each column, then name its sector below.</p>';
+    else P.innerHTML='<p style="margin:0 0 8px">Pick three use cases for one proposal. Are they genuinely different? <button class="sec" id="mx-ulang">Clear selection</button></p>';
+    if($('#mx-semua')){$('#mx-semua').onclick=()=>{POLA.forEach(p=>sek.forEach(s=>buka.add(p.id+'|'+s)));render()};$('#mx-tutup').onclick=()=>{buka.clear();render()}}
+    if($('#mx-ulang'))$('#mx-ulang').onclick=()=>{pilih=[];render()};
+    const H=$('#matriks-hasil');
+    if(mode==='portabel'){
+      H.innerHTML=`<div class="biaya-grid" style="margin-top:10px">${kolom.map((s,i)=>`<label>Column ${'ABCD'[i]}<select data-k="${i}"><option value="">choose…</option>${sek.map(x=>`<option value="${x}"${tebak[i]===x?' selected':''}>${SEKTOR[x].name}</option>`).join('')}</select></label>`).join('')}</div>
+        <div class="row"><button class="act" id="mx-cek">Check</button><button class="sec" id="mx-acak">Shuffle again</button></div><div id="mx-cek-hasil"></div>`;
+      $$('#matriks-hasil select').forEach(x=>x.onchange=()=>{tebak[x.dataset.k]=x.value});
+      $('#mx-acak').onclick=()=>{kolom=acakSalin(sek);tebak={};render()};
+      $('#mx-cek').onclick=()=>{
+        const benar=kolom.filter((s,i)=>tebak[i]===s).length;bunyi(benar===4?'menang':'salah');
+        $('#mx-cek-hasil').innerHTML=`<div class="${benar===4?'ok':'hint'}"><b>${benar} of 4 columns correct.</b> ${benar===4?'You recognised each sector from its use cases.':'Look for the context: vehicles and routes, fields and irrigation, rooms and guests, outlets and shoppers.'} The answer: ${kolom.map((s,i)=>`Column ${'ABCD'[i]} = ${SEKTOR[s].name}`).join(', ')}.</div>`;
+      };
+    }else if(mode==='desain'){
+      if(pilih.length<3)H.innerHTML=`<div class="hint">${pilih.length} of 3 use cases selected.</div>`;
+      else{
+        const pp=pilih.map(id=>id.split('|')[0]),unik=new Set(pp);
+        if(unik.size===3)H.innerHTML=`<div class="ok"><b>Genuinely different.</b> The three use cases answer three different questions: ${[...unik].map(x=>`"${esc(POLA_ID[x].q)}"`).join(', ')}.</div>`;
+        else{const sama=pp.find((x,i)=>pp.indexOf(x)!==i);H.innerHTML=`<div class="gagal"><b>Not genuinely different.</b> ${pp.filter(x=>x===sama).length} of them answer the same question, "${esc(POLA_ID[sama].q)}", so they are one pattern (${esc(POLA_ID[sama].name)}) offered more than once, however different the sectors look.</div>`}
+      }
+    }else H.innerHTML='';
+  }
+  $('#matriks').onclick=e=>{
+    const b=e.target.closest('button.sel');if(!b)return;const id=b.dataset.id;
+    if(mode==='jelajah'){buka.has(id)?buka.delete(id):buka.add(id);bunyi('klik');render()}
+    else if(mode==='desain'){if(pilih.includes(id))pilih=pilih.filter(x=>x!==id);else if(pilih.length<3)pilih.push(id);bunyi(pilih.length===3?'ding':'klik');render()}
+  };
+  tombolMode.forEach(b=>b.onclick=()=>{mode=b.dataset.mode;pilih=[];tebak={};kolom=mode==='portabel'?acakSalin(sek):sek.slice();bunyi('klik');render()});
+  render();
+}
+
+/* ============ CHAPTER 3: WORKED EXAMPLES & FOUR-LAYER BUILDER ============ */
+const CONTOH=[
+  {id:'retail-queue',judul:'Retail Queue Monitoring',pola:'presence-and-flow',sektor:'retail',
+   lapis:['Overhead people counters above each checkout lane','Wi-Fi: the store is fixed, mains powered, indoors','Alert if any queue exceeds 5 people for more than 3 continuous minutes','Push notification to the duty supervisor; weekly report by hour and weekday'],
+   catatan:`<h3>Two decisions, not one</h3><div class="wide"><table><tr><th></th><th>Output</th><th>Decision</th><th>Value type</th></tr>
+     <tr><td><b>Immediate</b></td><td>Live alert</td><td>Open another till now</td><td>Resolves one incident</td></tr>
+     <tr><td><b>Durable</b></td><td>Weekly report</td><td>Roster staff across the week</td><td>Changes a recurring cost</td></tr></table></div>
+     <p style="margin:8px 0 0">Most proposals design the alert and forget the report. The rostering decision usually carries the larger annual value.</p>`},
+  {id:'agri-soil-moisture',judul:'Agribusiness Soil Moisture (Kintamani coffee plantation)',pola:'condition-monitoring',sektor:'agribusiness',
+   lapis:['Battery probes at root depth, distributed across the fields','LoRaWAN: kilometres from any building and battery powered, so Wi-Fi fails on both range and power','Alert below the crop threshold for a defined period; alerts suppressed during and shortly after rainfall','Alert to the field supervisor; seasonal water-use report by zone'],
+   catatan:`<h3>Design choices</h3><ul class="lst"><li><b>Root depth, not surface.</b> Surface moisture misrepresents what the plant experiences: a placement decision driven by the business question, not convenience.</li>
+     <li><b>Rain suppression.</b> Without it, every wet-season storm generates a wave of meaningless alerts. Alert fatigue, anticipated at design time.</li></ul>`},
+  {id:'hotel-occupancy',judul:'Hospitality Room Occupancy',pola:'presence-and-flow',sektor:'hospitality',
+   lapis:['Passive infrared occupancy sensors in each room: no camera, no audio','Wi-Fi or low-power mesh: indoor, fixed, dense deployment','Room marked unoccupied after a defined interval; energy setback after a longer one','Housekeeping dashboard; automated HVAC setback with no human involved'],
+   catatan:`<div class="hint"><b>Ethical note.</b> The same device that saves energy also tells management when a guest is in their room. Commercially attractive, ethically loaded. Confront it at design time, not after the proposal is written. Treated fully in Weeks 13–14.</div>`}
+];
+const NAMA_LAPIS=['Device','Connectivity','Platform','Application'];
+function contohLapisan(){
+  $('#contoh-lapisan').innerHTML=CONTOH.map(c=>`<div class="kartu pola-kartu" style="--warna:${POLA_ID[c.pola].c};margin-bottom:12px">
+    <div class="judul">${esc(c.judul)}</div><p>Pattern: <b>${esc(POLA_ID[c.pola].name)}</b> · Sector: ${esc(SEKTOR[c.sektor].name)}</p>
+    <dl class="kv">${c.lapis.map((l,i)=>`<dt>${NAMA_LAPIS[i]}</dt><dd>${esc(l)}</dd>`).join('')}</dl>${c.catatan}</div>`).join('');
+}
+const BANGUN={
+  'retail-queue':[
+    [['Overhead people counters above each checkout lane',1,'Measures exactly what the decision needs: people waiting at each lane.'],['A camera recording faces at the entrance',0,'Captures personal data the decision does not need, and does not measure queues per lane.'],['A counter of items scanned at each till',0,'Measures sales throughput, not the queue customers experience.']],
+    [['Wi-Fi',1,'The store is fixed, mains powered and indoors.'],['LoRaWAN',0,'Built for kilometres of range on batteries; nothing here needs it.'],['A cellular SIM in every counter',0,'Adds a recurring fee per device where free in-store Wi-Fi works.']],
+    [['Alert if any queue exceeds 5 people for more than 3 continuous minutes',1,'A threshold with a tolerance window: brief spikes do not trigger alerts.'],['Alert whenever any queue exceeds 5 people',0,'No tolerance window: every momentary spike becomes an alert, and supervisors soon ignore them.'],['Store all counts and review them monthly',0,'No event at all, so no live decision is possible.']],
+    [['Push to the duty supervisor, plus a weekly report by hour and weekday',1,'Serves both decisions: open a till now, and roster staff across the week.'],['Push to the duty supervisor only',0,'Forgets the durable decision. The rostering report usually carries the larger annual value.'],['A monthly PDF to head office',0,'Too late for the live decision and too far from the person who can act.']]],
+  'agri-soil-moisture':[
+    [['Battery probes at root depth across the fields',1,'Measures what the plant experiences, where the risk actually sits.'],['Surface probes beside the access path for easy maintenance',0,'Mounted for convenience: it measures the wrong location, accurately.'],['One weather station at the estate office',0,'Measures weather at one point, not soil moisture per zone.']],
+    [['LoRaWAN',1,'Kilometres from any building and battery powered: long range at very low power.'],['Wi-Fi',0,'Fails on both range (about 50 m) and power (needs mains).'],['Ethernet',0,'Kilometres of cable across fields is impractical and fragile.']],
+    [['Below the crop threshold for a defined period, suppressed during and after rain',1,'Tolerance window plus rain suppression prevent floods of meaningless alerts.'],['Alert whenever moisture drops below the threshold',0,'No window and no rain logic: every storm cycle triggers alerts, causing alert fatigue.'],['An alert every morning at 08:00',0,'Not tied to the condition, so it carries no information.']],
+    [['Alert to the field supervisor; seasonal water-use report by zone',1,'The supervisor can open irrigation today; the report changes next season\'s plan.'],['Alert to the finance team at head office',0,'They cannot act in the field within a useful window.'],['A seasonal report only',0,'No timely intervention: crops can be stressed before anyone reads it.']]],
+  'hotel-occupancy':[
+    [['Passive infrared occupancy sensors: no camera, no audio',1,'Detects presence without recording guests.'],['Small cameras in each room',0,'Ethically unacceptable and far beyond what the decision needs.'],['Microphones that detect voices',0,'Records guests\' private conversations; unacceptable.']],
+    [['Wi-Fi or low-power mesh',1,'Indoor, fixed, dense deployment.'],['A cellular SIM in every room',0,'A recurring fee for each of 80–150 rooms, with no mobility to justify it.'],['LoRaWAN',0,'Designed for kilometres of range; indoors and dense, Wi-Fi or mesh is simpler.']],
+    [['Unoccupied after a defined interval; energy setback after a longer one',1,'Tolerance windows stop the air conditioning switching off on a guest sitting still.'],['Switch the air conditioning off the moment no motion is seen',0,'No window: a guest reading quietly loses cooling.'],['Log presence every second for later analysis',0,'No rule, so no decision, and a large privacy footprint.']],
+    [['Housekeeping dashboard plus automatic HVAC setback',1,'Housekeeping sees free rooms; the setback saves energy with no human involved.'],['A daily email to the general manager',0,'Nobody acts on it within a useful window.'],['Live room presence shown to all staff',0,'Exposes when guests are in their rooms: a privacy risk with no extra value.']]]
+};
+function pembangunLapis(){
+  let sk='retail-queue',pilihan={},selesai=new Set();
+  $('#bangun-skenario').innerHTML=CONTOH.map(c=>`<button class="sec" data-s="${c.id}">${esc(c.judul.replace(' (Kintamani coffee plantation)',''))}</button>`).join('');
+  function render(){
+    $$('#bangun-skenario button').forEach(b=>b.classList.toggle('on',b.dataset.s===sk));
+    const C=CONTOH.find(c=>c.id===sk),L=BANGUN[sk];
+    $('#bangun-isi').innerHTML=`<p style="margin:6px 0 10px">Scenario: <b>${esc(C.judul)}</b>, ${esc(SEKTOR[C.sektor].ctx)}.</p>`+
+      L.map((ops,i)=>`<div class="lapis"><div class="label">${i+1} · ${NAMA_LAPIS[i]}</div><div class="tombol-game">${ops.map((o,j)=>`<button class="pilih${pilihan[i]===j?' pil':''}" data-l="${i}" data-o="${j}" style="text-align:left;font-family:system-ui,sans-serif;font-size:12.5px;font-weight:500">${esc(o[0])}</button>`).join('')}</div></div>`).join('')+
+      `<div class="row"><button class="act" id="bangun-cek">Check design</button><button class="sec" id="bangun-ulang">Reset</button></div>`;
+    $('#bangun-cek').onclick=cek;$('#bangun-ulang').onclick=()=>{pilihan={};$('#bangun-hasil').innerHTML='';render()};
+  }
+  function cek(){
+    const L=BANGUN[sk];
+    if(Object.keys(pilihan).length<4){$('#bangun-hasil').innerHTML='<div class="hint">Choose one option for each of the four layers first.</div>';return}
+    const hasil=L.map((ops,i)=>ops[pilihan[i]]),benar=hasil.filter(h=>h[1]).length;
+    if(benar===4)selesai.add(sk);
+    bunyi(benar===4?'menang':'salah');
+    $$('#bangun-isi button.pilih').forEach(b=>{const o=L[+b.dataset.l][+b.dataset.o];if(pilihan[b.dataset.l]===+b.dataset.o){b.classList.remove('pil');b.classList.add(o[1]?'y':'n')}else if(o[1]&&benar<4)b.classList.add('y')});
+    let h=`<div class="${benar===4?'ok':'gagal'}"><b>${benar} of 4 layers match the reference.</b></div><ul class="lst">${hasil.map((x,i)=>`<li><b>${NAMA_LAPIS[i]}:</b> ${x[1]?'✓':'✗'} ${esc(x[2])}${x[1]?'':` Reference: ${esc(L[i].find(o=>o[1])[0])}.`}</li>`).join('')}</ul>`;
+    if(selesai.has('retail-queue')&&selesai.has('agri-soil-moisture'))h+=`<div class="ok"><b>Same architecture, opposite choice.</b> Retail queue monitoring and Kintamani soil moisture share the same four layers, yet one uses Wi-Fi and the other LoRaWAN. Connectivity is driven by physical constraint, not by preference.</div>`;
+    else h+=`<p style="margin:0">Tip: complete both the retail and the Kintamani scenarios to unlock the comparison.</p>`;
+    $('#bangun-hasil').innerHTML=h;
+  }
+  $('#bangun-skenario').onclick=e=>{const b=e.target.closest('button');if(!b)return;sk=b.dataset.s;pilihan={};$('#bangun-hasil').innerHTML='';bunyi('klik');render()};
+  $('#bangun-isi').onclick=e=>{const b=e.target.closest('button.pilih');if(!b)return;pilihan[b.dataset.l]=+b.dataset.o;bunyi('klik');$$(`#bangun-isi button[data-l="${b.dataset.l}"]`).forEach(x=>x.classList.toggle('pil',x===b));$$('#bangun-isi button.pilih').forEach(x=>x.classList.remove('y','n'))};
+  render();
+}
+
+/* ============ CHAPTER 3: CONNECTIVITY CHOOSER ============ */
+const JARINGAN=[['wifi','Wi-Fi'],['bluetooth','Bluetooth'],['cellular','Cellular'],['lorawan','LoRaWAN'],['ethernet','Ethernet']];
+const ALASAN_K={gerak:'The asset moves over a wide area, so fixed networks are ruled out',jauh:'Kilometres from infrastructure and battery powered: long range at low power',dalam:'Fixed, indoors, mains powered and close to infrastructure',dekat:'Short range and battery powered',kritis:'Stationary and reliability critical: a fixed cable',murah:'Wi-Fi is cheap and everyone already knows it'};
+const SKENARIO_K=[
+  {t:'GPS trackers on 20 delivery vans that drive island-wide.',lok:'gerak',j:'cellular',a:'gerak'},
+  {t:'Soil moisture probes across a Kintamani coffee plantation, kilometres from any building, battery powered.',lok:'jauh',j:'lorawan',a:'jauh'},
+  {t:'Overhead people counters above checkout lanes in a minimarket, mains powered.',lok:'dalam',j:'wifi',a:'dalam'},
+  {t:'Freezer temperature sensor inside a supermarket, mains powered.',lok:'dalam',j:'wifi',a:'dalam'},
+  {t:'Cargo temperature in refrigerated trucks, reported while driving between towns.',lok:'gerak',j:'cellular',a:'gerak'},
+  {t:'Water meters on irrigation zones across a 20-hectare plantation, battery powered.',lok:'jauh',j:'lorawan',a:'jauh'},
+  {t:'Vibration sensor on a packaging machine in a factory where any downtime is very costly.',lok:'dalam',j:'ethernet',a:'kritis'},
+  {t:'Battery tags on housekeeping carts, read by a gateway on the same hotel floor.',lok:'dekat',j:'bluetooth',a:'dekat'},
+  {t:'Collar sensors on cattle grazing across open hills, battery powered.',lok:'jauh',j:'lorawan',a:'jauh'},
+  {t:'Boiler pressure sensors in a hotel plant room next to the wired control panel; failures are dangerous.',lok:'dalam',j:'ethernet',a:'kritis'}
+];
+function permainanKonek(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0,net:null,al:null,tJawab:null},N=8,hasil=$('#konek-hasil'),bMulai=$('#konek-mulai');
+  $('#konek-opsi').innerHTML=JARINGAN.map(([v,l],i)=>`<button class="pilih" data-v="${v}" style="font-family:system-ui,sans-serif;font-size:12.5px">${l}<small>key ${i+1}</small></button>`).join('');
+  const fmt=s=>`Best score: ${s}`;simpanTerbaik('mis5:konek',0,$('#konek-terbaik'),fmt);
+  const aktif=()=>{$$('#konek-opsi button,#konek-alasan button').forEach(b=>{b.disabled=G.status!=='tanya'})};
+  function tampil(){
+    const K=G.daftar[G.i];
+    $('#konek-soal').innerHTML=`<div class="label">Deployment ${G.i+1} of ${N}</div><p style="margin:4px 0 0;color:var(--text);font-size:13.5px">${esc(K.t)}</p>`;
+    const lain=acakSalin(Object.keys(ALASAN_K).filter(k=>k!==K.a&&k!=='murah')).slice(0,1);
+    $('#konek-alasan').innerHTML=acakSalin([K.a,'murah',...lain]).map(k=>`<button class="pilih" data-v="${k}" style="text-align:left;font-family:system-ui,sans-serif;font-size:12.5px;font-weight:500">${esc(ALASAN_K[k])}</button>`).join('');
+    $$('#konek-opsi button').forEach(b=>b.classList.remove('y','n','pil'));
+    G.net=null;G.al=null;hasil.innerHTML='';aktif();
+  }
+  function mulai(){Object.assign(G,{status:'tanya',skor:0,hati:3,i:0,daftar:acakSalin(SKENARIO_K).slice(0,N),tJawab:null});bMulai.textContent='Restart';tampil()}
+  function nilai(){
+    if(!G.net||!G.al)return;
+    const K=G.daftar[G.i],okN=G.net===K.j,okA=G.al===K.a,ok=okN&&okA;
+    if(ok)G.skor+=10;else G.hati--;
+    G.status='jawab';G.tJawab=G.t;G.ok=ok;aktif();bunyi(ok?'koin':'salah');
+    $$('#konek-opsi button').forEach(b=>{if(b.dataset.v===K.j)b.classList.add('y');else if(b.dataset.v===G.net)b.classList.add('n')});
+    $$('#konek-alasan button').forEach(b=>{if(b.dataset.v===K.a)b.classList.add('y');else if(b.dataset.v===G.al)b.classList.add('n')});
+    const nama=JARINGAN.find(x=>x[0]===K.j)[1],akhir=G.hati<=0||G.i>=N-1;
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Correct':okN?'✗ Right network, wrong reason':'✗ Not quite'}: ${nama}.</b> ${esc(ALASAN_K[K.a])}.${G.net==='wifi'&&K.j!=='wifi'?' Wi-Fi is the most common wrong default: it needs mains power and only reaches about 50 m.':''}</div>
+      <div class="row"><button class="act" id="konek-lanjut">${akhir?'See result':'Next deployment →'}</button></div>`;
+    $('#konek-lanjut').onclick=lanjut;
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=N){G.status='selesai';bunyi(G.skor>=60?'menang':'kalah');hasil.innerHTML=`<div class="${G.skor>=60?'ok':'hint'}">Game over. Score <b>${G.skor} of ${N*10}</b>. ${G.skor>=60?'Physical constraints, not habit, chose your networks.':'Use the three questions: does it move, is there mains power, how far is it?'}</div>`;simpanTerbaik('mis5:konek',G.skor,$('#konek-terbaik'),fmt);bMulai.textContent='Play again';aktif()}
+    else{G.status='tanya';tampil()}
+  }
+  $('#konek-opsi').onclick=e=>{const b=e.target.closest('button');if(!b||G.status!=='tanya')return;G.net=b.dataset.v;pilihTombol($('#konek-opsi'),G.net);bunyi('klik');nilai()};
+  $('#konek-alasan').onclick=e=>{const b=e.target.closest('button');if(!b||G.status!=='tanya')return;G.al=b.dataset.v;pilihTombol($('#konek-alasan'),G.al);bunyi('klik');nilai()};
+  bMulai.onclick=mulai;aktif();
+  G.kunci=k=>{const i='12345'.indexOf(k);if(i>=0&&G.status==='tanya'){G.net=JARINGAN[i][0];pilihTombol($('#konek-opsi'),G.net);nilai()}};
+  const bg=latar(256,144,q=>{const a=acakTetap(157);kotak(q,0,0,256,36,'#8fd3ff');lukisRumput(q,0,36,256,108,a);lukisJalan(q,0,96,256,14,a);
+    lukisPondok(q,-4,22,92);for(let r=0;r<2;r++)for(let c=0;c<4;c++)semak(q,190+c*15,56+r*13,5,true)});
+  const POS={dalam:[60,78],dekat:[48,82],jauh:[214,70],gerak:[0,0]},ROUTER=[30,74],RX_K={wifi:[30,74,50],bluetooth:[30,74,26],ethernet:[30,74,0],lorawan:[76,6,999],cellular:[160,6,999]};
+  adegan($('#kv-konek'),(g,t)=>{
+    G.t=t;g.drawImage(bg,0,0);
+    perangkat(g,ROUTER[0]-3,ROUTER[1]-3,true);
+    hud(g,G.status==='awal'?'Connectivity':G.status==='selesai'?'Result':`Deployment ${Math.min(G.i+1,N)}/${N}`,G.skor,G.hati);
+    if(G.status==='awal'){layarJudul(g,'CONNECTIVITY',['Press "Start game".','Pick the network and the reason.'],t);return}
+    if(G.status==='selesai'){bingkaiRPG(g,48,36,160,52);tulis(g,`Score ${G.skor} of ${N*10}`,128,48,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,G.skor>=60?'Well connected!':'Try again.',128,64,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return}
+    const K=G.daftar[G.i];let [dx,dy]=POS[K.lok];
+    if(K.lok==='gerak'){const x=150+Math.sin(t*.6)*40;trukBox(g,x-32,108,'#f4f1e6',Math.cos(t*.6)>0);dx=x+6;dy=72}
+    else perangkat(g,dx-3,dy-3,Math.floor(t*3)%2===0);
+    if(G.status==='jawab'){
+      const u=t-G.tJawab,n=G.net,r=Math.min(1,u/.8),[rx,ry,R]=RX_K[n];
+      const cincin=(R,c)=>{for(let a=0;a<72;a++){const s=a/72*Math.PI*2;kotak(g,rx+Math.cos(s)*R*r,ry+Math.sin(s)*R*r*.6,2,2,c)}};
+      if(n==='wifi'||n==='bluetooth')cincin(R,n==='wifi'?'#4fb0ff':'#b58cff');
+      if(n==='lorawan'){kotak(g,rx-1,ry,2,18,GB.garis);kotak(g,rx-3,ry-2,6,3,'#ffd34d')}
+      if(n==='cellular'){for(let y=ry;y<ry+30;y+=4){kotak(g,rx-3+(y-ry)/10,y,1,4,GB.garis);kotak(g,rx+3-(y-ry)/10,y,1,4,GB.garis);kotak(g,rx-2,y,5,1,GB.garis)}kotak(g,rx-4,ry-2,9,2,'#55d36b')}
+      if(n==='lorawan'||n==='cellular')for(let k=0;k<3;k++){const q=((u*.5+k/3)%1)*120;g.globalAlpha=1-q/120;for(let a=0;a<48;a++){const s=Math.PI*(a/48);kotak(g,rx+Math.cos(s)*q,ry+Math.sin(s)*q*.6,1,1,n==='lorawan'?'#ffd34d':'#55d36b')}g.globalAlpha=1}
+      const jarak=Math.hypot(dx-rx,(dy-ry)/.6),sampai=n==='ethernet'?(K.lok==='dalam'||K.lok==='dekat'):jarak<=R;
+      const ujung=sampai?1:n==='ethernet'?.35:Math.min(1,R/jarak),ex=lerp(rx,dx,ujung*r),ey=lerp(ry,dy,ujung*r);
+      for(let s=0;s<=1;s+=4/Math.max(4,Math.hypot(ex-rx,ey-ry)))kotak(g,lerp(rx,ex,s),lerp(ry,ey,s),2,1,sampai?(n==='ethernet'?'#c3c7d6':'#ffffff'):'#ff5a5a');
+      if(sampai&&r>=1){const q=(u*.8)%1;kotak(g,lerp(dx,rx,q)-1,lerp(dy,ry,q)-1,3,3,'#ffd34d')}
+      if(!sampai&&r>=1)tanda(g,ex,ey,false);
+      const nama=JARINGAN.find(x=>x[0]===n)[1],w=lebarTeks(nama)+12;g.globalAlpha=.85;kotak(g,128-w/2,22,w,13,'#1c2340');g.globalAlpha=1;tulis(g,nama,128,23,'#ffffff',{rata:'tengah'});
+      if(u>.8)tanda(g,dx,dy-14,G.ok);
+    }
+    pamn(g,112,134,G.status==='jawab'&&G.ok&&t-G.tJawab<1.5?'sorak':'diam');
+  });
+  return G;
+}
+
+/* ============ CHAPTER 4: VALUE SOURCES, SCENE, COST CALCULATOR ============ */
+const SUMBER=[['Loss Avoided','Detecting a problem before it becomes a write-off.','The current loss rate is known or measurable.','strong'],
+  ['Cost Reduced','Using less input, or less labour.','Current consumption is measured.','strong'],
+  ['Revenue Protected or Gained','Preventing customer loss, or enabling a chargeable service.','An identifiable at-risk account.','weak','Attribution is contested. If the client stays, was it the sensors or the account manager?'],
+  ['Compliance Satisfied','Producing evidence a regulator requires.','The obligation itself.','different','Strong, but different in kind: it changes the question being asked.']];
+function kartuSumber(){
+  const lbl={strong:['Strong evidence','pill-y'],weak:['Weak evidence','pill-n'],different:['Strong, different in kind','pill-b']};
+  $('#sumber-nilai').innerHTML=SUMBER.map(([n,m,e,s,w])=>`<div class="kartu"><div class="judul">${esc(n)}</div><p><span class="${lbl[s][1]}">${lbl[s][0]}</span></p><p><b>Mechanism:</b> ${esc(m)}</p><p><b>Evidence needed:</b> ${esc(e)}</p>${w?`<p>${esc(w)}</p>`:''}</div>`).join('');
+}
+function adeganNilai(){
+  const P=20;
+  const bg=latar(256,144,q=>{lukisDindingKayu(q,0,0,256,44);lukisLantaiKayu(q,0,44,256,100,acakTetap(161))});
+  const S=[[2,'klik'],[4,'stempel'],[6.4,'benar']];
+  const A=adegan($('#kv-nilai'),(g,t)=>{
+    const T=GERAK?t%P:9;
+    suaraAdegan(A,T,S);
+    g.drawImage(bg,0,0);
+    judulKanvas(g,'Stated basis');
+    const miring=T<4?0:mulus(jepit((T-4)/1.6,0,1))*10,cx=150,cy=56;
+    kotak(g,cx-2,cy,4,46,GB.kayuGG);kotak(g,cx-12,102,24,4,GB.kayuGG);
+    const ax=cx-40,bx=cx+40,ay=cy-miring,by=cy+miring;
+    for(let s=0;s<=1;s+=.02)kotak(g,lerp(ax,bx,s),lerp(ay,by,s),1,2,GB.kayuGG);
+    for(const [x,y] of [[ax,ay],[bx,by]]){kotak(g,x,y,1,14,'#5c6178');kotak(g,x-16,y+14,32,3,'#8a8fa3')}
+    if(T>1){bulat(g,ax,ay+2,13,'#ff9a9a');tulis(g,'40%!',ax,ay-4,'#7a1c14',{rata:'tengah',tebal:true})}
+    if(T>2.6){panel(g,bx-14,by+2,28,12,'#2b3460','#8a8fa3');tulis(g,'8%',bx,by+4,'#ffd34d',{rata:'tengah',tebal:true})}
+    pamn(g,50,104,T>6.4?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    if(T>2.6&&T<=6.4)kotakDialog(g,6,110,244,31,'PAMN',['Left: "40% saving", no basis.','Right: "8% stock-outs", measured.'],99);
+    if(T>6.4)kotakDialog(g,6,110,244,31,'PAMN',['A big number with no basis weighs','less than a small measured one.'],99);
+  });
+}
+const PRESET_BIAYA={truk:{n:20,pasang:1500000,konek:75000,platform:1000000,baterai:0,latih:5000000},kebun:{n:40,pasang:900000,konek:10000,platform:750000,baterai:120000,latih:3000000}};
+function kalkulatorBiaya(){
+  const F=[['n','Devices',1],['pasang','Sensor + installation per device (one-time)',0],['konek','Connectivity per device per month',0],['platform','Platform subscription per month',0],['baterai','Battery replacement per device per year, incl. labour',0],['latih','Training and process change (year one)',0]];
+  $('#biaya-isian').innerHTML=F.map(([k,l])=>`<label>${l}<input type="number" min="0" step="1000" data-k="${k}"></label>`).join('');
+  const nilai={...PRESET_BIAYA.truk};
+  const isi=()=>$$('#biaya-isian input').forEach(i=>i.value=nilai[i.dataset.k]);
+  function hitung(){
+    $$('#biaya-isian input').forEach(i=>nilai[i.dataset.k]=Math.max(0,+i.value||0));
+    const {n,pasang,konek,platform,baterai,latih}=nilai,ulang=12*(n*konek+platform)+n*baterai,th1=n*pasang+latih+ulang,th3=ulang,maks=Math.max(th1,1);
+    const bar=(l,v,c)=>`<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>${l}</span><b style="white-space:nowrap;padding-left:8px">${rp(v)}</b></div><div class="bar-biaya"><i style="width:${v/maks*100}%;background:${c}"></i></div></div>`;
+    $('#biaya-hasil').innerHTML=bar('Year one: installation, training and running',th1,'var(--fp)')+bar('Year three: running cost only',th3,'var(--fn)')+
+      `<div class="hint">In year three, with nothing new installed, this deployment still costs <b>${rp(th3)}</b> a year, ${Math.round(th3/maks*100)}% of the first year. Connectivity: ${rp(12*n*konek)}; platform: ${rp(12*platform)}; batteries: ${rp(n*baterai)}.</div>`;
+  }
+  $('#biaya-isian').oninput=hitung;
+  $$('[data-preset]').forEach(b=>b.onclick=()=>{Object.assign(nilai,PRESET_BIAYA[b.dataset.preset]);isi();hitung();bunyi('klik')});
+  isi();hitung();
+}
+
+/* ============ CHAPTER 4: VALUE CLAIM AUDITOR ============ */
+const KLAIM=[
+  {t:'Improves efficiency by 40%.',a:'none'},{t:'Will increase revenue by 25% within six months.',a:'none'},{t:'Customer satisfaction will rise significantly.',a:'none'},
+  {t:'Saves around Rp 500 million a year across the chain.',a:'none'},{t:'Reduces equipment downtime dramatically.',a:'none'},
+  {t:'Currently 8% of order lines stock out; this is the figure the investment must move.',a:'basis'},
+  {t:'Chiller failures wrote off Rp 18 million of stock last year, according to the incident log; the target is to halve it.',a:'basis'},
+  {t:'Fuel costs Rp 42 million a month across 20 trucks, from fuel receipts; we will track litres per kilometre by route.',a:'basis'},
+  {t:'Guests waited more than 5 minutes at check-in on 31% of mornings last month, according to the queue log.',a:'basis'},
+  {t:'We cannot estimate the revenue effect reliably, but monthly spoilage cost is the metric to track.',a:'unknown'},
+  {t:'We do not yet know the pump\'s normal vibration; we will log three months of data before claiming any saving.',a:'unknown'},
+  {t:'The effect on repeat bookings is uncertain; we will compare complaint rates for six months before and after.',a:'unknown'}
+];
+const ALASAN_A={none:'No stated basis: it cannot be verified or tracked',basis:'Tied to a measured current baseline',unknown:'Honest unknown with a measurement plan'};
+function permainanAudit(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0,v:null,a:null,tJawab:null},hasil=$('#audit-hasil'),bMulai=$('#audit-mulai');
+  $('#audit-vonis').innerHTML=[['y','Acceptable'],['n','Unacceptable']].map(([v,l])=>`<button class="pilih" data-v="${v}" style="font-family:system-ui,sans-serif">${l}</button>`).join('');
+  $('#audit-alasan').innerHTML=Object.entries(ALASAN_A).map(([k,l])=>`<button class="pilih" data-v="${k}" style="text-align:left;font-family:system-ui,sans-serif;font-size:12.5px;font-weight:500">${esc(l)}</button>`).join('');
+  const poin=K=>K.a==='unknown'?15:10;let MAKS=0;
+  const fmt=s=>`Best score: ${s}`;simpanTerbaik('mis5:audit',0,$('#audit-terbaik'),fmt);
+  const aktif=()=>$$('#audit-vonis button,#audit-alasan button').forEach(b=>{b.disabled=G.status!=='tanya';if(G.status==='tanya')b.classList.remove('y','n','pil')});
+  function mulai(){
+    const ambil=(a,n)=>acakSalin(KLAIM.filter(k=>k.a===a)).slice(0,n);
+    Object.assign(G,{status:'tanya',skor:0,hati:3,i:0,daftar:acakSalin([...ambil('none',3),...ambil('basis',2),...ambil('unknown',3)]),v:null,a:null,tJawab:null});
+    MAKS=G.daftar.reduce((s,k)=>s+poin(k),0);hasil.innerHTML='';bMulai.textContent='Restart';aktif();
+  }
+  function nilai(){
+    if(!G.v||!G.a)return;
+    const K=G.daftar[G.i],benarV=K.a==='none'?'n':'y',ok=G.v===benarV&&G.a===K.a;
+    if(ok)G.skor+=poin(K);else G.hati--;
+    G.status='jawab';G.tJawab=G.t;G.ok=ok;aktif();bunyi(ok?'koin':'salah');
+    $$('#audit-vonis button').forEach(b=>{if(b.dataset.v===benarV)b.classList.add('y');else if(b.dataset.v===G.v)b.classList.add('n')});
+    $$('#audit-alasan button').forEach(b=>{if(b.dataset.v===K.a)b.classList.add('y');else if(b.dataset.v===G.a)b.classList.add('n')});
+    const akhir=G.hati<=0||G.i>=G.daftar.length-1;
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?`✓ Correct, +${poin(K)}`:'✗ Not quite'}: ${benarV==='y'?'Acceptable':'Unacceptable'}.</b> ${esc(ALASAN_A[K.a])}.${K.a==='unknown'?' Admitting what is not yet known, and saying how it will be measured, is more credible than inventing a figure.':''}</div>
+      <div class="row"><button class="act" id="audit-lanjut">${akhir?'See result':'Next claim →'}</button></div>`;
+    $('#audit-lanjut').onclick=lanjut;
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=G.daftar.length){G.status='selesai';bunyi(G.skor>=MAKS*.7?'menang':'kalah');hasil.innerHTML=`<div class="${G.skor>=MAKS*.7?'ok':'hint'}">Audit complete. Score <b>${G.skor} of ${MAKS}</b>.</div>`;simpanTerbaik('mis5:audit',G.skor,$('#audit-terbaik'),fmt);bMulai.textContent='Play again'}
+    else{G.status='tanya';G.v=null;G.a=null;hasil.innerHTML=''}
+    aktif();
+  }
+  $('#audit-vonis').onclick=e=>{const b=e.target.closest('button');if(!b||G.status!=='tanya')return;G.v=b.dataset.v;pilihTombol($('#audit-vonis'),G.v);bunyi('klik');nilai()};
+  $('#audit-alasan').onclick=e=>{const b=e.target.closest('button');if(!b||G.status!=='tanya')return;G.a=b.dataset.v;pilihTombol($('#audit-alasan'),G.a);bunyi('klik');nilai()};
+  bMulai.onclick=mulai;aktif();
+  const meja=latar(256,144,q=>{const a=acakTetap(163);kotak(q,0,0,256,144,'#6b4426');for(let y=0;y<144;y+=6)kotak(q,0,y,256,1,'#5a3820');for(let i=0;i<60;i++)kotak(q,Math.floor(a()*256),Math.floor(a()*144),3+Math.floor(a()*6),1,a()<.5?'#7d5233':'#4e301a')});
+  adegan($('#kv-audit'),(g,t)=>{
+    G.t=t;g.drawImage(meja,0,0);
+    hud(g,G.status==='awal'?'Claim Auditor':G.status==='selesai'?'Result':`Claim ${Math.min(G.i+1,G.daftar.length)}/${G.daftar.length}`,G.skor,G.hati);
+    if(G.status==='awal'){layarJudul(g,'CLAIM AUDITOR',['Press "Start game".','Verdict first, then reason.'],t);return}
+    if(G.status==='selesai'){bingkaiRPG(g,48,36,160,52);tulis(g,`Score ${G.skor} of ${MAKS}`,128,48,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,G.skor>=MAKS*.7?'Sharp auditor!':'Try again.',128,64,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return}
+    const K=G.daftar[G.i],w=216,baris=bungkus(K.t,w-16),h=18+baris.length*11+10,x=20,y=24;
+    g.globalAlpha=.3;kotak(g,x+3,y+3,w,h,0);g.globalAlpha=1;
+    kotak(g,x,y,w,h,'#8a6a3a');kotak(g,x+1,y+1,w-2,h-2,GB.kertas);
+    tulis(g,'VALUE CLAIM',x+8,y+5,'#8a6a3a',{tebal:true});
+    baris.forEach((b,i)=>tulis(g,b,x+8,y+18+i*11,'#3a2410'));
+    if(G.status==='jawab'){
+      const u=t-G.tJawab,benarV=K.a==='none'?'n':'y',teks=benarV==='y'?'ACCEPT':'REJECT',c=benarV==='y'?'#2f9e44':'#c0392b';
+      if(u>.1){const tw=lebarTeks(teks,10,true)*2+14;g.globalAlpha=.9;bingkai(g,x+w-tw-8,y+h+4,tw,20,c);bingkai(g,x+w-tw-7,y+h+5,tw-2,18,c);tulis(g,teks,x+w-8-tw/2,y+h+7,c,{rata:'tengah',tebal:true,skala:2});g.globalAlpha=1}
+    }
+    pamn(g,30,140,G.status==='jawab'&&G.ok?'sorak':'diam');
+  });
+  return G;
+}
+
+/* ============ CHAPTER 5: READINESS ============ */
+const SYARAT=[
+  {n:'Capacity to Act',s:'If an alert arrives and nobody can respond, the deployment produces information without value.',e:'A cold-chain alert sent to a driver with no means of fixing a failing refrigeration unit changes nothing except the record of when the loss began.',q:'Who receives this, what authority do they have, and what do they physically do in the next ten minutes?'},
+  {n:'Environmental Suitability',c:['Connectivity coverage: verified, not assumed','Power availability: mains, battery, or harvesting, confirmed for the location','Physical durability: dust, moisture, heat, and handling in the actual environment','Sensor placement: where the risk actually sits, not where maintenance is convenient'],w:'A sensor mounted for maintenance convenience measures the wrong location, accurately.'},
+  {n:'Cost Proportionality',s:'Recurring cost must be proportionate to the value at risk, not to the asset\'s purchase price.',e:'Instrumenting a Rp 2 million asset with a Rp 400,000 annual subscription rarely survives scrutiny.',r:'Annual recurring cost against annual value at risk.'}
+];
+const ANTI=[['Already Visible','The physical condition is already visible without instrumentation.'],['No Actionable Window','Nobody can act on the output within a useful time window.'],['Asset Value Too Low','The asset value is too low to justify recurring cost.'],['People or Process Problem','The sensor would document the problem, not solve it.']];
+function kartuSiap(){
+  $('#syarat-siap').innerHTML=SYARAT.map((x,i)=>`<div class="kartu" style="margin-bottom:12px"><div class="judul">Gate ${i+1} · ${esc(x.n)}</div>
+    ${x.s?`<p>${esc(x.s)}</p>`:''}${x.c?`<ul class="lst">${x.c.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:''}
+    ${x.e?`<p><b>Example:</b> ${esc(x.e)}</p>`:''}${x.q?`<div class="hint" style="margin:4px 0 0"><b>Check question:</b> ${esc(x.q)}</div>`:''}
+    ${x.w?`<div class="hint" style="margin:4px 0 0"><b>Warning:</b> ${esc(x.w)}</div>`:''}${x.r?`<p style="margin:0"><b>Ratio to compute:</b> ${esc(x.r)}</p>`:''}</div>`).join('');
+  $('#antipola').innerHTML=ANTI.map(([n,t])=>`<div class="kartu"><div class="judul">${esc(n)}</div><p>${esc(t)}</p></div>`).join('');
+}
+/* Gate seen at an angle across the corridor: back post far, front post near. PAMN walks through it,
+   so the back half is drawn before PAMN and the front half (post, lintel, sign) after. */
+const GT={kB:62,kD:108,tinggi:40,miring:22,kakiP:86};
+function gerbangLintas(g,x,label,naik,merah,bagian){
+  const pos=s=>[x+GT.miring*(1-s),lerp(GT.kB,GT.kD,s)],sP=(GT.kakiP-GT.kB)/(GT.kD-GT.kB),masuk=s=>bagian==='belakang'?s<sP:s>=sP;
+  const c=merah?'#d23c4a':'#2b2f45',r=naik*32,tiang=s=>{const [px,py]=pos(s);kotak(g,px-3,py-GT.tinggi,6,GT.tinggi,GB.garis);kotak(g,px-2,py-GT.tinggi+1,4,GT.tinggi-2,BT.batu);kotak(g,px-2,py-GT.tinggi+1,1,GT.tinggi-2,BT.batuT)};
+  if(bagian==='belakang'){for(let s=0;s<=1;s+=.02){const [bx,by]=pos(s);kotak(g,bx-2,by-1,5,3,BT.batuG)}tiang(0)}
+  g.globalAlpha=.32;for(let s=0;s<=1;s+=.02)if(masuk(s)){const [bx,by]=pos(s),atas=by-35,bawah=by-r;if(bawah>atas)kotak(g,bx,atas,1,bawah-atas,merah?'#5a0f18':'#1b1b2f')}g.globalAlpha=1;
+  for(let b=0;b<7;b++){const s=(b+.5)/7;if(!masuk(s))continue;const [bx,by]=pos(s),atas=by-35,bawah=by-r;if(bawah>atas){kotak(g,bx,atas,2,bawah-atas,c);if(r<2)kotak(g,bx,bawah-2,2,2,'#2b2f45')}}
+  for(const h of [9,21]){const hh=h+r;if(hh>=34)continue;for(let s=0;s<=1;s+=.02)if(masuk(s)){const [bx,by]=pos(s);kotak(g,bx,by-hh,1,2,c)}}
+  if(bagian==='depan'){
+    tiang(1);
+    for(let s=0;s<=1;s+=.02){const [bx,by]=pos(s);kotak(g,bx-3,by-GT.tinggi-1,6,6,GB.garis)}for(let s=0;s<=1;s+=.02){const [bx,by]=pos(s);kotak(g,bx-2,by-GT.tinggi,4,4,BT.batuT)}
+    const [mx,my]=pos(.85),w=lebarTeks(label,10,true)+8,y=my-GT.tinggi-13;
+    kotak(g,mx,y+10,1,3,GB.garis);kotak(g,mx-w/2,y,w,11,GB.garis);kotak(g,mx-w/2+1,y+1,w-2,9,BT.batuT);tulis(g,label,mx,y+1,'#1c2340',{rata:'tengah',tebal:true});
+  }
+}
+function lorong(q){q.globalAlpha=.3;kotak(q,0,GT.kB-4,256,GT.kD-GT.kB+6,'#1b1b2f');q.globalAlpha=1;kotak(q,0,GT.kB-5,256,1,BT.batuG);kotak(q,0,GT.kD+2,256,1,BT.batuG)}
+function semuaGerbang(g,GX,naik,merah,bagian){['ACT','SITE','COST'].forEach((l,i)=>gerbangLintas(g,GX[i],l,naik[i],merah[i],bagian))}
+function piala(g,x,ada=true){const k=GT.kakiP;kotak(g,x-9,k-16,18,16,GB.garis);kotak(g,x-8,k-15,16,15,BT.batu);kotak(g,x-8,k-15,16,2,BT.batuT);if(ada){const {w,h}=ukuranSprite('pialaG');spr(g,'pialaG',x-w,k-16-h*2,2)}}
+function adeganSiap(){
+  const P=30,GX=[54,124,192];
+  const bg=latar(256,144,q=>{lukisDindingBatu(q,0,0,256,40);lukisLantaiBatu(q,0,40,256,104,acakTetap(167));lorong(q)});
+  const S=[[2.4,'pintu'],[5.4,'pintu'],[8.4,'tutup'],[8.6,'salah'],[17.4,'pintu'],[20.4,'pintu'],[23.4,'pintu'],[24.4,'menang']];
+  const A=adegan($('#kv-siap'),(g,t)=>{
+    const T=GERAK?t%P:9.5,putaran=T<15?0:1,u=T-putaran*15;
+    suaraAdegan(A,T,S);
+    g.drawImage(bg,0,0);
+    const lolos=putaran===0?[true,true,false]:[true,true,true];
+    const buka=GX.map((_,i)=>lolos[i]?mulus(jepit((u-2.4-i*3)/.8,0,1)):0);
+    let px=lerp(14,GX[0]-12,jepit(u/2,0,1));
+    for(let i=0;i<3;i++){const mulai=2.4+i*3+.8;if(u>mulai&&lolos[i])px=lerp(GX[i]-12,i<2?GX[i+1]-12:224,jepit((u-mulai)/1.6,0,1))}
+    const blok=putaran===0&&u>8.4,merah=[false,false,blok];
+    if(blok)px=GX[2]-12+(u<9?Math.round(Math.sin(u*60)*2):0);
+    piala(g,246,putaran===1);
+    semuaGerbang(g,GX,buka,merah,'belakang');
+    pamn(g,px,GT.kakiP,putaran===1&&u>9.6?'sorak':'diam');
+    semuaGerbang(g,GX,buka,merah,'depan');
+    if(blok)kotakDialog(g,6,110,244,31,'PAMN',['Cost is out of proportion to','the value at risk. Not ready.'],99);
+    if(putaran===1&&u>9.6)kotakDialog(g,6,110,244,31,'PAMN',['All three gates pass.','Ready to propose.'],99);
+  });
+}
+
+/* ============ CHAPTER 5: READINESS GATE ============ */
+const KASUS_SIAP=[
+  {t:'Cold-chain alerts for 20 refrigerated trucks are sent to the driver of each truck.',g:[[0,'The driver has no means of fixing a failing refrigeration unit on the road, so the alert only records when the loss began.']]},
+  {t:'Soil probes for a coffee plantation are mounted at the surface beside the access path, so maintenance is easy. The field supervisor can open irrigation valves.',g:[[1,'The field supervisor can open irrigation valves the same day.'],[0,'Mounted for maintenance convenience, the probes measure the wrong location, accurately. Plants feel moisture at root depth.']]},
+  {t:'A cellular tracker with a Rp 400,000 annual subscription on each Rp 2 million handheld scanner in a warehouse. Staff search for lost scanners.',g:[[1,'Warehouse staff can search for a missing scanner straight away.'],[1,'Mains charging and cellular coverage inside the warehouse are confirmed.'],[0,'Rp 400,000 a year to protect a Rp 2 million asset rarely survives scrutiny: cost must be proportionate to the value at risk.']]},
+  {t:'Chiller monitoring in 20 minimarkets. The outlet supervisor on shift can move stock to a backup freezer. Wi-Fi was tested in every outlet. Each chiller holds about Rp 15 million of stock; monitoring costs Rp 600,000 a year per chiller.',g:[[1,'The supervisor on shift has the authority and a backup freezer.'],[1,'Wi-Fi coverage was verified, not assumed, and chillers have mains power.'],[1,'Rp 600,000 a year against about Rp 15 million at risk is proportionate.']],
+   b:['The outlet supervisor on shift moves the stock to the backup freezer within 10 minutes of the alert.','Management will have better visibility of chiller temperatures.','Someone will check the chiller when they have time.','The system will reduce spoilage across the chain.']},
+  {t:'Boiler pressure sensors in a hotel plant room, assumed to connect over the hotel Wi-Fi, which nobody has checked in the basement. An engineer is on duty 24/7.',g:[[1,'The duty engineer can respond at any hour.'],[0,'Connectivity coverage must be verified, not assumed. Basement plant rooms are a classic Wi-Fi dead zone.']]},
+  {t:'Tracking for 20 delivery vans. The dispatcher can reassign drops and inform customers. Cellular coverage was checked on every route. Late-delivery penalties cost Rp 50 million a year; subscriptions cost Rp 24 million a year.',g:[[1,'The dispatcher has the authority to reassign drops and inform customers.'],[1,'Coverage was checked on every route, and trackers run on vehicle power.'],[1,'Rp 24 million a year against Rp 50 million of penalties at risk is proportionate.']],
+   b:['The dispatcher reassigns the next drop and messages the customer within 15 minutes of a delay alert.','Deliveries will become more efficient.','The operations team will discuss delays at the monthly meeting.','Drivers will be tracked at all times.']}
+];
+const NAMA_GERBANG=['Capacity to act','Environmental suitability','Cost proportionality'];
+function permainanSiap(){
+  const G={status:'awal',skor:0,hati:3,i:0,gate:0,daftar:[],t:0,tJawab:null,ok:null,hasilGate:[]},hasil=$('#gerbang-hasil'),bMulai=$('#gerbang-mulai');
+  const fmt=s=>`Best score: ${s}`;simpanTerbaik('mis5:siap',0,$('#gerbang-terbaik'),fmt);
+  let MAKS=0;
+  function tampil(){
+    const K=G.daftar[G.i],boss=G.gate>=3;
+    $('#gerbang-soal').innerHTML=`<div class="label">Proposal ${G.i+1} of ${G.daftar.length} · ${boss?'Final boss question':`Gate ${G.gate+1}: ${NAMA_GERBANG[G.gate]}`}</div><p style="margin:4px 0 8px;color:var(--text);font-size:13.5px">${esc(K.t)}</p>${boss?'<p style="margin:0 0 6px"><b>"If all three sensors work perfectly tomorrow, who does what differently?"</b> Choose the answer that names a role, a specific action, and a time window.</p>':''}`;
+    const ops=boss?acakSalin(K.b.map((x,j)=>[x,j])):[['Passes this gate',1],['Fails this gate',0]];
+    $('#gerbang-opsi').innerHTML=ops.map(([l,v])=>`<button class="pilih" data-v="${v}" style="text-align:left;font-family:system-ui,sans-serif;font-size:12.5px;font-weight:500">${esc(l)}</button>`).join('');
+    G.status='tanya';hasil.innerHTML='';
+  }
+  function mulai(){Object.assign(G,{skor:0,hati:3,i:0,gate:0,daftar:acakSalin(KASUS_SIAP),hasilGate:[]});MAKS=G.daftar.reduce((s,k)=>s+k.g.length*10+(k.b?20:0),0);bMulai.textContent='Restart';tampil()}
+  function jawab(v){
+    if(G.status!=='tanya')return;
+    const K=G.daftar[G.i],boss=G.gate>=3;let ok,teks,berhenti=false;
+    if(boss){ok=v===0;teks=ok?'This answer names a role, a specific action and a time window.':'Too vague: a passing answer needs a named role, a specific action and a defined time window.';if(ok)G.skor+=20;berhenti=true}
+    else{const [lulus,why]=K.g[G.gate];ok=(v===1)===!!lulus;teks=why;if(ok)G.skor+=10;G.hasilGate[G.gate]=!!lulus;if(!lulus)berhenti=true}
+    if(!ok)G.hati--;
+    G.status='jawab';G.tJawab=G.t;G.ok=ok;bunyi(ok?'koin':'salah');
+    $$('#gerbang-opsi button').forEach(b=>{const benar=boss?b.dataset.v==='0':(b.dataset.v==='1')===!!K.g[G.gate][0];if(benar)b.classList.add('y');else if(+b.dataset.v===v)b.classList.add('n');b.disabled=true});
+    const blok=!boss&&!K.g[G.gate][0];
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Correct':'✗ Not quite'}${boss?'':`: ${blok?'fails':'passes'} this gate`}.</b> ${esc(teks)}${blok?' <b>The proposal is not ready.</b>':''}</div>
+      <div class="row"><button class="act" id="gerbang-lanjut">${G.hati<=0||(berhenti&&G.i>=G.daftar.length-1)?'See result':berhenti?'Next proposal →':(G.gate===2?'Final boss question →':'Next gate →')}</button></div>`;
+    $('#gerbang-lanjut').onclick=()=>lanjut(berhenti);
+  }
+  function lanjut(berhenti){
+    if(G.hati<=0||(berhenti&&G.i>=G.daftar.length-1)){G.status='selesai';bunyi(G.skor>=MAKS*.7?'menang':'kalah');$('#gerbang-soal').innerHTML='';$('#gerbang-opsi').innerHTML='';hasil.innerHTML=`<div class="${G.skor>=MAKS*.7?'ok':'hint'}">All proposals judged. Score <b>${G.skor} of ${MAKS}</b>.</div>`;simpanTerbaik('mis5:siap',G.skor,$('#gerbang-terbaik'),fmt);bMulai.textContent='Play again';return}
+    if(berhenti){G.i++;G.gate=0;G.hasilGate=[]}else G.gate++;
+    tampil();
+  }
+  $('#gerbang-opsi').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;jawab(+b.dataset.v)};
+  bMulai.onclick=mulai;
+  const GX=[54,124,192];
+  const bg=latar(256,144,q=>{lukisDindingBatu(q,0,0,256,40);lukisLantaiBatu(q,0,40,256,104,acakTetap(171));lorong(q)});
+  adegan($('#kv-gerbang'),(g,t)=>{
+    G.t=t;g.drawImage(bg,0,0);obor(g,10,16,t);obor(g,246,16,t);
+    hud(g,G.status==='awal'?'Readiness Gate':G.status==='selesai'?'Result':`Proposal ${Math.min(G.i+1,G.daftar.length)}/${G.daftar.length}`,G.skor,G.hati);
+    if(G.status==='awal'){semuaGerbang(g,GX,[0,0,0],[0,0,0],'belakang');pamn(g,20,GT.kakiP,'diam');semuaGerbang(g,GX,[0,0,0],[0,0,0],'depan');layarJudul(g,'READINESS GATE',['Press "Start game".','Judge each gate in turn.'],t);return}
+    if(G.status==='selesai'){bingkaiRPG(g,48,36,160,52);tulis(g,`Score ${G.skor} of ${MAKS}`,128,48,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,G.skor>=MAKS*.7?'Ready to advise!':'Try again.',128,64,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return}
+    const u=G.tJawab==null?9:t-G.tJawab,K=G.daftar[G.i];
+    let px=GX[0]-12;const naik=[0,0,0],merah=[0,0,0];
+    for(let i=0;i<3;i++){
+      const sudah=G.hasilGate[i],ini=i===G.gate&&G.status==='jawab',sesudah=i<2?GX[i+1]-12:220;
+      naik[i]=sudah===true?(ini?mulus(jepit(u/.8,0,1)):1):0;merah[i]=sudah===false;
+      if(sudah===true)px=ini?lerp(GX[i]-12,sesudah,jepit((u-.8)/1.2,0,1)):sesudah;
+    }
+    const blok=G.hasilGate.includes(false);
+    if(G.gate>=3){spr(g,'hantuG',226,44,2);tulis(g,'?',240,32,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});px=220}
+    semuaGerbang(g,GX,naik,merah,'belakang');
+    pamn(g,px+(blok&&u<.6?Math.round(Math.sin(u*60)*2):0),GT.kakiP,G.status==='jawab'&&G.ok?'sorak':'diam');
+    semuaGerbang(g,GX,naik,merah,'depan');
+    if(G.status==='jawab'&&u>.3)tanda(g,px-15,68,G.ok);
+  });
+}
+
+/* ============ QUIZ ============ */
+const KUIS=[
+  {q:'Which pattern answers "Is it degrading?"',o:['Predictive Maintenance','Condition Monitoring','Usage Measurement','Presence and Flow'],w:'Predictive Maintenance detects gradual degradation so repair happens on evidence.'},
+  {q:'Footfall by zone and queue length in a minimarket belong to …',o:['Presence and Flow','Usage Measurement','Location Tracking','Condition Monitoring'],w:'They answer "Who or what moves here?"'},
+  {q:'Energy consumption per hotel room belongs to …',o:['Usage Measurement','Condition Monitoring','Presence and Flow','Predictive Maintenance'],w:'It answers "How much, how often?" and changes an allocation decision.'},
+  {q:'Which pattern has a built-in delay before any benefit?',o:['Predictive Maintenance','Location Tracking','Usage Measurement','Condition Monitoring'],w:'A baseline of normal behaviour must be learned first.'},
+  {q:'Cargo temperature in transit and greenhouse humidity are …',o:['The same pattern: Condition Monitoring','Two different patterns','Usage Measurement and Condition Monitoring','Not IoT use cases'],w:'Different sensor, threshold and person; same core question: "Is it within range?"'},
+  {q:'A tracker for delivery vans that drive island-wide should use …',o:['Cellular','Wi-Fi','Ethernet','Bluetooth'],w:'The asset moves over a wide area, which rules out fixed networks.'},
+  {q:'Why does Wi-Fi fail for battery soil probes kilometres from any building?',o:['It fails on both range and power','It is too expensive','It is too slow for soil data','It cannot carry temperature readings'],w:'Wi-Fi reaches about 50 m and needs mains power.'},
+  {q:'Which value source has the weakest evidence?',o:['Revenue protected or gained','Loss avoided','Cost reduced','Compliance satisfied'],w:'Attribution is contested: was it the sensors or the account manager?'},
+  {q:'With a regulatory obligation, the question becomes …',o:['What is the cheapest compliant option?','Is this worth it?','Will competitors adopt it first?','How much revenue will it add?'],w:'Compliance applies regardless of profitability.'},
+  {q:'Which claim follows the stated-basis rule?',o:['"Currently 8% of order lines stock out; this is the figure the investment must move."','"Improves efficiency by 40%."','"Customers will be much happier."','"Saves around Rp 500 million a year."'],w:'It is tied to a measurable current baseline.'},
+  {q:'The cost line most proposals omit is …',o:['Recurring connectivity, platform and battery costs','Sensor purchase','Installation','The project manager\'s salary'],w:'Recurring cost scales with device count, every month, every year.'},
+  {q:'A cold-chain alert goes to a driver who cannot fix the unit. Which condition fails?',o:['Capacity to act','Environmental suitability','Cost proportionality','None: the alert is useful'],w:'Information without the ability to respond produces no value.'},
+  {q:'A sensor mounted where maintenance is convenient …',o:['Measures the wrong location, accurately','Always saves money','Improves the baseline','Is required by regulation'],w:'Placement should follow where the risk actually sits.'},
+  {q:'Recurring cost should be compared with …',o:['The annual value at risk','The asset\'s purchase price','Competitors\' budgets','The sensor\'s list price'],w:'Cost proportionality compares annual recurring cost with annual value at risk.'},
+  {q:'A passing answer to the master test names …',o:['A role, a specific action and a time window','The sensor brand','The connectivity option','The expected ROI percentage'],w:'Anything vaguer means the use case is not ready.'},
+  {q:'Which situation is an IoT antipattern?',o:['The sensor would document a people problem rather than solve it','The alert reaches a supervisor who can act','The condition is invisible without a sensor','The value at risk exceeds the recurring cost'],w:'If the problem is people or process, the sensor only records it.'},
+  {q:'Why is location history often worth more than the live position?',o:['It reveals route overruns, stop duration and optimistic schedules','It is cheaper to store','It needs no connectivity','Regulators require it'],w:'Live tracking solves today; the history changes the plan.'},
+  {q:'Three use cases are genuinely different only if …',o:['They belong to three different patterns','They are in three different sectors','They use three different sensors','They have three different suppliers'],w:'Same core question means same pattern, whatever the sector.'}
+];
+function kuisIoT(){
+  const wadah=$('#kuis'),hasil=$('#kuis-hasil'),KS={hasil:[],tSelesai:null,selesai:false};let benar=0,dijawab=0,soal=[];
+  const fmt=s=>`Best score: ${s} of 10`;simpanTerbaik('mis5:kuis',0,$('#kuis-terbaik'),fmt);
+  function baru(){
+    benar=0;dijawab=0;hasil.innerHTML='';KS.hasil=[];KS.selesai=false;KS.tSelesai=null;
+    soal=acakSalin(KUIS).slice(0,10).map(s=>({...s,urut:acakSalin(s.o.map((_,i)=>i))}));
+    wadah.innerHTML=soal.map((s,n)=>`<div class="soal-kuis" data-n="${n}"><div class="tanya">${n+1}. ${esc(s.q)}</div><div class="opsi">${s.urut.map(i=>`<button data-i="${i}">${esc(s.o[i])}</button>`).join('')}</div><div class="jelas"></div></div>`).join('');
+  }
+  wadah.onclick=e=>{
+    const b=e.target.closest('button');if(!b||b.disabled)return;
+    const box=b.closest('.soal-kuis'),s=soal[+box.dataset.n],ok=b.dataset.i==='0';
+    $$('button',box).forEach(x=>{x.disabled=true;if(x.dataset.i==='0')x.classList.add('y')});if(!ok)b.classList.add('n');
+    box.querySelector('.jelas').innerHTML=(ok?'<span style="color:var(--tp)">✓ Correct.</span> ':'<span style="color:var(--fn)">✗ Not quite.</span> ')+esc(s.w);
+    dijawab++;if(ok)benar++;bunyi(ok?'benar':'salah');KS.hasil[+box.dataset.n]=ok;
+    if(dijawab===soal.length){setTimeout(()=>bunyi(benar>=8?'menang':'selesai'),350);
+      hasil.innerHTML=`<div class="${benar>=8?'ok':'hint'}" style="display:flex;gap:14px;align-items:center">${benar>=8?`<img class="ikon" src="${ikonURL('pialaG',4)}" alt="">`:''}<div><b>Your score: ${benar} of 10.</b> ${benar>=8?'You are ready to assess IoT proposals.':'Revisit the chapters behind the questions you missed, then try new questions.'}</div></div>`;
+      simpanTerbaik('mis5:kuis',benar,$('#kuis-terbaik'),fmt);KS.selesai=true}
+  };
+  const latarKuis=latar(256,96,q=>{lukisDindingBatu(q,0,0,256,30);lukisLantaiBatu(q,0,30,256,66,acakTetap(41))});
+  adegan($('#kv-kuis'),(g,t)=>{
+    g.drawImage(latarKuis,0,0);obor(g,16,14,t);obor(g,240,14,t);
+    g.globalAlpha=.85;kotak(g,40,4,176,18,'#1c2340');g.globalAlpha=1;bingkai(g,40,4,176,18,'#4b5aa0');
+    for(let k=0;k<10;k++){const x=48+k*16,h=KS.hasil[k],c=h===true?'#55d36b':h===false?'#ff5a5a':'#3a3f5a',l=h===true?'#b8ffc4':h===false?'#ffb3b3':'#5c6178';kotak(g,x+2,8,6,10,GB.garis);kotak(g,x,10,10,6,GB.garis);kotak(g,x+3,9,4,8,c);kotak(g,x+1,11,8,4,c);kotak(g,x+3,10,2,2,l)}
+    if(KS.selesai&&KS.tSelesai==null)KS.tSelesai=t;
+    const u=KS.tSelesai==null?0:t-KS.tSelesai,lulus=benar>=8;
+    petiHarta(g,150,52,48,32,'int',{kilau:KS.selesai&&lulus&&Math.floor(u*4)%2===0});
+    if(KS.selesai&&lulus){const q=mulus(u/.8);spr(g,'pialaG',162,lerp(56,26,q),2)}
+    pamn(g,90,88,KS.selesai?(lulus?'sorak':'diam'):(Math.sin(t*1.6)>.97?'kedip':'diam'),{skala:2});
+    tulis(g,`${benar}/${dijawab||0}`,250,60,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+  });
+  $('#kuis-ulang').onclick=baru;baru();
+}
+
+/* ============ NAVIGATION, THEME, START ============ */
+const PETA=[['b1','termometer','1 · Five Patterns','Condition, location, usage, degradation, presence: the five questions IoT answers.','Pattern Classifier'],
+  ['b2','pin','2 · Sector Matrix','The same five patterns across retail, logistics, agribusiness and hospitality.','Sector Matrix Explorer'],
+  ['b3','meteran','3 · Four-Layer Builder','Device, connectivity, platform, application; why physical constraints choose the network.','Connectivity Chooser'],
+  ['b4','kepeng','4 · Business Value','Four value sources, the stated-basis rule, and the recurring cost most proposals forget.','Value Claim Auditor'],
+  ['b5','roda','5 · Readiness','Capacity to act, environmental suitability, cost proportionality.','Readiness Gate'],
+  ['kuis','pialaG','Quiz & Summary','Summary of the session and a short quiz.','']];
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=$('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+}
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Dark mode':'☀ Light mode'}
+let PILAH=null,KONEK=null,AUDIT=null;
+(function awal(){
+  $$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+  document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)goTab(g.dataset.go)});
+  $('#btn-tema').onclick=()=>{const t=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=t;try{localStorage.setItem('tema',t)}catch(e){}labelTema()};
+  labelTema();
+  const labelSuara=()=>{$('#btn-suara').textContent=SUARA.aktif?'🔊 Sound on':'🔇 Sound off'};
+  $('#btn-suara').onclick=()=>{SUARA.aktif=!SUARA.aktif;lsSimpan('mis5:suara',SUARA.aktif);labelSuara();bunyi('benar')};
+  labelSuara();
+  $$('#pilah-mulai,#konek-mulai,#audit-mulai,#gerbang-mulai,#kuis-ulang').forEach(b=>b.addEventListener('click',()=>bunyi('klik')));
+  $('#peta').innerHTML=PETA.map(([id,ik,j,d,m])=>`<div class="kartu"><div class="judul"><img class="ikon" src="${ikonURL(ik,['kepeng','roda'].includes(ik)?4:3)}" alt="">${esc(j)}</div><p>${esc(d)}</p>${m?`<p style="font-size:11.5px">Activity: <b>${esc(m)}</b></p>`:''}<button class="sec" data-go="${id}">Open →</button></div>`).join('');
+  $$('img[data-ikon]').forEach(im=>im.src=ikonURL(im.dataset.ikon,+im.dataset.skala||3));
+  kartuPola();
+  adeganMulaiIoT();adeganTur();
+  PILAH=permainanPilah();
+  kartuSektor();adeganSektor();matriksExplorer();
+  contohLapisan();KONEK=permainanKonek();pembangunLapis();
+  kartuSumber();adeganNilai();kalkulatorBiaya();AUDIT=permainanAudit();
+  kartuSiap();adeganSiap();permainanSiap();
+  kuisIoT();
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select'))return;
+    const tab=($('.tab.on')||{}).id,k=e.key.toLowerCase();
+    const G=tab==='t-b1'?PILAH:tab==='t-b3'?KONEK:null;
+    if(G&&G.kunci)G.kunci(k);
+  });
+  const awalTab=location.hash.slice(1);if(awalTab&&$('#t-'+awalTab))goTab(awalTab);
+  requestAnimationFrame(putar);
+})();
+
+</script>
+<script>
+/* ============ NAVIGASI PRESENTASI ============
+   Untuk remote presenter: PageDown atau panah kanan = maju, PageUp atau panah kiri = mundur.
+   Maju menyorot kartu berikutnya; kartu yang lebih panjang dari layar digulir dulu sampai habis;
+   setelah kartu terakhir, pindah ke tab berikutnya. Tidak aktif saat mengetik di kotak isian. */
+(function(){
+  const gaya=document.createElement('style');
+  gaya.textContent='.sorot-presentasi{outline:3px solid var(--fp);outline-offset:4px}'+
+    '#posisi-presentasi{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:0;transition:opacity .25s;pointer-events:none}'+
+    '#posisi-presentasi.on{opacity:1}';
+  document.head.appendChild(gaya);
+  const posisi=document.createElement('div');posisi.id='posisi-presentasi';posisi.setAttribute('aria-live','polite');document.body.appendChild(posisi);
+  let i=-1,tab=null,tunda=null;
+  const urutan=()=>[...document.querySelectorAll('nav button[data-t]')].map(b=>b.dataset.t);
+  const aktif=()=>{const t=document.querySelector('.tab.on');return t?t.id.slice(2):null};
+  const kartu=()=>{const t=document.querySelector('.tab.on');return t?[...t.querySelectorAll('.card')].filter(c=>c.offsetParent!==null&&!c.parentElement.closest('.card')):[]};
+  const atas=()=>{const nb=document.querySelector('.nimbar');return (nb&&getComputedStyle(nb).position==='sticky'?nb.offsetHeight:0)+14};
+  function tampilPosisi(K){
+    const u=urutan(),n=u.indexOf(aktif());
+    posisi.textContent=(n>=0?`Tab ${n+1}/${u.length} · `:'')+`bagian ${i+1}/${K.length}`;
+    posisi.classList.add('on');clearTimeout(tunda);tunda=setTimeout(()=>posisi.classList.remove('on'),1800);
+  }
+  function ke(K){
+    const c=K[i];if(!c)return;
+    document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'));
+    c.classList.add('sorot-presentasi');
+    scrollTo({top:Math.max(0,c.getBoundingClientRect().top+scrollY-atas()),behavior:'smooth'});
+    tampilPosisi(K);
+  }
+  function mulaiDariLayar(K){const a=atas();i=Math.max(0,K.findIndex(c=>c.getBoundingClientRect().bottom>a+40));tab=aktif()}
+  function pindahTab(arah){
+    const u=urutan(),n=u.indexOf(aktif());
+    if(n<0||n+arah<0||n+arah>=u.length){scrollTo({top:arah<0?0:document.body.scrollHeight,behavior:'smooth'});return}
+    goTab(u[n+arah]);tab=aktif();
+    requestAnimationFrame(()=>{const K=kartu();i=arah>0?0:K.length-1;ke(K)});
+  }
+  function langkah(arah){
+    const K=kartu();
+    if(!K.length){pindahTab(arah);return}
+    const disorot=tab===aktif()&&K[i]&&K[i].classList.contains('sorot-presentasi');
+    if(!disorot){mulaiDariLayar(K);ke(K);return}
+    const r=K[i].getBoundingClientRect();
+    if(arah>0&&r.bottom>innerHeight+8){scrollBy({top:innerHeight*.75,behavior:'smooth'});return}
+    if(arah<0&&r.top<atas()-8){scrollBy({top:-innerHeight*.75,behavior:'smooth'});return}
+    const j=i+arah;
+    if(j>=0&&j<K.length){i=j;ke(K)}else pindahTab(arah);
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    const maju=e.key==='PageDown'||e.key==='ArrowRight',mundur=e.key==='PageUp'||e.key==='ArrowLeft';
+    if(!maju&&!mundur)return;
+    const el=e.target;
+    if(el.closest&&el.closest('textarea,select,[contenteditable="true"]'))return;
+    if(el.tagName==='INPUT'&&!['range','checkbox','radio','button','submit'].includes(el.type))return;
+    e.preventDefault();e.stopPropagation();
+    if(el.blur&&el!==document.body)el.blur();
+    langkah(maju?1:-1);
+  },true);
+  // tab yang dipilih dengan klik mengulang hitungan dari atas
+  document.addEventListener('click',e=>{if(e.target.closest('nav button,[data-go]')){i=-1;tab=null;document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'))}},true);
+})();
+
+</script>
+</body>
+</html>
