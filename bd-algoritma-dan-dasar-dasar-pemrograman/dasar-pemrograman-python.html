@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasar Pemrograman Python — Praktikum Modul 6</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7' fill='%2318181b' stroke='%233f3f46'/%3E%3Cpath d='M8 10l6 6-6 6' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 22h7' stroke='%23e8e8ea' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.nimbar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.nimbar .muted{color:var(--muted)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 14px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-size:12.5px;vertical-align:middle}
+.ref td{font-size:12.5px}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+.wide table{min-width:560px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--code-text)}
+select,input[type=text]{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+button.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit}
+button.act:hover{opacity:.85}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:11px 0}
+.hint{background:color-mix(in srgb,var(--fp) 8%,transparent);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:color-mix(in srgb,var(--tp) 8%,transparent);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.gagal{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10.5px;font-weight:600}
+.pill.y{background:color-mix(in srgb,var(--tp) 15%,transparent);color:var(--tp)}
+.pill.n{background:color-mix(in srgb,var(--fn) 15%,transparent);color:var(--fn)}
+.pill.b{background:var(--panel2);color:var(--muted)}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+.lst b{color:var(--text)}
+.steps{list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--row);font-size:13px;color:var(--muted)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(st);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps b{color:var(--text)}
+.steps .sec{display:inline-block;margin-top:8px}
+/* kode */
+.kode{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:8px 0;font-family:var(--mono);font-size:12.5px;line-height:1.9;color:var(--code-text);overflow-x:auto}
+.kode .ln{display:flex;align-items:center;white-space:pre;padding:0 12px 0 0;min-height:1.9em}
+.kode .no{width:38px;text-align:right;padding-right:12px;color:var(--muted);user-select:none;flex:none}
+.kode.konsol .ln{padding-left:12px}
+.kode .cm{color:var(--muted)}
+.isi{font-family:var(--mono)!important;font-size:12.5px;background:var(--panel2);color:var(--text);border:1px solid var(--hover);border-radius:4px;padding:1px 5px;margin:0 1px;flex:none}
+.isi.y{border-color:var(--tp);box-shadow:0 0 0 1px var(--tp)}
+.isi.n{border-color:var(--fn);box-shadow:0 0 0 1px var(--fn)}
+.uji{font-family:var(--mono);font-size:12.5px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:9px 12px;margin:0 0 10px}
+.label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px}
+.soal{border-top:1px solid var(--row);padding:12px 0}
+.soal:first-of-type{border-top:none}
+.soal>label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.opsi label{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:13px;margin:6px 0;cursor:pointer}
+.opsi>label:first-child{display:block;font-weight:600;font-size:12.5px;margin:0 0 5px;cursor:default}
+.opsi input{margin-top:3px}
+.tanda{font-size:12px;margin-left:6px}
+.tanda.y{color:var(--tp)}.tanda.n{color:var(--fn)}
+td .tanda{margin-left:0}
+.butir{list-style:none;margin:8px 0 0;font-size:12.5px}
+.butir li{padding:4px 0;border-bottom:1px solid var(--row);color:var(--muted)}
+.butir li:last-child{border-bottom:none}
+.butir li.y b{color:var(--tp)}.butir li.n b{color:var(--fn)}
+.gerbang{display:none}
+.tanpa-nim .perlu-nim{display:none}
+.tanpa-nim .gerbang{display:block}
+.geser{display:none;font-size:12px;color:var(--muted);margin:0 0 6px}
+@media(max-width:640px){
+  .geser{display:block}
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{padding:10px 12px}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+</head>
+<body class="tanpa-nim">
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Algoritma dan Dasar-Dasar Pemrograman</a>
+    <h1>Dasar Pemrograman Python</h1>
+    <div class="sub">Algoritma dan Dasar-Dasar Pemrograman · Modul 6 · Sub-CPMK-621 — Program Studi Bisnis Digital, Fakultas Ekonomi dan Bisnis, Universitas Pendidikan Nasional</div>
+  </div>
+  <button class="sec" id="btn-tema"></button>
+</header>
+
+<div class="nimbar" id="nimbar"></div>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai di Sini</button>
+  <button data-t="t1">1 · Tipe Data</button>
+  <button data-t="t2">2 · Penamaan Variabel</button>
+  <button data-t="t3">3 · Lengkapi Program</button>
+  <button data-t="t4">4 · Deteksi Kesalahan</button>
+  <button data-t="rekap">5 · Rekap &amp; Pengumpulan</button>
+  <button data-t="acuan">? · Acuan</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Praktikum Modul 6</div>
+    <h2>Dasar Pemrograman Python: Variabel, Tipe Data, dan Masukan-Keluaran</h2>
+    <p>Memilih tipe data untuk data bisnis, melengkapi program perhitungan sederhana, dan menemukan penyebab kesalahan pada program Python. Bacalah halaman ini sampai habis sebelum mulai.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Masalah</h2>
+    <p>Program yang berjalan tanpa pesan kesalahan belum tentu benar. Menjumlahkan dua hasil <code>input()</code> tanpa konversi menghasilkan <code>100200</code>, bukan <code>300</code>. Angkanya tampak wajar, tidak ada pesan kesalahan, dan program berjalan mulus sampai akhir.</p>
+    <p>Nomor telepon yang disimpan sebagai bilangan kehilangan angka nol di depannya: <code>081234567890</code> berubah menjadi <code>81234567890</code>. Kekeliruan semacam ini baru ketahuan setelah ratusan data pelanggan telanjur tersimpan.</p>
+    <p>Pertanyaannya: bagaimana memilih tipe data yang tepat untuk setiap data bisnis, dan bagaimana membaca pesan kesalahan Python untuk menemukan penyebabnya dengan cepat?</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Tujuan Praktikum</h2>
+    <p>Setelah praktikum ini Anda diharapkan mampu:</p>
+    <ol class="lst">
+      <li>Memilih tipe data yang tepat untuk berbagai data bisnis beserta alasannya.</li>
+      <li>Melengkapi program perhitungan bisnis dengan konversi tipe dan pemformatan rupiah yang benar.</li>
+      <li>Menemukan jenis, letak, dan perbaikan kesalahan pada program Python yang bermasalah.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Manfaat</h2>
+    <ul class="lst">
+      <li><b>Bekal untuk Pertemuan 9–15.</b> Seluruh program pada pertemuan berikutnya bertumpu pada variabel, tipe data, dan masukan-keluaran.</li>
+      <li><b>Bersambung ke mata kuliah lanjutan.</b> Python dipakai pada Analitik Bisnis, <i>Business Intelligence</i>, dan Sains Data.</li>
+      <li><b>Mencegah kerusakan data.</b> Pemilihan tipe yang keliru merusak data pelanggan secara diam-diam, tanpa pesan kesalahan apa pun.</li>
+      <li><b>Membaca pesan kesalahan, bukan menebak.</b> Anda belajar menemukan baris penyebab dari pesan yang ditampilkan Python.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Skenario</h2>
+    <p>Anda membangun <b>sistem kasir sederhana</b> untuk Toko Kopi Nusantara. Data produk, harga, dan pelanggan harus disimpan dengan tipe yang tepat, lalu diolah menjadi tagihan yang terbaca rapi. Beberapa program yang sudah ditulis rekan Anda bermasalah dan harus diperbaiki.</p>
+    <div class="hint"><b>Soal disusun dari NIM Anda.</b> Nama produk, harga satuan, jumlah barang, dan nilai uji berbeda untuk setiap mahasiswa. Gunakan NIM Anda sendiri. Dosen akan memeriksa laporan Anda berdasarkan NIM tersebut.</div>
+  </div>
+
+  <div class="card">
+    <h2>5. Konsep yang Perlu Dipahami</h2>
+    <h3>Padanan pseudocode ke Python</h3>
+    <p><code>BACA</code> → <code>input()</code>, <code>TETAPKAN</code> dan <code>HITUNG</code> → <code>=</code>, <code>TAMPILKAN</code> → <code>print()</code>. <code>MULAI</code> dan <code>SELESAI</code> tidak punya padanan; program Python berjalan dari baris pertama sampai baris terakhir.</p>
+    <h3>Makna tanda =</h3>
+    <p>Tanda <code>=</code> bukan berarti "sama dengan", melainkan perintah memberi nilai: hitung ruas kanan, lalu simpan hasilnya ke nama di ruas kiri. Karena itu <code>x = x + 1</code> masuk akal dalam Python.</p>
+    <h3>Empat tipe data dasar</h3>
+    <p><code>int</code> (bilangan bulat), <code>float</code> (bilangan berkoma), <code>str</code> (teks), dan <code>bool</code> (benar atau salah). Python menetapkan tipe secara otomatis dari nilai yang diberikan.</p>
+    <h3>Kaidah input()</h3>
+    <p><code>input()</code> <b>selalu</b> menghasilkan teks, tanpa pengecualian. Masukan berupa angka wajib dikonversi dengan <code>int()</code> atau <code>float()</code> sebelum dihitung.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Langkah Praktikum</h2>
+    <ol class="steps">
+      <li><b>Masukkan NIM</b> pada kotak di bagian atas halaman, lalu klik <b>Mulai</b>.</li>
+      <li><b>Pilih tipe data</b> untuk enam data bisnis dan prediksikan hasil empat potongan kode.<br><button class="sec" data-go="t1">Buka Tab 1 →</button></li>
+      <li><b>Periksa penamaan variabel</b> dan telusuri makna tanda <code>=</code>.<br><button class="sec" data-go="t2">Buka Tab 2 →</button></li>
+      <li><b>Lengkapi tiga program</b> perhitungan bisnis, lalu tuliskan keluarannya.<br><button class="sec" data-go="t3">Buka Tab 3 →</button></li>
+      <li><b>Temukan kesalahan</b> pada empat program yang bermasalah.<br><button class="sec" data-go="t4">Buka Tab 4 →</button></li>
+      <li><b>Tulis ulang ketiga program Tab 3 di Google Colab</b> dan jalankan sungguhan. Bagian ini dikerjakan di luar aplikasi.</li>
+      <li><b>Rekap dan kumpulkan</b> laporan sesuai petunjuk di Tab 5.<br><button class="sec" data-go="rekap">Buka Tab 5 →</button></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>7. Perhatikan Sebelum Mulai</h2>
+    <ul class="lst">
+      <li><b>Kerjakan dengan menalar, bukan menebak.</b> Setiap penekanan tombol <b>Periksa</b> tercatat dan ikut tampil di rekap.</li>
+      <li><b>Pekerjaan tersimpan otomatis di peramban ini</b> untuk NIM yang Anda masukkan. Bila berganti komputer atau peramban, pekerjaan dimulai dari awal.</li>
+      <li><b>Angka boleh ditulis dengan atau tanpa titik ribuan</b>, misalnya <code>750000</code> atau <code>750.000</code>.</li>
+    </ul>
+    <div class="ok">Praktikum dinyatakan selesai bila seluruh latihan di Tab 1–4 berstatus tepat, <i>notebook</i> Colab sudah dibuat, dan laporan dikumpulkan sesuai petunjuk di Tab 5.</div>
+  </div>
+</div>
+
+<!-- ========== TAB 1 ========== -->
+<div class="tab" id="t-t1">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Bagian A: Pemilihan Tipe untuk Data Bisnis</h2>
+      <p>Pilih tipe data yang paling tepat untuk setiap data berikut. Kolom contoh menunjukkan nilai yang akan disimpan.</p>
+      <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="wide"><table id="t1a"></table></div>
+      <div class="row"><button class="act" id="t1a-cek">Periksa Bagian A</button></div>
+      <div id="t1a-hasil"></div>
+    </div>
+    <div class="card">
+      <h2>Bagian B: Prediksi Hasil Operasi</h2>
+      <p>Tuliskan apa yang ditampilkan Python bila setiap potongan kode berikut dijalankan. Tulis persis seperti yang muncul di layar.</p>
+      <div class="grid2" id="t1b"></div>
+      <div class="row"><button class="act" id="t1b-cek">Periksa Bagian B</button></div>
+      <div id="t1b-hasil"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 2 ========== -->
+<div class="tab" id="t-t2">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Bagian A: Sah atau Tidak Sah</h2>
+      <p>Tentukan apakah setiap nama berikut boleh dipakai sebagai nama variabel dalam Python.</p>
+      <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="wide"><table id="t2a"></table></div>
+      <div class="row"><button class="act" id="t2a-cek">Periksa Bagian A</button></div>
+      <div id="t2a-hasil"></div>
+    </div>
+    <div class="card">
+      <h2>Bagian B: Perbaikan Penamaan</h2>
+      <p>Ketiga nama berikut kurang baik, bahkan ada yang tidak sah. Tulis nama pengganti yang mengikuti kaidah penamaan Python: seluruhnya huruf kecil, antarkata dipisah garis bawah <code>_</code>, dan menjelaskan isinya.</p>
+      <p class="geser">Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="wide"><table id="t2b"></table></div>
+      <div class="row"><button class="act" id="t2b-cek">Periksa Bagian B</button></div>
+      <div id="t2b-hasil"></div>
+    </div>
+    <div class="card">
+      <h2>Bagian C: Makna Tanda =</h2>
+      <p>Telusuri (<i>tracing</i>) potongan kode berikut baris demi baris. Isi nilai <code>x</code> setelah setiap baris dijalankan.</p>
+      <div class="kode" id="t2c" style="max-width:460px"></div>
+      <div class="row"><button class="act" id="t2c-cek">Periksa Bagian C</button></div>
+      <div id="t2c-hasil"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 3 ========== -->
+<div class="tab" id="t-t3">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Lengkapi Program</h2>
+      <p>Isi setiap kotak pada kode agar program sesuai ketentuan bisnis, lalu tuliskan keluaran yang akan muncul di layar untuk data uji Anda.</p>
+      <ul class="lst">
+        <li><b>Tulis isi kotak saja</b>, misalnya nama fungsi atau rumus. Bagian kode lainnya sudah tersedia.</li>
+        <li><b>Huruf besar dan kecil dibedakan.</b> Tulis <code>harga</code>, bukan <code>Harga</code>.</li>
+        <li><b>Tanda kali dalam Python adalah <code>*</code></b>, bukan <code>x</code>. Tanda bagi adalah <code>/</code>.</li>
+        <li>Setelah ketiga program tepat, <b>tulis ulang di Google Colab</b> dan jalankan dengan data uji Anda (lihat Tab 5).</li>
+      </ul>
+    </div>
+    <div id="t3"></div>
+  </div>
+</div>
+
+<!-- ========== TAB 4 ========== -->
+<div class="tab" id="t-t4">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Deteksi Kesalahan</h2>
+      <p>Keempat program di bawah ini ditulis rekan Anda dan hasilnya bermasalah. Untuk setiap kasus:</p>
+      <ol class="lst">
+        <li><b>Baca layar</b> saat program dijalankan. Bila ada pesan kesalahan, mulailah dari baris terakhirnya.</li>
+        <li><b>Tentukan jenis kesalahannya.</b></li>
+        <li><b>Cari baris yang perlu diperbaiki.</b></li>
+        <li><b>Pilih perbaikan</b> yang tepat.</li>
+      </ol>
+      <p>Pesan kesalahan di sini ditampilkan ringkas. Di Colab tampilannya sedikit berbeda, tetapi baris terakhirnya sama.</p>
+    </div>
+    <div id="t4"></div>
+  </div>
+</div>
+
+<!-- ========== REKAP ========== -->
+<div class="tab" id="t-rekap">
+  <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Rekap disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
+  <div class="perlu-nim">
+    <div class="card">
+      <h2>Rekap Hasil</h2>
+      <div id="rekap"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Pengumpulan Tugas</h2>
+    <p>Kumpulkan <b>satu berkas PDF</b>. Dosen akan membuka soal dengan NIM Anda, jadi isi jawaban harus sesuai dengan soal untuk NIM tersebut.</p>
+    <h3>Tangkapan layar yang wajib dilampirkan</h3>
+    <p>Pastikan kotak <b>NIM di bagian atas halaman</b> ikut terlihat pada setiap tangkapan layar. Pintasan: <code>Win + Shift + S</code> (Windows) atau <code>Cmd + Shift + 4</code> (macOS).</p>
+    <div class="wide"><table class="ref">
+      <tr><th>Kode</th><th>Tab</th><th>Yang harus terlihat</th></tr>
+      <tr><td><b>SS1</b></td><td>1 · Tipe Data</td><td>Bagian A dan B beserta hasil pemeriksaannya</td></tr>
+      <tr><td><b>SS2</b></td><td>2 · Penamaan Variabel</td><td>Ketiga bagian beserta hasil pemeriksaannya</td></tr>
+      <tr><td><b>SS3</b></td><td>3 · Lengkapi Program</td><td>Ketiga program terisi beserta keluaran dan hasil pemeriksaannya (boleh lebih dari satu gambar)</td></tr>
+      <tr><td><b>SS4</b></td><td>4 · Deteksi Kesalahan</td><td>Keempat kasus beserta jawaban dan hasil pemeriksaannya (boleh lebih dari satu gambar)</td></tr>
+      <tr><td><b>SS5</b></td><td>5 · Rekap</td><td>Tabel rekap hasil</td></tr>
+    </table></div>
+    <h3>Berkas Google Colab</h3>
+    <ul class="lst">
+      <li><b>CL1</b>: tautan <i>notebook</i> Colab berisi ketiga program Tab 3 yang Anda tulis ulang dan jalankan sungguhan dengan data uji Anda, disertai tangkapan layar keluarannya.</li>
+    </ul>
+    <p>Buka <code>colab.research.google.com</code> → <i>New notebook</i> → ganti nama menjadi <code>P6_NIM_Nama</code> → klik <b>Bagikan</b> → ubah akses menjadi <b>Siapa saja yang memiliki link</b> → salin tautan.</p>
+    <h3>Pertanyaan analisis</h3>
+    <ol class="lst">
+      <li>Mengapa nomor telepon disimpan sebagai <code>str</code>? Apa yang terjadi pada nomor telepon dalam soal NIM Anda (Tab 1 Bagian A) bila disimpan sebagai <code>int</code>?</li>
+      <li>Kasus D pada Tab 4 tidak memicu pesan kesalahan apa pun. Mengapa kasus seperti ini justru lebih berbahaya daripada kasus yang memicu pesan?</li>
+      <li>Jalankan Program 1 Tab 3 di Colab <b>tanpa</b> <code>int()</code> dengan data uji Anda. Salin pesan yang muncul, lalu jelaskan mengapa hasilnya demikian.</li>
+    </ol>
+    <h3>Susunan laporan</h3>
+<pre>Nama berkas : P6_NIM_Nama.pdf          (contoh: P6_2401010001_Made_Adi.pdf)
+
+1. Identitas        : nama, NIM, kelas
+2. Tautan Colab     : CL1
+3. Tangkapan layar  : SS1–SS5, masing-masing diberi kode dan keterangan singkat
+4. Jawaban analisis : nomor 1–3</pre>
+    <h3>Langkah pengumpulan</h3>
+    <ol class="steps">
+      <li><b>Selesaikan Tab 1–4</b> dan pastikan statusnya di rekap. Bila ada yang belum tepat, tetap kumpulkan dan jelaskan kendalanya.</li>
+      <li><b>Ambil tangkapan layar</b> SS1–SS5 dengan NIM terlihat.</li>
+      <li><b>Buat <i>notebook</i> Colab</b> CL1 dan salin tautannya.</li>
+      <li><b>Jawab pertanyaan analisis</b> nomor 1–3.</li>
+      <li><b>Simpan sebagai PDF</b> dengan nama <code>P6_NIM_Nama.pdf</code>, lalu unggah ke LMS sebelum tenggat yang ditetapkan dosen.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== ACUAN ========== -->
+<div class="tab" id="t-acuan">
+  <div class="card">
+    <h2>Padanan Pseudocode ke Python</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Pseudocode</th><th>Python</th><th>Contoh</th></tr>
+      <tr><td><code>MULAI</code> / <code>SELESAI</code></td><td>Tidak ada padanan</td><td>Program berjalan dari baris pertama sampai terakhir</td></tr>
+      <tr><td><code>BACA harga</code></td><td><code>input()</code></td><td><code>harga = int(input("Harga: "))</code></td></tr>
+      <tr><td><code>TETAPKAN tarif = 11</code></td><td><code>=</code></td><td><code>tarif = 11</code></td></tr>
+      <tr><td><code>HITUNG total = harga * jumlah</code></td><td><code>=</code> dengan operator</td><td><code>total = harga * jumlah</code></td></tr>
+      <tr><td><code>TAMPILKAN total</code></td><td><code>print()</code></td><td><code>print("Total:", total)</code></td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Makna Tanda =</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Pernyataan</th><th>Dalam matematika</th><th>Dalam Python</th></tr>
+      <tr><td><code>x = 5</code></td><td>x sama dengan 5</td><td>Simpan nilai 5 ke dalam x</td></tr>
+      <tr><td><code>x = x + 1</code></td><td>Mustahil: tidak ada bilangan yang sama dengan dirinya sendiri ditambah 1</td><td>Ambil nilai x sekarang, tambah 1, lalu simpan kembali ke x</td></tr>
+    </table></div>
+    <p style="margin-top:9px">Untuk memeriksa apakah dua nilai sama, Python memakai tanda <code>==</code>, bukan <code>=</code>.</p>
+  </div>
+  <div class="card">
+    <h2>Aturan Penamaan Variabel</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Aturan</th><th>Sah</th><th>Tidak sah</th></tr>
+      <tr><td>Hanya huruf, angka, dan garis bawah <code>_</code></td><td><code>harga_satuan</code></td><td><code>harga-satuan</code>, <code>harga%</code></td></tr>
+      <tr><td>Tidak diawali angka</td><td><code>harga_2024</code></td><td><code>2harga</code></td></tr>
+      <tr><td>Tidak mengandung spasi</td><td><code>total_belanja</code></td><td><code>total belanja</code></td></tr>
+      <tr><td>Bukan kata kunci Python</td><td><code>kelas</code></td><td><code>class</code>, <code>for</code>, <code>if</code></td></tr>
+      <tr><td>Huruf besar dan kecil dibedakan</td><td colspan="2"><code>total</code> dan <code>Total</code> adalah dua nama yang berbeda</td></tr>
+    </table></div>
+    <p style="margin-top:9px">Nama fungsi bawaan seperti <code>print</code> dan <code>input</code> tidak ditolak Python, tetapi jangan dipakai sebagai nama variabel: setelah ditimpa, fungsinya tidak bisa dipakai lagi.</p>
+  </div>
+  <div class="card">
+    <h2>Kaidah Penamaan yang Baik</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Keliru</th><th>Benar</th><th>Alasan</th></tr>
+      <tr><td><code>x</code></td><td><code>total_belanja</code></td><td>Nama harus menjelaskan isinya</td></tr>
+      <tr><td><code>tb</code></td><td><code>total_belanja</code></td><td>Singkatan sulit dipahami orang lain</td></tr>
+      <tr><td><code>totalBelanja</code></td><td><code>total_belanja</code></td><td>Kebiasaan Python: huruf kecil, antarkata dipisah garis bawah (<i>snake_case</i>)</td></tr>
+      <tr><td><code>print</code></td><td><code>nilai_cetak</code></td><td>Menimpa fungsi bawaan <code>print()</code></td></tr>
+      <tr><td><code>harga satuan</code></td><td><code>harga_satuan</code></td><td>Spasi tidak diizinkan</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Empat Tipe Data Dasar</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Tipe</th><th>Isi</th><th>Contoh nilai</th><th>Contoh data bisnis</th></tr>
+      <tr><td><code>int</code></td><td>Bilangan bulat</td><td><code>45000</code>, <code>7</code></td><td>Stok gudang, jumlah karyawan</td></tr>
+      <tr><td><code>float</code></td><td>Bilangan berkoma</td><td><code>4.5</code>, <code>0.11</code></td><td>Rating produk, tarif pajak</td></tr>
+      <tr><td><code>str</code></td><td>Teks, diapit tanda kutip</td><td><code>"Gula Aren"</code>, <code>"80361"</code></td><td>Nama toko, kode pos</td></tr>
+      <tr><td><code>bool</code></td><td>Benar atau salah</td><td><code>True</code>, <code>False</code></td><td>Status lunas</td></tr>
+    </table></div>
+    <p style="margin-top:9px">Python menulis bilangan berkoma dengan titik: <code>4.5</code>, bukan <code>4,5</code>. Nilai yang diapit tanda kutip selalu bertipe <code>str</code>, termasuk <code>"100"</code>.</p>
+  </div>
+  <div class="card">
+    <h2>Pemilihan Tipe untuk Data Bisnis</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Data</th><th>Tipe</th><th>Alasan</th></tr>
+      <tr><td>Stok barang di gudang</td><td><code>int</code></td><td>Barang dihitung per buah, tidak pernah pecahan</td></tr>
+      <tr><td>Rating produk (1–5)</td><td><code>float</code></td><td>Dapat bernilai pecahan, misalnya 4.5</td></tr>
+      <tr><td>Nomor rekening bank</td><td><code>str</code></td><td>Tidak pernah dihitung; angka nol di depan harus tetap ada</td></tr>
+      <tr><td>Kode pos</td><td><code>str</code></td><td>Tidak pernah dihitung</td></tr>
+      <tr><td>Nama toko</td><td><code>str</code></td><td>Rangkaian karakter</td></tr>
+      <tr><td>Status pembayaran lunas</td><td><code>bool</code></td><td>Hanya bernilai benar atau salah</td></tr>
+    </table></div>
+    <div class="hint">Uji sederhana: apakah nilai ini akan pernah dijumlahkan, dikurangi, atau dikalikan? Bila tidak, simpan sebagai teks.</div>
+  </div>
+  <div class="card">
+    <h2>Pemformatan Keluaran Rupiah</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Penulisan</th><th>Hasil</th><th>Keterangan</th></tr>
+      <tr><td><code>f"Rp{total}"</code></td><td><code>Rp1250000</code></td><td>Tanpa pemisah ribuan (<code>total = 1250000</code>)</td></tr>
+      <tr><td><code>f"Rp{total:,}"</code></td><td><code>Rp1,250,000</code></td><td>Pemisah ribuan berupa koma</td></tr>
+      <tr><td><code>f"Rp{total:,}".replace(",", ".")</code></td><td><code>Rp1.250.000</code></td><td>Format Indonesia: koma diganti titik</td></tr>
+      <tr><td><code>f"{rata:.2f}"</code></td><td><code>4.50</code></td><td>Dua angka di belakang koma (<code>rata = 4.5</code>)</td></tr>
+      <tr><td><code>f"{nilai:,.2f}"</code></td><td><code>1,250,000.50</code></td><td>Pemisah ribuan dan dua angka desimal (<code>nilai = 1250000.5</code>)</td></tr>
+    </table></div>
+    <p style="margin-top:9px">Teks yang diawali huruf <code>f</code> disebut <i>f-string</i>. Hanya pada <i>f-string</i>, nama di dalam kurung kurawal <code>{ }</code> diganti dengan nilainya.</p>
+  </div>
+  <div class="card">
+    <h2>Empat Jenis Kesalahan</h2>
+    <div class="wide"><table class="ref">
+      <tr><th>Jenis</th><th>Penyebab lazim</th><th>Perbaikan</th></tr>
+      <tr><td><b>SyntaxError</b></td><td>Penulisan tidak sesuai aturan Python: kurung atau tanda kutip tidak berpasangan, nama variabel tidak sah</td><td>Lengkapi pasangan kurung dan tanda kutip; perbaiki nama</td></tr>
+      <tr><td><b>NameError</b></td><td>Nama dipakai sebelum diberi nilai, atau ejaannya berbeda, termasuk huruf besar-kecil</td><td>Samakan penulisan nama, atau beri nilai lebih dahulu</td></tr>
+      <tr><td><b>TypeError</b></td><td>Mengoperasikan tipe yang tidak cocok, misalnya <code>int + str</code></td><td>Konversi dengan <code>int()</code> atau <code>float()</code></td></tr>
+      <tr><td><b>ValueError</b></td><td>Nilai tidak dapat dikonversi, misalnya <code>int("12.5")</code></td><td>Gunakan fungsi konversi yang sesuai, misalnya <code>float()</code></td></tr>
+    </table></div>
+    <p style="margin-top:9px"><b>Cara membaca pesan kesalahan:</b> lihat baris terakhirnya untuk jenis dan penjelasan kesalahan, lalu lihat <code>line N</code> untuk nomor barisnya.</p>
+    <div class="hint">Kesalahan logika, misalnya lupa huruf <code>f</code> atau menjumlahkan dua teks, tidak memicu pesan apa pun. Program berjalan sampai selesai, tetapi hasilnya keliru. Hanya pembandingan dengan perhitungan manual yang dapat mengungkapnya.</div>
+  </div>
+</div>
+
+<footer>Praktikum ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · v1.0</footer>
+</div>
+
+<script>
+/* ============ UTIL ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const punya=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+const ribuan=(n,p)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,p);
+function angka(v){
+  let s=String(v??'').trim().replace(/^["']+|["']+$/g,'').trim().replace(/^rp\.?\s*/i,'');
+  if(/^\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,'');
+  return /^-?\d+(\.0+)?$/.test(s)?parseFloat(s):NaN;
+}
+
+/* ============ PRNG (benih dari NIM) ============ */
+let _s=1;
+function benih(t){let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}_s=h||1}
+function rnd(){_s=(Math.imul(_s,1664525)+1013904223)>>>0;return _s/4294967296}
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1))}
+function acak(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* ============ PENCOCOKAN ============ */
+function sidik(t){let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
+const SDK=new Set('krxtlh 17q9ztl 1vjj7ud q36xl3 1yx28fj tni0j6 3v3xbs a07beg 2w2d48 1b2w6iq lec1n8 1ven7xf 1nodq1f 25zi8o 17bt3xj 9zw39n 1ac59vh o9dmza 1qmkg8f 13soyqo ae5qxa 19doqp9 x4manl wumoym boihzq 17y6k7j 1fkfj4c qgdt5m 144gdl 186nao8 xw4pmn'.split(' '));
+const cocok=(k,v)=>SDK.has(sidik(k+'|'+v));
+
+/* ============ SOAL ============ */
+const PRODUK=['Kopi Arabika','Teh Hijau','Gula Aren','Madu Hutan','Kopi Robusta','Teh Melati','Cokelat Bubuk','Jahe Merah'];
+const TIPE=['int','float','str','bool'];
+const DATA1=[
+  {id:'jumlah',l:'Jumlah barang dipesan',c:S=>S.j1,why:'Jumlah barang tidak mungkin bernilai pecahan.'},
+  {id:'harga',l:'Harga satuan dalam rupiah',c:S=>S.h1,why:'Rupiah tidak lazim menggunakan pecahan.'},
+  {id:'telepon',l:'Nomor telepon pelanggan',c:S=>S.tel,why:'Angka nol di depan hilang bila disimpan sebagai bilangan, dan nomor telepon tidak pernah dihitung.'},
+  {id:'kode',l:'Kode produk',c:S=>S.kode,why:'Kode produk memuat huruf dan tanda hubung.'},
+  {id:'diskon',l:'Persentase diskon',c:S=>S.disk,why:'Persentase diskon dapat bernilai pecahan.'},
+  {id:'premium',l:'Status anggota premium',c:()=>'ya atau tidak',why:'Status keanggotaan hanya bernilai benar atau salah.'}
+];
+const NAMA=[
+  {n:'harga_satuan',why:'Huruf kecil dan garis bawah boleh dipakai dalam nama variabel.'},
+  {n:'2harga',why:'Nama variabel tidak boleh diawali angka.'},
+  {n:'total belanja',why:'Nama variabel tidak boleh mengandung spasi.'},
+  {n:'harga_2024',why:'Angka boleh dipakai dalam nama variabel, asalkan tidak di awal.'},
+  {n:'harga-satuan',why:'Tanda hubung <code>-</code> dibaca Python sebagai tanda kurang, jadi tidak boleh dipakai dalam nama.'},
+  {n:'nama_pelanggan',why:'Beberapa kata yang dipisah garis bawah membentuk nama yang sah.'}
+];
+const BURUK=[
+  {n:'x',isi:'nama pelanggan',kata:['nama','pelanggan']},
+  {n:'totalBelanja',isi:'total belanja; gaya penulisannya belum sesuai kebiasaan Python',kata:['total','belanja']},
+  {n:'harga satuan',isi:'harga satuan',kata:['harga','satuan']}
+];
+const TERPAKAI='False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield print input int float str bool type len sum max min round list dict'.split(' ');
+
+function buatSoal(nim){
+  benih('alg6:'+nim);
+  const S={},h=()=>ri(3,50)*5000,j=()=>ri(3,12);
+  S.prd=acak(PRODUK);
+  S.h1=h();S.j1=j();
+  S.tel='081'+Array.from({length:9},()=>ri(0,9)).join('');
+  S.kode='PRD-0'+String(ri(0,999)).padStart(3,'0');
+  S.disk=ri(5,25)+'.5';
+  S.hb=h();S.jb=j();
+  S.x0=ri(2,9);
+  S.hp1=h();S.jp1=j();
+  S.hp2=h();S.jp2=j();
+  S.tot=ri(1050,9950)*1000;
+  S.hk=[h(),h(),h(),h()];S.jk=j();S.ong=ri(2,8)*5000;
+  S.u1=acak(DATA1.map((_,i)=>i));
+  S.u2=acak(NAMA.map((_,i)=>i));
+  S.u4=[0,1,2,3].map(()=>acak([0,1,2]));
+  return S;
+}
+
+/* ============ STATE ============ */
+let NIM=null,S=null,ST=null;
+const stBaru=()=>({t1a:{},t1b:['','','',''],t2a:{},t2b:['','',''],t2c:['','',''],
+  t3:{p1:{b:['','',''],o:['']},p2:{b:['','',''],o:['','','']},p3:{b:['',''],o:['','']}},
+  t4:[0,1,2,3].map(()=>({jenis:'',baris:'',fix:''})),att:{},ok:{}});
+function simpan(){try{localStorage.setItem('alg6:'+NIM,JSON.stringify(ST))}catch(e){}}
+function muat(n){try{return JSON.parse(localStorage.getItem('alg6:'+n))}catch(e){return null}}
+function catat(k,ok){ST.att[k]=(ST.att[k]||0)+1;ST.ok[k]=ok;simpan();renderRekap()}
+/* setiap isian membawa data-s berisi jalur penyimpanannya, misalnya "t3.p1.b.0" */
+function isiState(e){
+  const p=(e.target.dataset.s||'').split('.');if(!p[0]||!ST)return;
+  let o=ST;for(let i=0;i<p.length-1;i++)o=o[p[i]];
+  o[p[p.length-1]]=e.target.value;simpan();
+}
+document.addEventListener('input',isiState);
+document.addEventListener('change',isiState);
+
+/* ============ UMPAN BALIK ============ */
+function tanda(id,ok,why){const el=$(id);if(!el)return;el.className='tanda '+(ok?'y':'n');el.innerHTML=ok?'✓ tepat':'✗ '+why}
+const warnai=(id,ok)=>{const el=$(id);if(el){el.classList.remove('y','n');el.classList.add(ok?'y':'n')}};
+const ringkas=(k,r,pesanOk)=>{const n=r.filter(Boolean).length;
+  return (n===r.length?`<div class="ok"><b>Tepat.</b> ${pesanOk}</div>`:`<div class="gagal">${n} dari ${r.length} butir sudah tepat. Perbaiki butir yang bertanda ✗.</div>`)+`<p style="font-size:12px">Pemeriksaan ke-${ST.att[k]}.</p>`};
+const daftarButir=r=>`<ul class="butir">${r.map(x=>`<li class="${x.ok?'y':'n'}"><b>${x.ok?'✓':'✗'} ${x.l}</b>${x.ok?'':' — '+x.why}</li>`).join('')}</ul>`;
+
+/* ============ NAVIGASI & NIM ============ */
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=document.querySelector('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+}
+$$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+$$('[data-go]').forEach(b=>b.onclick=()=>goTab(b.dataset.go));
+
+function renderNim(){
+  const bar=$('#nimbar');
+  if(!NIM){
+    document.body.classList.add('tanpa-nim');
+    bar.innerHTML=`<span>Masukkan NIM untuk memulai:</span><input type="text" id="nim-in" inputmode="numeric" placeholder="contoh: 2401010001" style="width:180px"><button class="act" id="nim-ok">Mulai</button><span class="muted" id="nim-msg"></span>`;
+    const go=()=>{const v=$('#nim-in').value.trim();if(!/^\d{6,15}$/.test(v)){$('#nim-msg').textContent='NIM harus berupa 6–15 digit angka.';return}pasangNim(v)};
+    $('#nim-ok').onclick=go;$('#nim-in').onkeydown=e=>{if(e.key==='Enter')go()};
+    return;
+  }
+  document.body.classList.remove('tanpa-nim');
+  bar.innerHTML=`<span>NIM <b style="font-family:var(--mono)">${NIM}</b></span><span class="muted">Soal pada halaman ini disusun dari NIM tersebut.</span><span style="flex:1"></span><button class="sec" id="nim-ganti">Ganti NIM</button>`;
+  $('#nim-ganti').onclick=()=>{if(!confirm('Ganti NIM? Pekerjaan untuk NIM ini tetap tersimpan di peramban ini.'))return;NIM=null;try{localStorage.removeItem('alg6:nim')}catch(e){};renderNim()};
+}
+function pasangNim(n){
+  NIM=n;S=buatSoal(n);ST=Object.assign(stBaru(),muat(n)||{});
+  try{localStorage.setItem('alg6:nim',n)}catch(e){}
+  renderNim();renderT1();renderT2();renderT3();renderT4();renderRekap();
+}
+
+/* ============ KODE ============ */
+/* satu baris kode = larik bagian; teks biasa, {s:jalur,w:lebar} untuk kotak isian, {cm:teks} untuk komentar */
+function barisKode(baris,bernomor=true){
+  return baris.map((b,i)=>`<div class="ln">${bernomor?`<span class="no">${i+1}</span>`:''}`+
+    (typeof b==='string'?[b]:b).map(x=>typeof x==='string'?`<span>${esc(x)}</span>`
+      :x.cm?`<span class="cm">${esc(x.cm)}</span>`
+      :`<input type="text" class="isi" id="i-${x.s.replace(/\./g,'-')}" data-s="${x.s}" value="${esc(ambil(x.s))}" style="width:${x.w+2}ch" autocomplete="off" autocapitalize="off" spellcheck="false">`).join('')+
+    '</div>').join('');
+}
+function ambil(p){let o=ST;for(const k of p.split('.'))o=o?.[k];return o??''}
+
+/* ============ TAB 1 ============ */
+const KODE1B=[
+  {kode:()=>['a = 100','b = 200','print(a + b)'],f:()=>100+200,why:'<code>a</code> dan <code>b</code> tidak diapit tanda kutip, jadi keduanya bilangan dan tanda <code>+</code> menjumlahkan.'},
+  {kode:()=>['c = "100"','d = "200"','print(c + d)'],f:()=>'100'+'200',why:'<code>c</code> dan <code>d</code> diapit tanda kutip sehingga bertipe <code>str</code>. Tanda <code>+</code> pada teks menyambung, bukan menjumlahkan.'},
+  {kode:S=>[`harga = ${S.hb}`,`jumlah = ${S.jb}`,'print(harga * jumlah)'],f:S=>S.hb*S.jb,why:'Kedua nilai bertipe <code>int</code>, dan tanda <code>*</code> mengalikan.'},
+  {kode:S=>[`diskon = ${S.disk}`,'print(type(diskon))'],f:null,why:'<code>type()</code> menampilkan tipe sebuah nilai, bukan nilainya. Perhatikan apakah nilai diskon memuat titik desimal.'}
+];
+function renderT1(){
+  $('#t1a').innerHTML='<tr><th>#</th><th>Data</th><th>Contoh nilai</th><th>Tipe</th><th>Hasil</th></tr>'+
+    S.u1.map((di,i)=>{const d=DATA1[di],v=ST.t1a[d.id]||'';return `<tr><td>${i+1}</td><td>${d.l}</td><td><code>${esc(d.c(S))}</code></td>
+    <td><select data-s="t1a.${d.id}"><option value="">pilih</option>${TIPE.map(t=>`<option${v===t?' selected':''}>${t}</option>`).join('')}</select></td><td><span class="tanda" id="t1a-${d.id}"></span></td></tr>`}).join('');
+  $('#t1b').innerHTML=KODE1B.map((k,i)=>`<div class="soal" style="border-top:none"><label>Kode ${i+1}</label><div class="kode">${barisKode(k.kode(S))}</div>
+    <div class="row" style="margin-bottom:0"><span style="font-size:12.5px;color:var(--muted)">Keluaran:</span><input type="text" data-s="t1b.${i}" value="${esc(ST.t1b[i])}" style="font-family:var(--mono);width:190px" autocomplete="off" spellcheck="false"></div>
+    <div class="tanda" id="t1b-${i}" style="margin:6px 0 0"></div></div>`).join('');
+  $('#t1a-hasil').innerHTML=$('#t1b-hasil').innerHTML='';
+}
+$('#t1a-cek').onclick=()=>{
+  const r=DATA1.map(d=>{const ok=cocok('t1a:'+d.id,ST.t1a[d.id]||'');tanda('#t1a-'+d.id,ok,ST.t1a[d.id]?d.why:'Belum dipilih.');return ok});
+  const ok=r.every(Boolean);catat('t1a',ok);
+  $('#t1a-hasil').innerHTML=ringkas('t1a',r,'Keenam data sudah disimpan dengan tipe yang tepat.');
+};
+function namaTipe(v){
+  const s=String(v||'').trim().replace(/\s+/g,'');
+  const m=s.match(/^<class(['"])(\w+)\1>$/);return m?m[2]:s.replace(/^["']|["']$/g,'');
+}
+$('#t1b-cek').onclick=()=>{
+  const r=KODE1B.map((k,i)=>{
+    const v=String(ST.t1b[i]||'').trim();
+    const ok=k.f?angka(v)===+k.f(S):cocok('t1b:'+(i+1),namaTipe(v));
+    tanda('#t1b-'+i,ok,v?k.why:'Belum diisi.');return ok;
+  });
+  const ok=r.every(Boolean);catat('t1b',ok);
+  $('#t1b-hasil').innerHTML=ringkas('t1b',r,'Keempat prediksi sesuai dengan keluaran Python.');
+};
+
+/* ============ TAB 2 ============ */
+function renderT2(){
+  $('#t2a').innerHTML='<tr><th>#</th><th>Nama variabel</th><th>Penilaian</th><th>Hasil</th></tr>'+
+    S.u2.map((ni,i)=>{const n=NAMA[ni].n,v=ST.t2a[n]||'';return `<tr><td>${i+1}</td><td><code>${esc(n)}</code></td>
+    <td><select data-s="t2a.${esc(n)}"><option value="">pilih</option><option value="sah"${v==='sah'?' selected':''}>Sah</option><option value="tidak"${v==='tidak'?' selected':''}>Tidak sah</option></select></td><td><span class="tanda" id="t2a-${ni}"></span></td></tr>`}).join('');
+  $('#t2b').innerHTML='<tr><th>Nama buruk</th><th>Isinya</th><th>Nama pengganti</th><th>Hasil</th></tr>'+
+    BURUK.map((b,i)=>`<tr><td><code>${esc(b.n)}</code></td><td>${esc(b.isi)}</td><td><input type="text" data-s="t2b.${i}" value="${esc(ST.t2b[i])}" style="font-family:var(--mono);width:170px" autocomplete="off" autocapitalize="off" spellcheck="false"></td><td><span class="tanda" id="t2b-${i}"></span></td></tr>`).join('');
+  const x=i=>({s:'t2c.'+i,w:4});
+  $('#t2c').innerHTML=barisKode([[`x = ${S.x0}        `,{cm:'# x = '},x(0)],['x = x + 1    ',{cm:'# x = '},x(1)],['x = x * 2    ',{cm:'# x = '},x(2)]]);
+  $('#t2a-hasil').innerHTML=$('#t2b-hasil').innerHTML=$('#t2c-hasil').innerHTML='';
+}
+$('#t2a-cek').onclick=()=>{
+  const r=NAMA.map((d,ni)=>{const v=ST.t2a[d.n]||'',ok=cocok('t2a:'+d.n,v);tanda('#t2a-'+ni,ok,v?d.why:'Belum dipilih.');return ok});
+  const ok=r.every(Boolean);catat('t2a',ok);
+  $('#t2a-hasil').innerHTML=ringkas('t2a',r,'Seluruh nama sudah dinilai dengan benar.');
+};
+function cekNama(b,v){
+  const s=String(v||'').trim();
+  if(!s) return 'Belum diisi.';
+  if(/\s/.test(s)) return 'Nama variabel tidak boleh mengandung spasi. Pisahkan kata dengan garis bawah <code>_</code>.';
+  if(/^\d/.test(s)) return 'Nama variabel tidak boleh diawali angka.';
+  if(/\W/.test(s)) return 'Hanya huruf, angka, dan garis bawah <code>_</code> yang diizinkan.';
+  if(/[A-Z]/.test(s)) return 'Kebiasaan Python: seluruhnya huruf kecil.';
+  if(TERPAKAI.includes(s)) return 'Nama ini sudah dipakai Python. Pilih nama lain.';
+  if(s.length<5) return 'Terlalu singkat. Gunakan nama yang menjelaskan isinya.';
+  if(!s.includes('_')) return 'Isinya terdiri atas lebih dari satu kata. Pisahkan antarkata dengan garis bawah <code>_</code>.';
+  if(!b.kata.some(k=>s.includes(k))) return `Nama belum menggambarkan isinya (${esc(b.isi.split(';')[0])}).`;
+  return '';
+}
+$('#t2b-cek').onclick=()=>{
+  const r=BURUK.map((b,i)=>{const why=cekNama(b,ST.t2b[i]);tanda('#t2b-'+i,!why,why);return !why});
+  const ok=r.every(Boolean);catat('t2b',ok);
+  $('#t2b-hasil').innerHTML=ringkas('t2b',r,'Ketiga nama pengganti mengikuti kaidah penamaan Python.');
+};
+$('#t2c-cek').onclick=()=>{
+  const e=[S.x0,S.x0+1,(S.x0+1)*2];
+  const why=['Baris pertama memberi <code>x</code> nilai awalnya.','Ambil nilai <code>x</code> saat ini, tambah 1, lalu simpan kembali ke <code>x</code>.','Gunakan nilai <code>x</code> dari baris sebelumnya, bukan nilai awalnya.'];
+  const r=e.map((n,i)=>{const ok=angka(ST.t2c[i])===n;warnai('#i-t2c-'+i,ok);return {l:`Baris ${i+1}`,ok,why:ST.t2c[i]?why[i]:'Belum diisi.'}});
+  const ok=r.every(x=>x.ok);catat('t2c',ok);
+  $('#t2c-hasil').innerHTML=daftarButir(r)+ringkas('t2c',r.map(x=>x.ok),'Nilai <code>x</code> setelah setiap baris sudah benar.')+
+    '<div class="hint">Pola <code>x = x + 1</code> inilah yang akan dipakai sebagai penampung dan pencacah pada Pertemuan 11.</div>';
+};
+
+/* ============ TAB 3 ============ */
+/* Pemeriksa rumus: menghitung ekspresi gaya Python dengan beberapa kumpulan nilai uji */
+const FUNGSI={int:Math.trunc,float:x=>x,round:Math.round,abs:Math.abs};
+function nilaiRumus(src,ctx){
+  const tk=[];let i=0;
+  while(i<src.length){
+    const r=src.slice(i),m=r.match(/^\s+/)||r.match(/^(\d+\.?\d*|\.\d+)/)||r.match(/^[A-Za-z_]\w*/)||r.match(/^(\*\*|\/\/|[-+*\/%()])/);
+    if(!m) throw {e:'sintaks'};
+    if(m[0].trim()) tk.push(m[0]);
+    i+=m[0].length;
+  }
+  let p=0;const lihat=()=>tk[p],maju=()=>tk[p++];
+  function jumlah(){let a=kali();while(lihat()==='+'||lihat()==='-'){const o=maju(),b=kali();a=o==='+'?a+b:a-b}return a}
+  function kali(){let a=tanda1();while(['*','/','//','%'].includes(lihat())){const o=maju(),b=tanda1();
+    if(o!=='*'&&b===0) throw {e:'nol'};
+    a=o==='*'?a*b:o==='/'?a/b:o==='//'?Math.floor(a/b):((a%b)+b)%b}return a}
+  function tanda1(){if(lihat()==='-'){maju();return -tanda1()}if(lihat()==='+'){maju();return tanda1()}return pangkat()}
+  function pangkat(){const a=atom();if(lihat()==='**'){maju();return a**tanda1()}return a}
+  function atom(){
+    const t=maju();
+    if(t===undefined) throw {e:'sintaks'};
+    if(t==='('){const v=jumlah();if(maju()!==')') throw {e:'sintaks'};return v}
+    if(/^[\d.]/.test(t)) return parseFloat(t);
+    if(/^[A-Za-z_]/.test(t)){
+      if(lihat()==='('){maju();if(!punya(FUNGSI,t)) throw {e:'fungsi',n:t};const v=jumlah();if(maju()!==')') throw {e:'sintaks'};return FUNGSI[t](v)}
+      if(!punya(ctx,t)) throw {e:'nama',n:t};
+      return ctx[t];
+    }
+    throw {e:'sintaks'};
+  }
+  const v=jumlah();if(p<tk.length) throw {e:'sintaks'};return v;
+}
+/* nilai uji tambahan; subtotal × 11 selalu habis dibagi 100 agar int() atau round() pada pajak tetap diterima */
+const DUNIA=[{harga:37000,jumlah:3},{harga:12300,jumlah:7},{harga:900,jumlah:13}];
+const CEK={
+  konv(B,v){
+    const s=String(v||'').trim().replace(/\(\s*\)$/,'');
+    if(!s) return 'Kotak masih kosong.';
+    if(cocok(B.tag,s)) return '';
+    if(cocok(B.tag,s.toLowerCase())) return 'Python membedakan huruf besar dan kecil.';
+    if(s==='float') return 'Harga dan jumlah barang tidak pernah berkoma. Dengan <code>float</code>, total tercetak dengan akhiran <code>.0</code>.';
+    if(s==='str') return 'Nilai dari <code>input()</code> sudah berupa teks. Teks tidak dapat dikalikan dengan teks.';
+    return 'Tulis nama fungsi yang mengubah teks menjadi bilangan yang sesuai dengan datanya.';
+  },
+  rumus(B,v,P){
+    const s=String(v||'').trim();
+    if(!s) return 'Kotak masih kosong.';
+    if(/×|\sx\s/.test(s)) return 'Tanda kali dalam Python adalah <code>*</code>, bukan <code>x</code>.';
+    if(s.includes('=')) return `Tulis ruas kanannya saja; bagian <code>${B.v} =</code> sudah tersedia.`;
+    const hasil=[];
+    try{
+      for(const w of [...DUNIA,P.uji(S)]){const d=P.dunia(w),ctx={};B.ada.forEach(k=>ctx[k]=d[k]);hasil.push([nilaiRumus(s,ctx),d[B.v]])}
+    }catch(x){
+      if(x.e==='nama') return P.semua.includes(x.n)?`<code>${esc(x.n)}</code> belum memiliki nilai pada baris ini.`:`Nama <code>${esc(x.n)}</code> tidak ada pada program ini. Periksa ejaannya; huruf besar dan kecil dibedakan.`;
+      if(x.e==='nol') return 'Pembagian dengan nol tidak diizinkan.';
+      if(x.e==='fungsi') return `Fungsi <code>${esc(x.n)}()</code> tidak diperlukan di sini.`;
+      if(s.includes('%')) return 'Dalam Python, tanda <code>%</code> bukan persen. Tulis persen sebagai pembagian dengan 100.';
+      return 'Penulisan belum sah menurut Python. Gunakan nama variabel, angka, kurung, dan tanda <code>+ - * /</code>.';
+    }
+    if(!/[A-Za-z_]/.test(s)) return 'Gunakan nama variabel, bukan angka hasil hitungan. Program harus benar untuk masukan berapa pun.';
+    return hasil.every(([a,b])=>Math.abs(a-b)<=1e-6*Math.max(1,Math.abs(b)))?'':B.why;
+  },
+  format(B,v){
+    const s=String(v||'').trim();
+    if(!s) return 'Kotak masih kosong.';
+    if(cocok(B.tag,s)) return '';
+    if(s.startsWith(':')) return 'Titik dua sudah tersedia; tulis isi sesudahnya saja.';
+    if(/f$/.test(s)) return 'Format ini mengatur angka desimal, bukan pemisah ribuan.';
+    return 'Lihat tab Acuan bagian Pemformatan Keluaran Rupiah.';
+  },
+  kutip(B,v){
+    const s=String(v||'').trim();
+    if(!s) return 'Kotak masih kosong.';
+    const m=s.match(/^(["'])(.*)\1$/);
+    if(!m) return 'Teks dalam Python harus diapit tanda kutip.';
+    if(cocok(B.tag,m[2])) return '';
+    if(m[2]===',') return 'Mengganti koma dengan koma tidak mengubah apa pun.';
+    return 'Format Indonesia memakai tanda lain sebagai pemisah ribuan.';
+  }
+};
+const PROG=[
+  {id:'p1',judul:'Program 1 — Total Belanja',
+   aturan:S=>`Pelanggan membeli <b>${esc(S.prd[0])}</b>. Kasir memasukkan harga satuan dan jumlah barang, lalu program menampilkan total belanja, yaitu harga satuan dikali jumlah barang.`,
+   semua:['harga','jumlah','total'],
+   dunia:w=>({harga:w.harga,jumlah:w.jumlah,total:w.harga*w.jumlah}),
+   uji:S=>({harga:S.hp1,jumlah:S.jp1}),
+   kode:b=>[['harga  = ',b(0,5),'(input("Harga satuan: "))'],['jumlah = ',b(1,5),'(input("Jumlah barang: "))'],'',['total = ',b(2,18)],'','print("Total belanja:", total)'],
+   isi:[{k:'konv',tag:'t3p1:0',ln:1},{k:'konv',tag:'t3p1:1',ln:2},{k:'rumus',ln:4,v:'total',ada:['harga','jumlah'],why:'Total belanja adalah harga satuan dikali jumlah barang.'}],
+   layar:(S,o)=>[`Harga satuan: ${S.hp1}`,`Jumlah barang: ${S.jp1}`,['Total belanja: ',o(0,12)]],
+   keluar:[{l:'Total belanja',f:S=>S.hp1*S.jp1,why:(S,v)=>v===S.hp1+''+S.jp1?'Itu hasil menyambung teks. Setelah dikonversi, keduanya dikalikan sebagai bilangan.':'Hitung harga satuan dikali jumlah barang pada data uji.'}]},
+  {id:'p2',judul:'Program 2 — Tagihan dengan Pajak',
+   aturan:S=>`Pelanggan membeli <b>${esc(S.prd[1])}</b>. Toko mengenakan pajak 11% dari subtotal. Lengkapi rumus subtotal, pajak, dan total tagihan. Program ini memakai <i>f-string</i>: teks yang diawali huruf <code>f</code>, sehingga nama di dalam kurung kurawal <code>{ }</code> diganti dengan nilainya.`,
+   semua:['harga','jumlah','subtotal','pajak','total'],
+   dunia:w=>{const s=w.harga*w.jumlah,p=s*11/100;return {harga:w.harga,jumlah:w.jumlah,subtotal:s,pajak:p,total:s+p}},
+   uji:S=>({harga:S.hp2,jumlah:S.jp2}),
+   kode:b=>['harga  = int(input("Harga satuan: "))','jumlah = int(input("Jumlah barang: "))','',['subtotal = ',b(0,18)],['pajak    = ',b(1,18)],['total    = ',b(2,18)],'','print(f"Subtotal : Rp{subtotal}")','print(f"Pajak    : Rp{pajak}")','print(f"Total    : Rp{total}")'],
+   isi:[{k:'rumus',ln:4,v:'subtotal',ada:['harga','jumlah'],why:'Subtotal adalah harga satuan dikali jumlah barang.'},
+        {k:'rumus',ln:5,v:'pajak',ada:['harga','jumlah','subtotal'],why:'Pajak adalah 11% dari subtotal.'},
+        {k:'rumus',ln:6,v:'total',ada:['harga','jumlah','subtotal','pajak'],why:'Total tagihan adalah subtotal ditambah pajak.'}],
+   layar:(S,o)=>[`Harga satuan: ${S.hp2}`,`Jumlah barang: ${S.jp2}`,['Subtotal : Rp',o(0,12)],['Pajak    : Rp',o(1,12)],['Total    : Rp',o(2,12)]],
+   keluar:[{l:'Subtotal',f:S=>S.hp2*S.jp2,why:()=>'Hitung harga satuan dikali jumlah barang pada data uji.'},
+           {l:'Pajak',f:S=>S.hp2*S.jp2*11/100,why:()=>'Hitung 11% dari subtotal.'},
+           {l:'Total',f:S=>S.hp2*S.jp2*111/100,why:()=>'Jumlahkan subtotal dan pajak.'}],
+   catatan:'Bila rumus pajak memakai <code>/</code>, Colab mencetak pajak dan total dengan akhiran <code>.0</code>, misalnya <code>Rp34650.0</code>, karena hasil pembagian selalu bertipe <code>float</code>. Di sini kedua penulisan diterima.'},
+  {id:'p3',judul:'Program 3 — Pemformatan Rupiah',
+   aturan:()=>'Total tagihan harus tampil dengan pemisah ribuan. Baris pertama memakai pemisah bawaan Python, lalu baris kedua mengubahnya ke format Indonesia. Pada program ini, tulis keluaran persis seperti tampilan Python, termasuk tanda koma atau titiknya.',
+   semua:['total'],
+   kode:(b,S)=>[`total = ${S.tot}`,'',['print(f"Total: Rp{total:',b(0,4),'}")'],['print(f"Total: Rp{total:,}".replace(",", ',b(1,5),'))']],
+   isi:[{k:'format',tag:'t3p3:0',ln:3},{k:'kutip',tag:'t3p3:1',ln:4}],
+   layar:(S,o)=>[['Total: Rp',o(0,14)],['Total: Rp',o(1,14)]],
+   keluar:[{l:'Baris pertama',persis:true,f:S=>ribuan(S.tot,','),why:(S,v)=>angka(v)===S.tot?'Format <code>:,</code> menambahkan pemisah ribuan berupa koma.':'Periksa kembali angka dan tanda pemisahnya.'},
+           {l:'Baris kedua',persis:true,f:S=>ribuan(S.tot,'.'),why:(S,v)=>v.includes(',')?'<code>replace()</code> mengganti setiap koma dengan tanda lain.':'Periksa kembali angka dan tanda pemisahnya.'}]}
+];
+function renderT3(){
+  $('#t3').innerHTML=PROG.map(P=>{
+    const b=(i,w)=>({s:`t3.${P.id}.b.${i}`,w}),o=(i,w)=>({s:`t3.${P.id}.o.${i}`,w}),u=P.uji?P.uji(S):null;
+    return `<div class="card"><h2>${P.judul}</h2><p>${P.aturan(S)}</p>
+    <div class="grid2"><div><div class="label">Kode</div><div class="kode">${barisKode(P.kode(b,S))}</div></div>
+    <div>${u?`<div class="label">Data uji</div><div class="uji">harga satuan = <b>${u.harga}</b> · jumlah barang = <b>${u.jumlah}</b></div>`:''}
+    <div class="label">Keluaran yang diharapkan</div><div class="kode konsol">${barisKode(P.layar(S,o),false)}</div></div></div>
+    <div class="row"><button class="act" data-cek="${P.id}">Periksa ${P.judul.split(' — ')[0]}</button></div><div id="${P.id}-hasil"></div></div>`;
+  }).join('');
+}
+$('#t3').onclick=e=>{
+  const btn=e.target.closest('[data-cek]');if(!btn)return;
+  const P=PROG.find(x=>x.id===btn.dataset.cek),A=ST.t3[P.id],r=[];
+  P.isi.forEach((B,i)=>{const why=CEK[B.k](B,A.b[i],P);warnai(`#i-t3-${P.id}-b-${i}`,!why);r.push({l:`Kotak pada baris ${B.ln}`,ok:!why,why})});
+  P.keluar.forEach((K,i)=>{
+    const v=String(A.o[i]||'').trim().replace(/\s+/g,''),e=K.f(S);
+    const ok=K.persis?v.replace(/^rp/i,'')===e:angka(v)===e;
+    warnai(`#i-t3-${P.id}-o-${i}`,ok);r.push({l:`Keluaran ${K.l}`,ok,why:v?K.why(S,v):'Belum diisi.'});
+  });
+  const ok=r.every(x=>x.ok);catat(P.id,ok);
+  $(`#${P.id}-hasil`).innerHTML=daftarButir(r)+ringkas(P.id,r.map(x=>x.ok),'Kode dan keluarannya sudah sesuai ketentuan. Tulis ulang program ini di Colab dan jalankan dengan data uji yang sama.')+(P.catatan?`<div class="hint">${P.catatan}</div>`:'');
+};
+
+/* ============ TAB 4 ============ */
+const JENIS=[['SyntaxError','SyntaxError'],['NameError','NameError'],['TypeError','TypeError'],['ValueError','ValueError'],['tanpa','Tidak memicu pesan kesalahan']];
+const BACA='Baca baris terakhir pesan kesalahan: kata sebelum titik dua adalah jenis kesalahannya.';
+const KASUS=[
+  {nama:'Kasus A — Mencetak Total Belanja',ket:'Program menghitung total belanja dari harga satuan dan jumlah barang.',
+   kode:['harga  = int(input("Harga satuan: "))','jumlah = int(input("Jumlah barang: "))','total_belanja = harga * jumlah','print("Total belanja:", Total_Belanja)'],
+   layar:S=>[`Harga satuan: ${S.hk[0]}`,`Jumlah barang: ${S.jk}`,'Traceback (most recent call last):','  File "main.py", line 4, in <module>','    print("Total belanja:", Total_Belanja)',"NameError: name 'Total_Belanja' is not defined"],
+   opsi:()=>['Ubah Total_Belanja pada baris 4 menjadi total_belanja','Tambahkan huruf f di depan tanda kutip pada baris 4','Bungkus Total_Belanja pada baris 4 dengan int()'],
+   why:[BACA,'Cari baris yang memakai nama berbeda dari nama yang ditetapkan sebelumnya.','Python membedakan huruf besar dan kecil. Perbaikan harus membuat kedua penulisan nama sama persis.']},
+  {nama:'Kasus B — Menambahkan Ongkos Kirim',ket:'Program menjumlahkan harga produk dengan ongkos kirim.',
+   kode:['harga  = int(input("Harga produk: "))','ongkir = input("Ongkos kirim: ")','total  = harga + ongkir','print("Total bayar:", total)'],
+   layar:S=>[`Harga produk: ${S.hk[1]}`,`Ongkos kirim: ${S.ong}`,'Traceback (most recent call last):','  File "main.py", line 3, in <module>','    total  = harga + ongkir',"TypeError: unsupported operand type(s) for +: 'int' and 'str'"],
+   opsi:()=>['Ubah int() pada baris 1 menjadi str()','Bungkus input() pada baris 2 dengan int()','Ganti tanda + pada baris 3 dengan tanda koma'],
+   why:[BACA,'Cari baris yang membuat <code>ongkir</code> masih berupa teks.','Nilai dari <code>input()</code> selalu berupa teks, dan teks tidak dapat dijumlahkan dengan bilangan.']},
+  {nama:'Kasus C — Mencatat Diskon',ket:'Program mencatat persentase diskon sebuah produk.',
+   kode:['produk = input("Nama produk: ")','diskon = int(input("Diskon (%): "))','print("Diskon", produk, ":", diskon, "%")'],
+   layar:S=>[`Nama produk: ${S.prd[2]}`,`Diskon (%): ${S.disk}`,'Traceback (most recent call last):','  File "main.py", line 2, in <module>','    diskon = int(input("Diskon (%): "))',`ValueError: invalid literal for int() with base 10: '${S.disk}'`],
+   opsi:S=>['Bungkus input() pada baris 1 dengan int()',`Masukkan diskon dengan koma, yaitu ${S.disk.replace('.',',')}`,'Ganti int() pada baris 2 dengan float()'],
+   why:[BACA,'Pesan kesalahan menunjuk baris tempat konversi gagal.','<code>int()</code> hanya dapat mengubah teks bilangan bulat, padahal masukan diskon memuat titik desimal.']},
+  {nama:'Kasus D — Mencetak Keterangan Produk',ket:'Program menampilkan nama produk beserta harganya.',
+   kode:['produk = input("Nama produk: ")','harga  = int(input("Harga: "))','print("Produk {produk} seharga Rp{harga}")'],
+   layar:S=>[`Nama produk: ${S.prd[3]}`,`Harga: ${S.hk[3]}`,'Produk {produk} seharga Rp{harga}'],
+   opsi:()=>['Tambahkan huruf f di depan tanda kutip pada baris 3','Bungkus input() pada baris 1 dengan str()','Ganti kurung kurawal { } pada baris 3 dengan kurung biasa ( )'],
+   why:['Perhatikan apakah program menampilkan pesan kesalahan.','Cari baris yang mencetak teks berkurung kurawal apa adanya.','Kurung kurawal hanya diganti dengan nilainya bila teks diawali huruf <code>f</code>.'],
+   catatan:'Kasus ini berjalan mulus tanpa pesan kesalahan apa pun, tetapi hasilnya keliru. Inilah jenis kesalahan yang paling berbahaya — hanya pembandingan keluaran terhadap hasil yang diharapkan yang dapat mengungkapnya.'}
+];
+function renderT4(){
+  $('#t4').innerHTML=KASUS.map((K,c)=>{
+    const A=ST.t4[c],op=K.opsi(S);
+    return `<div class="card"><h2>${K.nama}</h2><p>${K.ket}</p>
+    <div class="grid2"><div><div class="label">Kode</div><div class="kode">${barisKode(K.kode)}</div></div>
+    <div><div class="label">Layar saat program dijalankan</div><div class="kode konsol">${barisKode(K.layar(S),false)}</div></div></div>
+    <div class="soal"><label>a. Jenis kesalahan</label><select data-s="t4.${c}.jenis"><option value="">pilih jenis kesalahan</option>${JENIS.map(([v,l])=>`<option value="${v}"${A.jenis===v?' selected':''}>${l}</option>`).join('')}</select><span class="tanda" id="t4a-${c}"></span></div>
+    <div class="soal"><label>b. Baris yang perlu diperbaiki</label><select data-s="t4.${c}.baris"><option value="">pilih baris</option>${K.kode.map((_,i)=>`<option value="${i+1}"${A.baris===String(i+1)?' selected':''}>Baris ${i+1}</option>`).join('')}</select><span class="tanda" id="t4b-${c}"></span></div>
+    <div class="soal opsi"><label>c. Perbaikan yang tepat <span class="tanda" id="t4c-${c}"></span></label>${S.u4[c].map(o=>`<label><input type="radio" name="fix${c}" data-s="t4.${c}.fix" value="${o}"${A.fix===String(o)?' checked':''}> ${esc(op[o])}</label>`).join('')}</div>
+    <div class="row"><button class="act" data-cek="${c}">Periksa ${K.nama.split(' — ')[0]}</button></div><div id="t4h-${c}"></div></div>`;
+  }).join('');
+}
+$('#t4').onclick=e=>{
+  const b=e.target.closest('[data-cek]');if(!b)return;
+  const c=+b.dataset.cek,K=KASUS[c],A=ST.t4[c];
+  const r=['jenis','baris','fix'].map((f,i)=>{const ok=cocok(`t4:${c}:${f}`,A[f]);tanda(`#t4${'abc'[i]}-${c}`,ok,A[f]===''?'Belum dipilih.':K.why[i]);return ok});
+  const ok=r.every(Boolean);catat('t4'+c,ok);
+  $('#t4h-'+c).innerHTML=ringkas('t4'+c,r,'Jenis, letak, dan perbaikan kesalahan seluruhnya benar.')+(K.catatan?`<div class="hint">${K.catatan}</div>`:'');
+};
+
+/* ============ REKAP ============ */
+const DAFTAR=[['t1a','Tab 1 Bagian A — Pemilihan tipe'],['t1b','Tab 1 Bagian B — Prediksi operasi'],['t2a','Tab 2 Bagian A — Sah atau tidak sah'],['t2b','Tab 2 Bagian B — Perbaikan penamaan'],['t2c','Tab 2 Bagian C — Makna tanda ='],
+  ...PROG.map(P=>[P.id,'Tab 3 · '+P.judul]),...KASUS.map((K,c)=>['t4'+c,'Tab 4 · '+K.nama])];
+function renderRekap(){
+  if(!ST)return;
+  const n=DAFTAR.filter(([k])=>ST.ok[k]).length;
+  $('#rekap').innerHTML=`<p>NIM <b style="font-family:var(--mono);color:var(--text)">${NIM}</b> · dicetak ${new Date().toLocaleString('id-ID')}</p>
+  <div class="wide"><table class="ref"><tr><th>Latihan</th><th>Status</th><th>Jumlah pemeriksaan</th></tr>`+
+  DAFTAR.map(([k,l])=>`<tr><td>${esc(l)}</td><td>${ST.ok[k]?'<span class="pill y">Tepat</span>':ST.att[k]?'<span class="pill n">Belum tepat</span>':'<span class="pill b">Belum dikerjakan</span>'}</td><td>${ST.att[k]||0}</td></tr>`).join('')+
+  `</table></div><div class="${n===DAFTAR.length?'ok':'hint'}">${n} dari ${DAFTAR.length} latihan berstatus tepat.</div>`;
+}
+
+/* ============ TEMA ============ */
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+$('#btn-tema').onclick=()=>{
+  const t=document.documentElement.dataset.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem('tema',t)}catch(e){}
+  labelTema();
+};
+labelTema();
+
+/* init */
+(function(){let n=null;try{n=localStorage.getItem('alg6:nim')}catch(e){}if(n)pasangNim(n);else renderNim()})();
+</script>
+</body>
+</html>
