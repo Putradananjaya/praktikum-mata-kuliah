@@ -985,15 +985,34 @@ function lonceng(g,cx,y,t,bunyiAktif){
   spr(g,'lonceng',cx-5+goy,y-1);
   if(bunyiAktif){const f=GERAK?Math.floor(t*8)%2:0;for(const s of [-1,1]){kotak(g,cx+s*(9+f),y+2,1,3,'#ffd34d');kotak(g,cx+s*(12+f),y+1,1,5,'#ffd34d')}}
 }
-function gerbang(g,x,y,buka,goy=0){
-  // dua tiang batu dan dua daun pintu kayu; x = tepi kiri, lebar 34, y = alas
-  for(const px of [x,x+28]){kotak(g,px,y-30,6,30,GB.garis);kotak(g,px+1,y-29,4,28,BT.batu);kotak(g,px+1,y-29,1,28,BT.batuT);kotak(g,px-1,y-32,8,3,GB.garis);kotak(g,px,y-31,6,1,BT.batuT)}
-  const lebar=Math.round(11*(1-buka));
-  for(const [dx,arah] of [[6,1],[28,-1]]){
-    if(lebar<=0)continue;
-    const X=arah>0?x+dx+goy:x+dx-lebar+goy;
-    kotak(g,X,y-22,lebar,20,GB.kayuGG);if(lebar>2){kotak(g,X+1,y-21,lebar-2,18,GB.kayu);for(let k=X+3;k<X+lebar-1;k+=3)kotak(g,k,y-21,1,18,GB.kayuG);kotak(g,X+1,y-16,lebar-2,1,GB.kayuGG);kotak(g,X+1,y-8,lebar-2,1,GB.kayuGG)}
+/* Gerbang ayun dua daun yang melintang di jalan (tampak 3/4 dari selatan; kedalaman digambar miring).
+   gx = tiang utara di tepi belakang jalan; tiang selatan di tepi depan jalan, bergeser ke kiri.
+   buka 0 = tertutup, 1 = terbuka penuh; kedua daun berayun ke barat, ke dalam halaman toko.
+   Gambar gerbangBelakang sebelum tokoh dan gerbangDepan sesudahnya agar urutan kedalaman benar. */
+const GERBANG={yU:90,yS:113,miring:.45,tinggi:12,tiang:18};
+function tiangGerbang(g,x,yb){const h=GERBANG.tiang;kotak(g,x-3,yb-h,7,h,GB.garis);kotak(g,x-2,yb-h+1,5,h-2,BT.batu);kotak(g,x-2,yb-h+1,1,h-2,BT.batuT);kotak(g,x-4,yb-h-2,9,3,GB.garis);kotak(g,x-3,yb-h-1,7,1,BT.batuT)}
+function daunGerbang(g,hx,hy,arah,buka,goy){
+  const {miring,tinggi:h}=GERBANG,tengah=(GERBANG.yS-GERBANG.yU)/2;
+  const cx=-arah*miring,cy=arah,n=Math.hypot(cx,cy),aTutup=Math.atan2(cy,cx);
+  let d=Math.PI-aTutup;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+  const a=aTutup+d*mulus(buka),L=tengah*n,ux=Math.cos(a),uy=Math.sin(a);
+  for(let s=0;s<=L;s+=.5){
+    const bx=Math.round(hx+ux*s+goy),by=Math.round(hy+uy*s),c=Math.floor(s/3)%2?GB.kayu:GB.kayuT;
+    kotak(g,bx,by-h,2,h,c);kotak(g,bx,by-h,2,1,GB.kayuGG);kotak(g,bx,by-h+4,2,1,GB.kayuG);kotak(g,bx,by-5,2,1,GB.kayuG);kotak(g,bx,by-1,2,1,GB.kayuGG);
   }
+  kotak(g,Math.round(hx+ux*L+goy),Math.round(hy+uy*L)-h,2,h,GB.kayuGG);
+}
+function gerbangBelakang(g,gx,buka,goy=0){tiangGerbang(g,gx,GERBANG.yU);daunGerbang(g,gx,GERBANG.yU,1,buka,goy)}
+function gerbangDepan(g,gx,buka,goy=0){
+  const xs=gx-Math.round((GERBANG.yS-GERBANG.yU)*GERBANG.miring);
+  // pagar batas halaman berlanjut dari tiang selatan ke arah depan
+  let px=xs,py=GERBANG.yS;
+  for(let k=1;k<=4;k++){
+    const fx=xs-Math.round(k*8*GERBANG.miring),fy=GERBANG.yS+k*8;
+    for(const hr of [9,4])for(let q=0;q<=1;q+=.1)kotak(g,Math.round(lerp(px,fx,q)),Math.round(lerp(py,fy,q))-hr,1,2,GB.kayu);
+    kotak(g,fx-1,fy-11,3,11,GB.kayuGG);kotak(g,fx,fy-10,1,9,GB.kayuT);px=fx;py=fy;
+  }
+  daunGerbang(g,xs,GERBANG.yS,-1,buka,goy);tiangGerbang(g,xs,GERBANG.yS);
 }
 
 /* ============ ADEGAN: GERBANG TOKO ============ */
@@ -1004,7 +1023,7 @@ function adeganGerbang(){
     lukisRumput(q,0,0,256,144,a);
     lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
     lukisPondok(q,6,0,112);
-    for(let x=122;x<158;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,122,78,36,2,GB.kayu);
+    for(let x=122;x<184;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,122,78,62,2,GB.kayu);
     for(let x=196;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,196,78,60,2,GB.kayu);
     pohon(q,236,14,12);
     for(const [x,y,c] of [[130,118,'#ffffff'],[150,124,'#ff8fb1'],[210,120,'#ffffff'],[240,126,'#ff8fb1'],[20,120,'#ffffff'],[60,126,'#ffffff']])bunga(q,x,y,c);
@@ -1024,12 +1043,14 @@ function adeganGerbang(){
     else if(T>=10.5&&T<17){px=206;coba=Math.min(5,Math.floor((T-10.5)/.8)+1);const fase=(T-10.5)%.8;if(T<14.5&&fase<.25)pgoy=-2}
     else if(T>=17&&T<20){px=lerp(206,290,(T-17)/2);pBalik=false}
     const alarm=T>14.5&&T<17.5;
-    gerbang(g,166,104,buka,coba&&T<14.5&&((T-10.5)%.8)<.15?1:0);
+    const gGoy=coba&&T<14.5&&((T-10.5)%.8)<.15?1:0;
+    gerbangBelakang(g,190,buka,gGoy);
     lonceng(g,140,52,t,alarm);
     kotak(g,139,52,2,40,GB.kayuGG);
     pamn(g,152,104,alarm?'sorak':(T>3&&T<5.5?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam')));
     if(wx!=null&&(T<8))warga(g,wx,104,wpose,{balik:wBalik});
     if(px!=null)penyusup(g,px,104,T>=17?(Math.floor(t*9)%2?'jalan':'samping'):(T<10.5?(Math.floor(t*7)%2?'jalan':'samping'):'samping'),{balik:pBalik,goy:pgoy});
+    gerbangDepan(g,190,buka,gGoy);
     if(coba&&T<14.5){const fase=(T-10.5)%.8;if(fase<.5)tulis(g,'✗',px,78-fase*10,'#ff5a5a',{rata:'tengah',skala:1,tebal:true,bayang:'#0b0f22'})}
     if(T>3&&T<5.5)tulis(g,'✓',206,78-(T-3)*3,'#55d36b',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
     if(alarm&&Math.floor(t*4)%2===0)tulis(g,'ALERT',140,24,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
@@ -1248,7 +1269,7 @@ function adeganIDS(){
     const a=acakTetap(23);
     lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
     lukisPondok(q,-52,0,112);
-    for(let x=66;x<112;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,66,78,46,2,GB.kayu);
+    for(let x=66;x<140;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,66,78,74,2,GB.kayu);
     for(let x=150;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,150,78,106,2,GB.kayu);
     pohon(q,232,16,12);semak(q,184,34,7,true);
     for(const [x,y,c] of [[150,120,'#ffffff'],[170,126,'#ff8fb1'],[220,122,'#ffffff'],[30,124,'#ff8fb1']])bunga(q,x,y,c);
@@ -1269,9 +1290,10 @@ function adeganIDS(){
     }
     const alarm=fase===0&&T>3.5&&T<6.5;
     kotak(g,87,50,2,42,GB.kayuGG);lonceng(g,88,50,t,alarm);
-    gerbang(g,118,104,buka,goy);
-    pamn(g,104,104,alarm?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    gerbangBelakang(g,146,buka,goy);
+    pamn(g,112,104,alarm?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
     if(fase===2)warga(g,fx,104,pose,{balik});else penyusup(g,fx,104,pose,{balik});
+    gerbangDepan(g,146,buka,goy);
     if(fase===2&&T>18.6&&T<20.4)tulis(g,'?',fx,74,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
     if(alarm&&Math.floor(t*4)%2===0)tulis(g,'ALERT',88,22,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
     const mode=fase===0?'MODE IDS':'MODE IPS',w=lebarTeks(mode,10,true)+12;
@@ -1290,7 +1312,7 @@ function adeganEmpat(){
     const a=acakTetap(29);
     lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
     lukisPondok(q,-60,0,112);
-    for(let x=60;x<112;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,60,78,52,2,GB.kayu);
+    for(let x=60;x<140;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,60,78,80,2,GB.kayu);
     for(let x=150;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,150,78,106,2,GB.kayu);
     pohon(q,226,18,11);
   });
@@ -1301,9 +1323,10 @@ function adeganEmpat(){
     g.drawImage(bawah,0,0);
     const fx=lerp(276,40,jepit(u/3.7,0,1)),pose=Math.floor(t*7)%2?'jalan':'samping',alarm=v.lc&&u>1.5&&u<3.5;
     kotak(g,87,50,2,42,GB.kayuGG);lonceng(g,88,50,t,alarm);
-    gerbang(g,118,104,1);
-    pamn(g,104,104,alarm&&v.jahat?'sorak':'diam');
+    gerbangBelakang(g,146,1);
+    pamn(g,112,104,alarm&&v.jahat?'sorak':'diam');
     if(v.jahat)penyusup(g,fx,104,pose,{balik:true});else warga(g,fx,104,pose,{balik:true});
+    gerbangDepan(g,146,1);
     if(v.k==='FP'&&u>1.9)tulis(g,'?',fx,74,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
     if(v.k==='FN'&&u>2.2)tulis(g,'!',fx,72,'#ff5a5a',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
     const H=HASIL4[v.k],teks=`${H.j} (${v.k})`,w=lebarTeks(teks,10,true)+12;
@@ -1828,6 +1851,68 @@ let JEJAK=null,STEMPEL=null,RAKIT=null,BENANG=null;
   });
   const awalTab=location.hash.slice(1);if(awalTab&&$('#t-'+awalTab))goTab(awalTab);
   requestAnimationFrame(putar);
+})();
+</script>
+<script>
+/* ============ NAVIGASI PRESENTASI ============
+   Untuk remote presenter: PageDown atau panah kanan = maju, PageUp atau panah kiri = mundur.
+   Maju menyorot kartu berikutnya; kartu yang lebih panjang dari layar digulir dulu sampai habis;
+   setelah kartu terakhir, pindah ke tab berikutnya. Tidak aktif saat mengetik di kotak isian. */
+(function(){
+  const gaya=document.createElement('style');
+  gaya.textContent='.sorot-presentasi{outline:3px solid var(--fp);outline-offset:4px}'+
+    '#posisi-presentasi{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:0;transition:opacity .25s;pointer-events:none}'+
+    '#posisi-presentasi.on{opacity:1}';
+  document.head.appendChild(gaya);
+  const posisi=document.createElement('div');posisi.id='posisi-presentasi';posisi.setAttribute('aria-live','polite');document.body.appendChild(posisi);
+  let i=-1,tab=null,tunda=null;
+  const urutan=()=>[...document.querySelectorAll('nav button[data-t]')].map(b=>b.dataset.t);
+  const aktif=()=>{const t=document.querySelector('.tab.on');return t?t.id.slice(2):null};
+  const kartu=()=>{const t=document.querySelector('.tab.on');return t?[...t.querySelectorAll('.card')].filter(c=>c.offsetParent!==null&&!c.parentElement.closest('.card')):[]};
+  const atas=()=>{const nb=document.querySelector('.nimbar');return (nb&&getComputedStyle(nb).position==='sticky'?nb.offsetHeight:0)+14};
+  function tampilPosisi(K){
+    const u=urutan(),n=u.indexOf(aktif());
+    posisi.textContent=(n>=0?`Tab ${n+1}/${u.length} · `:'')+`bagian ${i+1}/${K.length}`;
+    posisi.classList.add('on');clearTimeout(tunda);tunda=setTimeout(()=>posisi.classList.remove('on'),1800);
+  }
+  function ke(K){
+    const c=K[i];if(!c)return;
+    document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'));
+    c.classList.add('sorot-presentasi');
+    scrollTo({top:Math.max(0,c.getBoundingClientRect().top+scrollY-atas()),behavior:'smooth'});
+    tampilPosisi(K);
+  }
+  function mulaiDariLayar(K){const a=atas();i=Math.max(0,K.findIndex(c=>c.getBoundingClientRect().bottom>a+40));tab=aktif()}
+  function pindahTab(arah){
+    const u=urutan(),n=u.indexOf(aktif());
+    if(n<0||n+arah<0||n+arah>=u.length){scrollTo({top:arah<0?0:document.body.scrollHeight,behavior:'smooth'});return}
+    goTab(u[n+arah]);tab=aktif();
+    requestAnimationFrame(()=>{const K=kartu();i=arah>0?0:K.length-1;ke(K)});
+  }
+  function langkah(arah){
+    const K=kartu();
+    if(!K.length){pindahTab(arah);return}
+    const disorot=tab===aktif()&&K[i]&&K[i].classList.contains('sorot-presentasi');
+    if(!disorot){mulaiDariLayar(K);ke(K);return}
+    const r=K[i].getBoundingClientRect();
+    if(arah>0&&r.bottom>innerHeight+8){scrollBy({top:innerHeight*.75,behavior:'smooth'});return}
+    if(arah<0&&r.top<atas()-8){scrollBy({top:-innerHeight*.75,behavior:'smooth'});return}
+    const j=i+arah;
+    if(j>=0&&j<K.length){i=j;ke(K)}else pindahTab(arah);
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    const maju=e.key==='PageDown'||e.key==='ArrowRight',mundur=e.key==='PageUp'||e.key==='ArrowLeft';
+    if(!maju&&!mundur)return;
+    const el=e.target;
+    if(el.closest&&el.closest('textarea,select,[contenteditable="true"]'))return;
+    if(el.tagName==='INPUT'&&!['range','checkbox','radio','button','submit'].includes(el.type))return;
+    e.preventDefault();e.stopPropagation();
+    if(el.blur&&el!==document.body)el.blur();
+    langkah(maju?1:-1);
+  },true);
+  // tab yang dipilih dengan klik mengulang hitungan dari atas
+  document.addEventListener('click',e=>{if(e.target.closest('nav button,[data-go]')){i=-1;tab=null;document.querySelectorAll('.sorot-presentasi').forEach(x=>x.classList.remove('sorot-presentasi'))}},true);
 })();
 </script>
 </body>
