@@ -108,7 +108,13 @@ button.sec:hover{border-color:var(--hover)}
 .tanpa-nim .gerbang{display:block}
 #ver{cursor:default;user-select:none;display:inline-block;padding:4px 2px;touch-action:manipulation}
 .geser{display:none;font-size:12px;color:var(--muted);margin:0 0 6px}
+/* lapisan dunia */
+.layar{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line);background:#1d2b53}
+.layar-wrap{max-width:760px}
+.ikon{image-rendering:pixelated;vertical-align:middle;flex:none}
 @media(max-width:640px){
+  select{max-width:100%}
+  .ref th,.ref td{padding:6px 5px;word-break:break-word}
   .geser{display:block}
   nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   nav::-webkit-scrollbar{display:none}
@@ -128,7 +134,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
     <h1>Penelusuran Algoritma</h1>
     <div class="sub">Algoritma dan Dasar-Dasar Pemrograman · Modul 5 · Sub-CPMK-612 — Program Studi Bisnis Digital, Fakultas Ekonomi dan Bisnis, Universitas Pendidikan Nasional</div>
   </div>
-  <button class="sec" id="btn-tema"></button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="sec" id="btn-suara"></button><button class="sec" id="btn-tema"></button></div>
 </header>
 
 <div class="nimbar" id="nimbar"></div>
@@ -149,6 +155,10 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
     <div class="eyebrow">Praktikum Modul 5</div>
     <h2>Penelusuran Algoritma: Validasi Logika dan Pendeteksian Kesalahan</h2>
     <p>Menjalankan algoritma secara manual dengan tabel penelusuran untuk membuktikan kebenarannya, lalu menemukan letak kesalahan logika pada algoritma yang keluarannya tidak sesuai harapan. Bacalah halaman ini sampai habis sebelum mulai.</p>
+  </div>
+
+  <div class="card">
+    <div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-mulai" width="256" height="144" aria-label="Animasi Toko Kopi Nusantara: pengembang menyerahkan rancangan, PAMN menelusurinya baris demi baris"></canvas></div>
   </div>
 
   <div class="card">
@@ -227,6 +237,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
 <div class="tab" id="t-t1">
   <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
   <div class="perlu-nim">
+      <div class="card"><div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-t1" width="256" height="144" aria-label="Panggung Tab 1: mesin hitung bonus. PAMN bereaksi setiap kali jawaban diperiksa."></canvas></div></div>
     <div class="card">
       <h2>Penelusuran Algoritma Bercabang: Bonus Penjualan</h2>
       <p>Kebijakan perusahaan: tenaga penjualan memperoleh bonus 5% dari omzet bila omzet mulai dari 20.000.000, dan 3% bila omzet mulai dari 10.000.000. Selain itu tidak memperoleh bonus. Tenaga penjualan dengan masa kerja sekurang-kurangnya 5 tahun memperoleh tambahan 1%.</p>
@@ -266,6 +277,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
 <div class="tab" id="t-t2">
   <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
   <div class="perlu-nim">
+      <div class="card"><div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-t2" width="256" height="144" aria-label="Panggung Tab 2: gudang transaksi. PAMN bereaksi setiap kali jawaban diperiksa."></canvas></div></div>
     <div class="card">
       <h2>Penelusuran Algoritma Berulang: Rekapitulasi Transaksi</h2>
       <p>Algoritma berikut menghitung total omzet, banyaknya transaksi besar (mulai dari 500.000), dan nilai transaksi terkecil dari daftar transaksi hari ini.</p>
@@ -300,6 +312,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
 <div class="tab" id="t-t3">
   <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
   <div class="perlu-nim">
+      <div class="card"><div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-t3" width="256" height="144" aria-label="Panggung Tab 3: papan tanda perbandingan. PAMN bereaksi setiap kali jawaban diperiksa."></canvas></div></div>
     <div class="card">
       <h2>Bagian A: Kata Kunci Aturan Bisnis dan Tanda Perbandingan</h2>
       <p>Pilih tanda perbandingan yang tepat untuk setiap rumusan kebijakan. Perhatikan kata kuncinya: "mulai dari", "lebih dari", "paling lama", "di bawah", dan seterusnya.</p>
@@ -321,6 +334,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
 <div class="tab" id="t-t4">
   <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Soal latihan ini disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
   <div class="perlu-nim">
+      <div class="card"><div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-t4" width="256" height="144" aria-label="Panggung Tab 4: ruang bawah tanah tempat kesalahan bersembunyi. PAMN bereaksi setiap kali jawaban diperiksa."></canvas></div></div>
     <div class="card">
       <h2>Deteksi Letak Kesalahan</h2>
       <p>Keempat algoritma di bawah ini berjalan, tetapi keluarannya tidak sesuai kebijakan. Untuk setiap kasus, ikuti prosedur pendeteksian:</p>
@@ -340,6 +354,7 @@ footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;bo
 <div class="tab" id="t-rekap">
   <div class="card gerbang"><h2>Masukkan NIM terlebih dahulu</h2><p>Rekap disusun dari NIM Anda. Isi NIM pada kotak di bagian atas halaman.</p></div>
   <div class="perlu-nim">
+      <div class="card"><div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-rekap" width="256" height="144" aria-label="Peti harta: terbuka ketika semua latihan berstatus tepat"></canvas></div></div>
     <div class="card">
       <h2>Rekap Hasil</h2>
       <div id="rekap"></div>
@@ -945,6 +960,583 @@ labelTema();
 
 /* init */
 (function(){let n=null;try{n=localStorage.getItem('alg5:nim')}catch(e){}if(n)pasangNim(n);else renderNim()})();
+</script>
+<script>
+/* ============ UTIL ============ */
+/* $ dan $$ memakai definisi milik halaman */
+/* esc memakai definisi milik halaman */
+const acakSalin=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const lsAmbil=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSimpan=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const GERAK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const jepit=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mulus=t=>{t=jepit(t,0,1);return t*t*(3-2*t)};
+
+/* ============ EFEK SUARA ============ */
+/* Bunyi 8-bit disintesis langsung dengan Web Audio; tidak ada berkas suara yang diunduh */
+const SUARA={aktif:lsAmbil('alg5rpg:suara',true),ctx:null,derau:null};
+function konteksSuara(){
+  if(!SUARA.aktif)return null;
+  try{
+    if(!SUARA.ctx){
+      const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+      SUARA.ctx=new C();
+      const b=SUARA.ctx.createBuffer(1,Math.floor(SUARA.ctx.sampleRate*.5),SUARA.ctx.sampleRate),d=b.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+      SUARA.derau=b;
+    }
+    if(SUARA.ctx.state==='suspended')SUARA.ctx.resume();
+    return SUARA.ctx;
+  }catch(e){return null}
+}
+function nada(f,dur,o={}){
+  const c=konteksSuara();if(!c)return;
+  const t=c.currentTime+(o.tunda||0),gn=c.createGain();
+  gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(o.vol??.06,t+.008);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  gn.connect(c.destination);
+  let src;
+  if(o.jenis==='derau'){src=c.createBufferSource();src.buffer=SUARA.derau;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=f;src.connect(fl);fl.connect(gn)}
+  else{src=c.createOscillator();src.type=o.jenis||'square';src.frequency.setValueAtTime(f,t);if(o.ke)src.frequency.exponentialRampToValueAtTime(o.ke,t+dur);src.connect(gn)}
+  src.start(t);src.stop(t+dur+.03);
+}
+const BUNYI={
+  klik:()=>nada(880,.04,{vol:.03}),
+  langkah:()=>nada(520,.07,{jenis:'triangle',vol:.09,ke:660}),
+  simpan:()=>{nada(440,.05,{jenis:'triangle',vol:.09});nada(880,.09,{jenis:'triangle',vol:.09,tunda:.05})},
+  cetak:()=>{nada(1200,.03,{vol:.03});nada(1500,.03,{vol:.03,tunda:.05});nada(1200,.03,{vol:.03,tunda:.1})},
+  benar:()=>{nada(660,.07,{vol:.05});nada(880,.07,{vol:.05,tunda:.07});nada(1320,.14,{vol:.05,tunda:.14})},
+  salah:()=>nada(200,.28,{jenis:'sawtooth',vol:.05,ke:90}),
+  galat:()=>{nada(160,.12,{vol:.06});nada(120,.25,{vol:.06,tunda:.12,ke:70})},
+  koin:()=>{nada(988,.06,{vol:.05});nada(1319,.16,{vol:.05,tunda:.06})},
+  lempar:()=>nada(260,.25,{jenis:'triangle',vol:.07,ke:900}),
+  stempel:()=>{nada(500,.12,{jenis:'derau',vol:.25});nada(110,.12,{jenis:'sine',vol:.2,ke:50})},
+  jatuh:()=>nada(700,.4,{vol:.04,ke:80}),
+  mesin:()=>{for(let i=0;i<6;i++)nada(110+(i%2)*35,.1,{jenis:'sawtooth',vol:.035,tunda:i*.1})},
+  tembak:()=>nada(1600,.2,{vol:.045,ke:180}),
+  ledak:()=>nada(1200,.5,{jenis:'derau',vol:.3}),
+  hehe:()=>{nada(900,.07,{vol:.04});nada(700,.07,{vol:.04,tunda:.1});nada(900,.07,{vol:.04,tunda:.2})},
+  menang:()=>[523,659,784,1047].forEach((f,i)=>nada(f,i===3?.3:.1,{vol:.05,tunda:i*.1})),
+  kalah:()=>[392,330,262].forEach((f,i)=>nada(f,.2,{jenis:'triangle',vol:.08,tunda:i*.17})),
+  selesai:()=>{nada(784,.08,{jenis:'triangle',vol:.08});nada(1047,.16,{jenis:'triangle',vol:.08,tunda:.08})}
+};
+function bunyi(n){try{if(SUARA.aktif&&BUNYI[n])BUNYI[n]()}catch(e){}}
+
+/* ============ PIXEL ART ============ */
+/* Palet 16 warna; sprite ditulis sebagai larik string, satu karakter = satu piksel, '.' = transparan */
+const PAL=['#000000','#1d2b53','#7e2553','#008751','#ab5236','#5f574f','#c2c3c7','#fff1e8','#ff004d','#ffa300','#ffec27','#00e436','#29adff','#83769c','#ff77a8','#ffccaa'];
+const WARNA_TIPE={int:10,float:12,str:11,bool:14};
+const FONT='Consolas,Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace';
+const warna=c=>typeof c==='number'?PAL[c]:c;
+function siapLayar(c){const g=c.getContext('2d');g.imageSmoothingEnabled=false;return g}
+function kotak(g,x,y,w,h,c){g.fillStyle=warna(c);g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function bingkai(g,x,y,w,h,c){kotak(g,x,y,w,1,c);kotak(g,x,y+h-1,w,1,c);kotak(g,x,y,1,h,c);kotak(g,x+w-1,y,1,h,c)}
+function panel(g,x,y,w,h,isi,tepi){kotak(g,x+1,y,w-2,h,isi);kotak(g,x,y+1,w,h-2,isi);if(tepi!=null){kotak(g,x+1,y,w-2,1,tepi);kotak(g,x+1,y+h-1,w-2,1,tepi);kotak(g,x,y+1,1,h-2,tepi);kotak(g,x+w-1,y+1,1,h-2,tepi)}}
+
+const SPRITE={
+  pito:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoA:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','5....55....5','555555555555','.5cccccccc5.','.5ca9cc9ac5.','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoK:['.....88.....','.....55.....','..55555555..','.5666666665.','.5666666665.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  orang:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','..1..1..','..1..1..','.00..00.'],
+  orang2:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','.1....1.','.1....1.','00....00'],
+  koin:['..9999..','.9aaaa9.','9aa77aa9','9a7aaaa9','9aaaaaa9','9aaaaaa9','.9aaaa9.','..9999..'],
+  gelas:['6......6','6......6','6......6','6cccccc6','6cccccc6','6c7cccc6','6cccccc6','6cccccc6','.6cccc6.','..6666..'],
+  lampu:['..aaaa..','.aa77aa.','aa7aaaaa','aaaaaaaa','aaaaaaaa','.aaaaaa.','..6666..','..5555..','..6666..','...55...'],
+  lampuMati:['..dddd..','.dd66dd.','dd6ddddd','dddddddd','dddddddd','.dddddd.','..6666..','..5555..','..6666..','...55...'],
+  tag:['..bbbbbbbb','.bb3b3bbbb','bbb3b3bbbb','bbbbbbbbbb','bb7777777b','bbbbbbbbbb','.bbbbbbbbb','..bbbbbbbb'],
+  hati:['.88.88.','8888888','8888888','.88888.','..888..','...8...'],
+  hatiK:['.55.55.','5555555','5555555','.55555.','..555..','...5...'],
+  kumbang:['..5........5..','...5......5...','....XXXXXX....','..XXXXXXXXXX..','.XX77XXXX77XX.','.XX70XXXX70XX.','XXXXXXXXXXXXXX','XYYYYYYYYYYYYX','XYYXYYXXYYXYYX','.XYYYYYYYYYYX.','..XXXXXXXXXX..','.5..5....5..5.'],
+  hantu:['...777777...','..77777777..','.7777777777.','.7700770077.','.7700770077.','.7777777777.','.7777887777.','.7777777777.','.7777777777.','.7777777777.','.77.7777.77.','.7...77...7.'],
+  piala:['aaaaaaaaaaaa','a.a7aaaaaa.a','a.a7aaaaaa.a','.aa7aaaaaaa.','..aaaaaaaa..','...aaaaaa...','....aaaa....','.....99.....','.....99.....','...999999...','..44444444..','..44444444..'],
+  peti:['44444444','49999994','49444494','49499494','49499494','49444494','49999994','44444444'],
+  printer:['..777777..','..700007..','5555555555','566666b665','5666666665','5555555555','..777777..','..777777..'],
+  papanKetik:['5555555555','5767676765','5676767675','5767676765','5677777765','5555555555'],
+  roda:['...66...','.6.66.6.','..6666..','666..666','666..666','..6666..','.6.66.6.','...66...'],
+  tambah:['...aa...','...aa...','...aa...','aaaaaaaa','aaaaaaaa','...aa...','...aa...','...aa...'],
+  labu:['..6666..','...66...','...66...','..6bb6..','.6bbbb6.','6bb7bbb6','6bbbbbb6','6bbbbbb6','.666666.']
+};
+const _spr=new Map();
+function gambarSprite(nama,k,balik,ganti){
+  const key=nama+'|'+k+'|'+(balik?1:0)+'|'+(ganti?JSON.stringify(ganti):'');
+  let c=_spr.get(key);if(c)return c;
+  const S=barisSprite(nama),pal=Array.isArray(SPRITE[nama])?null:SPRITE[nama].p,w=S[0].length,h=S.length;
+  c=document.createElement('canvas');c.width=w*k;c.height=h*k;const q=c.getContext('2d');
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const ch=S[y][x];if(ch==='.')continue;
+    const col=ganti&&ganti[ch]!=null?ganti[ch]:pal?pal[ch]:ch==='X'?6:ch==='Y'?5:parseInt(ch,16);
+    if(col==null)continue;
+    q.fillStyle=warna(col);q.fillRect((balik?w-1-x:x)*k,y*k,k,k);
+  }
+  _spr.set(key,c);return c;
+}
+function spr(g,nama,x,y,k=1,o={}){
+  const c=gambarSprite(nama,k,o.balik,o.ganti);
+  if(o.alpha!=null)g.globalAlpha=o.alpha;
+  g.drawImage(c,Math.round(x),Math.round(y));
+  g.globalAlpha=1;return c;
+}
+const barisSprite=nama=>{const S=SPRITE[nama];return Array.isArray(S)?S:S.d};
+const ukuranSprite=nama=>({w:barisSprite(nama)[0].length,h:barisSprite(nama).length});
+function ikonURL(nama,k=3,ganti){return gambarSprite(nama,k,false,ganti).toDataURL()}
+
+/* ============ PAMN & DUNIA RPG ============ */
+/* Sprite berpalet sendiri: {p: warna per karakter, d: baris piksel} */
+const PAL_PAMN={o:'#1b1b2f',k:'#4a4f63',g:'#ffc940',G:'#d18b1c',h:'#e6eef5',m:'#b3c2d1',n:'#7a8aa0',v:'#23304a',e:'#6ff7ff',E:'#ffffff',b:'#f0b067',c:'#c97a36',d:'#8a4a1e',s:'#3fd1b9',t:'#1f8f80',l:'#6b4426',L:'#4a2c16'};
+const PAL_ORANG={o:'#2a1a14',H:'#7a4a24',S:'#f5c9a0',e:'#ff8fb1',E:'#d9607f',b:'#4a6fd1',B:'#2f4aa0',L:'#3a2a20'};
+Object.assign(SPRITE,{
+  pamnD:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnK:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohvvvvvvvvmo..','..ohveevveevmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnA:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','.kohhhhhhhmmmok.','.kkommmmmmmnokk.','.bc.okkkkkko.cd.','.bcossssssttocd.','.obbbsssstttcdo.','..obbbbeecccco..','..obbbbeecccdo..','..obbbbccccddo..','...obbccccddo...','...oddddddddo...','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnS1:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','...okco.ocko....','..okco...ocko...','.olllo...olllo..','oLlllo..olllLo..','oooooo..oooooo..']},
+  pamnS2:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','.....okco.......','.....okco.......','....olllo.......','....olllLo......','....oooooo......']},
+  warga1:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','...obbobBo......','..obbo.obBo.....','.obbo...obBo....','.oLLo...oLLLo...','.oooo...ooooo...']},
+  warga2:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','....obbbbBo.....','....obbbBo......','.....obBo.......','....oLLLo.......','....ooooo.......']},
+  wargaB:{p:PAL_ORANG,d:['......oooo......','....oHHHHHHo....','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','....oHHHHHHo....','.....oSSSSo.....','....oeeeeeeo....','...oeeeeeeeeo...','..oSeeeeeeeeSo..','..oSeEEEEEEeSo..','...oEEEEEEEEo...','....obbbbbbo....','....obbbbbBo....','....obboobBo....','....obboobBo....','....oLLooLLo....','....oLLooLLo....','....oooooooo....']},
+  kepeng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0'},d:['..oooo..','.owyyyo.','owyooyYo','oyo..oYo','oyo..oYo','oyYooYYo','.oYYYYo.','..oooo..']},
+  ramuan:{p:{o:'#1b1b2f',k:'#b07a3e',K:'#7a4a1f',g:'#d8f0ff',b:'#29adff',B:'#1a6fd1',w:'#ffffff'},d:['..okko..','..oKKo..','..ogBo..','.oggbbo.','ogwbbbBo','obwbbbBo','obbbbbBo','obbbbBBo','.oBBBBo.','..oooo..']},
+  gulungan:{p:{o:'#5a3a1a',P:'#c9b27a',p:'#f1e3b5',l:'#8a6a3a',g:'#2fbf4f',G:'#1a8a35'},d:['.oooooooo.','oPppggppPo','oPlpgGplPo','oPppgGppPo','oPlpgGplPo','oPppggppPo','.oooooooo.']},
+  lentera:{p:{o:'#2a1a0a',m:'#8a5a2b',M:'#b07a3e',g:'#ffd0e4',f:'#ff77a8',F:'#ffffff'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  lenteraMati:{p:{o:'#2a1a0a',m:'#6b4a2a',M:'#8a6a4a',g:'#5f6070',f:'#3c3d4a',F:'#4a4b58'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  hatiG:{p:{o:'#5a0a1a',w:'#ffd0d0',r:'#e83a3a',R:'#a01c2c'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']},
+  hatiGK:{p:{o:'#3a2a3a',w:'#5a4a5a',r:'#4a3a4a',R:'#3a2a3a'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']}
+});
+const ikonTipe=v=>v.t==='int'?'kepeng':v.t==='float'?'ramuan':v.t==='str'?'gulungan':v.t==='bool'?(v.v?'lentera':'lenteraMati'):null;
+const TEKS_TIPE={int:'#ffd34d',float:'#5cc8ff',str:'#7dff8a',bool:'#ff9ccb'};
+const POSE_PAMN={diam:'pamnD',kedip:'pamnK',sorak:'pamnA',samping1:'pamnS1',samping2:'pamnS2'};
+/* PAMN digambar dengan titik tengah x dan telapak kaki y */
+function pamn(g,cx,kaki,pose='diam',o={}){
+  const nama=POSE_PAMN[pose]||'pamnD',k=o.skala||1,{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-6*k,kaki-1*k,12*k,2*k,0);kotak(g,cx-4*k,kaki-2*k,8*k,4*k,0);g.globalAlpha=1;
+  spr(g,nama,cx-w*k/2,kaki-h*k,k,{balik:o.balik,ganti:o.ganti,alpha:o.alpha});
+}
+function warga(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2,kaki-h,1,{balik:o.balik});
+}
+
+
+/* Teks: font piksel "Kepeng" buatan sendiri (huruf kapital 7 piksel, lebar proporsional),
+   digambar pada kisi piksel yang sama dengan sprite agar menyatu dengan gaya gim */
+const GLIF={"A":[5,0,[".###.","#...#","#...#","#####","#...#","#...#","#...#"]],"B":[5,0,["####.","#...#","#...#","####.","#...#","#...#","####."]],"C":[5,0,[".###.","#...#","#....","#....","#....","#...#",".###."]],"D":[5,0,["####.","#...#","#...#","#...#","#...#","#...#","####."]],"E":[5,0,["#####","#....","#....","####.","#....","#....","#####"]],"F":[5,0,["#####","#....","#....","####.","#....","#....","#...."]],"G":[5,0,[".###.","#...#","#....","#.###","#...#","#...#",".####"]],"H":[5,0,["#...#","#...#","#...#","#####","#...#","#...#","#...#"]],"I":[3,0,["###",".#.",".#.",".#.",".#.",".#.","###"]],"J":[5,0,["..###","...#.","...#.","...#.","#..#.","#..#.",".##.."]],"K":[5,0,["#...#","#..#.","#.#..","##...","#.#..","#..#.","#...#"]],"L":[5,0,["#....","#....","#....","#....","#....","#....","#####"]],"M":[5,0,["#...#","##.##","#.#.#","#.#.#","#...#","#...#","#...#"]],"N":[5,0,["#...#","##..#","#.#.#","#..##","#...#","#...#","#...#"]],"O":[5,0,[".###.","#...#","#...#","#...#","#...#","#...#",".###."]],"P":[5,0,["####.","#...#","#...#","####.","#....","#....","#...."]],"Q":[5,0,[".###.","#...#","#...#","#...#","#.#.#","#..#.",".##.#"]],"R":[5,0,["####.","#...#","#...#","####.","#.#..","#..#.","#...#"]],"S":[5,0,[".####","#....","#....",".###.","....#","....#","####."]],"T":[5,0,["#####","..#..","..#..","..#..","..#..","..#..","..#.."]],"U":[5,0,["#...#","#...#","#...#","#...#","#...#","#...#",".###."]],"V":[5,0,["#...#","#...#","#...#","#...#","#...#",".#.#.","..#.."]],"W":[5,0,["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"]],"X":[5,0,["#...#","#...#",".#.#.","..#..",".#.#.","#...#","#...#"]],"Y":[5,0,["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."]],"Z":[5,0,["#####","....#","...#.","..#..",".#...","#....","#####"]],"0":[5,0,[".###.","#...#","#..##","#.#.#","##..#","#...#",".###."]],"1":[5,0,["..#..",".##..","..#..","..#..","..#..","..#..",".###."]],"2":[5,0,[".###.","#...#","....#","...#.","..#..",".#...","#####"]],"3":[5,0,["####.","....#","....#",".###.","....#","....#","####."]],"4":[5,0,["...#.","..##.",".#.#.","#..#.","#####","...#.","...#."]],"5":[5,0,["#####","#....","####.","....#","....#","#...#",".###."]],"6":[5,0,["..##.",".#...","#....","####.","#...#","#...#",".###."]],"7":[5,0,["#####","....#","...#.","..#..",".#...",".#...",".#..."]],"8":[5,0,[".###.","#...#","#...#",".###.","#...#","#...#",".###."]],"9":[5,0,[".###.","#...#","#...#",".####","....#","...#.",".##.."]],"a":[5,2,[".###.","....#",".####","#...#",".####"]],"b":[5,0,["#....","#....","####.","#...#","#...#","#...#","####."]],"c":[4,2,[".###","#...","#...","#...",".###"]],"d":[5,0,["....#","....#",".####","#...#","#...#","#...#",".####"]],"e":[5,2,[".###.","#...#","#####","#....",".###."]],"f":[4,0,["..##",".#..","####",".#..",".#..",".#..",".#.."]],"g":[5,2,[".####","#...#","#...#","#...#",".####","....#",".###."]],"h":[5,0,["#....","#....","#.##.","##..#","#...#","#...#","#...#"]],"i":[1,0,["#",".","#","#","#","#","#"]],"j":[3,0,["..#","...","..#","..#","..#","..#","..#","#.#",".#."]],"k":[4,0,["#...","#...","#..#","#.#.","##..","#.#.","#..#"]],"l":[2,0,["#.","#.","#.","#.","#.","#.",".#"]],"m":[5,2,["##.#.","#.#.#","#.#.#","#.#.#","#.#.#"]],"n":[5,2,["#.##.","##..#","#...#","#...#","#...#"]],"o":[5,2,[".###.","#...#","#...#","#...#",".###."]],"p":[5,2,["####.","#...#","#...#","#...#","####.","#....","#...."]],"q":[5,2,[".####","#...#","#...#","#...#",".####","....#","....#"]],"r":[4,2,["#.##","##..","#...","#...","#..."]],"s":[5,2,[".####","#....",".###.","....#","####."]],"t":[4,0,[".#..",".#..","####",".#..",".#..",".#..","..##"]],"u":[5,2,["#...#","#...#","#...#","#..##",".##.#"]],"v":[5,2,["#...#","#...#","#...#",".#.#.","..#.."]],"w":[5,2,["#...#","#...#","#.#.#","#.#.#",".#.#."]],"x":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"y":[5,2,["#...#","#...#","#...#","#...#",".####","....#",".###."]],"z":[5,2,["#####","...#.","..#..",".#...","#####"]]," ":[3,0,[]],"!":[1,0,["#","#","#","#","#",".","#"]],"\"":[3,0,["#.#","#.#"]],"#":[5,1,[".#.#.","#####",".#.#.","#####",".#.#."]],"$":[5,0,["..#..",".####","#.#..",".###.","..#.#","####.","..#.."]],"%":[5,0,["##...","##..#","...#.","..#..",".#...","#..##","...##"]],"&":[5,0,[".##..","#..#.","#.#..",".#...","#.#.#","#..#.",".##.#"]],"'":[1,0,["#","#"]],"(":[2,0,[".#","#.","#.","#.","#.","#.",".#"]],")":[2,0,["#.",".#",".#",".#",".#",".#","#."]],"*":[5,1,["..#..","#.#.#",".###.","#.#.#","..#.."]],"+":[5,1,["..#..","..#..","#####","..#..","..#.."]],",":[2,5,[".#",".#","#."]],"-":[4,3,["####"]],".":[1,6,["#"]],"/":[5,0,["....#","...#.","...#.","..#..",".#...",".#...","#...."]],":":[1,2,["#",".",".",".","#"]],";":[2,2,[".#","..","..",".#",".#","#."]],"<":[3,1,["..#",".#.","#..",".#.","..#"]],"=":[4,2,["####","....","####"]],">":[3,1,["#..",".#.","..#",".#.","#.."]],"?":[5,0,[".###.","#...#","....#","...#.","..#..",".....","..#.."]],"@":[5,0,[".###.","#...#","#.###","#.#.#","#.###","#....",".###."]],"[":[3,0,["###","#..","#..","#..","#..","#..","###"]],"\\":[5,0,["#....",".#...",".#...","..#..","...#.","...#.","....#"]],"]":[3,0,["###","..#","..#","..#","..#","..#","###"]],"^":[5,0,["..#..",".#.#.","#...#"]],"_":[5,7,["#####"]],"`":[2,0,["#.",".#"]],"{":[4,0,["..##",".#..",".#..","#...",".#..",".#..","..##"]],"|":[1,0,["#","#","#","#","#","#","#","#"]],"}":[4,0,["##..","..#.","..#.","...#","..#.","..#.","##.."]],"~":[5,2,[".#...","#.#.#","...#."]],"▶":[4,1,["#...","##..","###.","##..","#..."]],"▼":[5,2,["#####",".###.","..#.."]],"✓":[5,2,["....#","...#.","#.#..",".#..."]],"✗":[5,1,["#...#",".#.#.","..#..",".#.#.","#...#"]],"×":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"…":[5,6,["#.#.#"]],"→":[5,2,["...#.","#####","...#."]],"←":[5,2,[".#...","#####",".#..."]],"·":[1,3,["#"]],"°":[3,0,[".#.","#.#",".#."]]};
+const _glif=new Map();
+const skalaTeks=uk=>Math.max(1,Math.round(uk/10));
+function kanvasGlif(ch,col,tebal){
+  const key=ch+'|'+col+'|'+(tebal?1:0);let c=_glif.get(key);if(c)return c;
+  const [w,y0,rows]=GLIF[ch]||GLIF['?'];
+  c=document.createElement('canvas');c.width=Math.max(1,w+(tebal?1:0));c.height=10;const q=c.getContext('2d');q.fillStyle=warna(col);
+  rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='#'){q.fillRect(x,y0+y,1,1);if(tebal&&r[x+2]!=='#')q.fillRect(x+1,y0+y,1,1)}});
+  _glif.set(key,c);return c;
+}
+const lebarGlif=(ch,tebal,mono)=>mono?6:(GLIF[ch]||GLIF['?'])[0]+1+(tebal?1:0);
+function lebarTeks(s,uk=10,tebal,mono){
+  let w=0;for(const ch of String(s))w+=lebarGlif(ch,tebal,mono);
+  return Math.max(0,w-1)*skalaTeks(uk)+2;
+}
+function tulis(g,s,x,y,col=7,o={}){
+  s=String(s);if(!s)return 0;
+  const uk=(o.uk||10)*(o.skala||1),k=skalaTeks(uk),w=lebarTeks(s,uk,o.tebal,o.mono);
+  let xx=x+1;if(o.rata==='tengah')xx=x-w/2+1;else if(o.rata==='kanan')xx=x-w+1;
+  xx=Math.round(xx);const yy=Math.round(y)+1;
+  const lapis=o.bayang!=null?[[o.bayang,k],[col,0]]:[[col,0]];
+  for(const [c,d] of lapis){
+    let cx=xx;
+    for(const ch of s){
+      const [gw]=GLIF[ch]||GLIF['?'];
+      if(ch!==' '){const im=kanvasGlif(ch,warna(c),o.tebal),ox=o.mono?Math.floor((5-gw)/2)*k:0;g.drawImage(im,cx+ox+d,yy+d,im.width*k,im.height*k)}
+      cx+=lebarGlif(ch,o.tebal,o.mono)*k;
+    }
+  }
+  return w;
+}
+function potong(s,maks,uk=10){s=String(s);if(lebarTeks(s,uk)<=maks)return s;while(s.length>1&&lebarTeks(s+'…',uk)>maks)s=s.slice(0,-1);return s+'…'}
+
+
+
+/* ============ LATAR GAYA RPG GBA ============ */
+const GB={rumput:'#6cc04a',rumputT:'#8ad65a',rumputG:'#4a9a3a',rumputGG:'#357a2c',tanah:'#d9b26b',tanahG:'#b8894a',tanahT:'#ecd08e',
+  jerami:'#e8b84a',jeramiG:'#c08a2a',jeramiT:'#f7d982',jeramiGG:'#8f5f1a',dinding:'#e8dcc0',dindingG:'#c4b392',batu:'#9a8c70',
+  kayu:'#b07a3e',kayuG:'#7f5428',kayuT:'#d29a55',kayuGG:'#4a2c16',daun:'#2f8a35',daunT:'#55b84f',daunG:'#1d5a22',ceri:'#d23c3c',
+  tenda:'#2bb3a3',tendaG:'#1f8f80',putih:'#f4f1e6',lantai:'#c08b4f',lantaiG:'#946433',lantaiT:'#d7a56a',kertas:'#f1e3b5',kertasG:'#b49a62',garis:'#1b1b2f'};
+function acakTetap(benih){let s=benih>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+function latar(w,h,lukis){const c=document.createElement('canvas');c.width=w;c.height=h;lukis(c.getContext('2d'));return c}
+function bulat(q,cx,cy,r,col){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y)+.35);kotak(q,cx-w,cy+y,2*w+1,1,col)}}
+function lukisRumput(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.rumput);
+  for(let i=0;i<w*h/22;i++){
+    const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h),r=a();
+    if(r<.5){kotak(q,px,py+1,1,1,GB.rumputG);kotak(q,px+1,py,1,1,GB.rumputG);kotak(q,px+2,py+1,1,1,GB.rumputG)}
+    else if(r<.8)kotak(q,px,py,1,1,GB.rumputT);
+    else if(r<.86)kotak(q,px,py,2,1,GB.rumputGG);
+  }
+}
+function lukisJalan(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.tanah);
+  for(let i=0;i<w*h/14;i++){const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h);kotak(q,px,py,1,1,a()<.6?GB.tanahG:GB.tanahT)}
+}
+function bunga(q,x,y,c){kotak(q,x,y-1,1,1,c);kotak(q,x-1,y,3,1,c);kotak(q,x,y+1,1,1,c);kotak(q,x,y,1,1,'#ffe066')}
+function semak(q,x,y,r,buah){
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-1,y-1,r-2,GB.daunT);
+  kotak(q,x-r+2,y-1,1,1,GB.daunG);kotak(q,x+1,y+2,1,1,GB.daunG);
+  if(buah)for(const [dx,dy] of [[-2,1],[2,-1],[0,3],[3,2]])kotak(q,x+dx,y+dy,1,1,GB.ceri);
+}
+function pohon(q,x,y,r){
+  kotak(q,x-3,y+r-2,6,10,GB.kayuG);kotak(q,x-3,y+r-2,2,10,GB.kayu);
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-3,y-3,r-4,GB.daunT);
+  const a=acakTetap(x*7+y);for(let i=0;i<r*3;i++){const px=x+Math.floor((a()-.5)*r*1.6),py=y+Math.floor((a()-.5)*r*1.6);kotak(q,px,py,2,1,GB.daunG)}
+}
+function lukisPondok(q,x,y,w){
+  const ha=34,hd=24;
+  kotak(q,x+4,y+ha,w-8,hd,GB.dinding);
+  const a=acakTetap(11);
+  for(let i=0;i<26;i++)kotak(q,x+6+Math.floor(a()*(w-14)),y+ha+3+Math.floor(a()*(hd-8)),4,2,GB.dindingG);
+  kotak(q,x+4,y+ha+hd-3,w-8,3,GB.batu);bingkai(q,x+3,y+ha,w-6,hd+1,GB.garis);
+  for(let r=0;r<ha;r++){const t=Math.max(0,5-r);kotak(q,x+t,y+r,w-2*t,1,GB.jerami)}
+  for(let b=1;b<ha-3;b+=5)for(let i=x+3+((b/5|0)%2)*2;i<x+w-3;i+=4){kotak(q,i,y+b,1,3,GB.jeramiG);kotak(q,i+1,y+b-1,1,1,GB.jeramiT)}
+  kotak(q,x,y+ha-3,w,3,GB.jeramiGG);kotak(q,x+5,y,w-10,1,GB.garis);
+  for(let r=0;r<6;r++){kotak(q,x+5-r,y+r,1,1,GB.garis);kotak(q,x+w-6+r,y+r,1,1,GB.garis)}
+  kotak(q,x,y+5,1,ha-5,GB.garis);kotak(q,x+w-1,y+5,1,ha-5,GB.garis);kotak(q,x,y+ha,w,1,GB.garis);
+  const dx=x+48;kotak(q,dx,y+ha+6,16,hd-6,GB.kayuG);kotak(q,dx+2,y+ha+8,12,hd-8,GB.kayu);kotak(q,dx+7,y+ha+8,1,hd-8,GB.kayuG);
+  kotak(q,dx+2,y+ha+5,12,2,GB.kayuGG);kotak(q,dx+10,y+ha+15,2,2,'#ffd34d');bingkai(q,dx-1,y+ha+5,18,hd-4,GB.garis);
+  kotak(q,x+78,y+ha+5,16,11,GB.garis);kotak(q,x+79,y+ha+6,14,9,'#7ec8e3');kotak(q,x+85,y+ha+6,1,9,GB.garis);kotak(q,x+79,y+ha+10,14,1,GB.garis);kotak(q,x+80,y+ha+7,3,2,'#d8f4ff');
+  kotak(q,x+10,y+ha+6,32,12,GB.kayuGG);kotak(q,x+11,y+ha+7,30,10,GB.kayuT);kotak(q,x+11,y+ha+15,30,2,GB.kayu);
+}
+function lukisPeti(q,x,y){kotak(q,x,y,14,12,GB.kayuGG);kotak(q,x+1,y+1,12,10,GB.kayu);kotak(q,x+1,y+1,12,3,'#5a3418');for(let i=0;i<5;i++)kotak(q,x+2+i*2,y+2,1,1,'#2a1a10');kotak(q,x+1,y+6,12,1,GB.kayuG)}
+function kotakDialog(g,x,y,w,h,nama,baris,u){
+  bingkaiRPG(g,x,y,w,h);
+  if(nama){const tw=lebarTeks(nama,8,true)+10;panel(g,x+8,y-9,tw,12,GB.tenda,GB.putih);tulis(g,nama,x+13,y-8,'#ffffff',{uk:8,tebal:true,bayang:GB.tendaG})}
+  let sisa=GERAK?Math.floor(u*45):1e9;
+  baris.forEach((b,i)=>{const t=b.slice(0,Math.max(0,sisa));sisa-=b.length;tulis(g,t,x+9,y+5+i*12,'#ffffff',{bayang:'#0b0f22'})});
+  if(sisa>4&&Math.floor(u*3)%2===0){const ax=x+w-12,ay=y+h-9;kotak(g,ax,ay,5,1,'#ffffff');kotak(g,ax+1,ay+1,3,1,'#ffffff');kotak(g,ax+2,ay+2,1,1,'#ffffff')}
+}
+function hatiHUD(g,x,y,isi,maks=3){for(let i=0;i<maks;i++)spr(g,i<isi?'hatiG':'hatiGK',x+i*9,y)}
+
+Object.assign(SPRITE,{
+  bugG:{p:{o:'#1b1b2f',k:'#3a2a3a',e:'#ffffff',p:'#1b1b2f',X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'},d:['...k........k...','....k......k....','....oooooooo....','...oZZXXXXYYo...','..oZeeXXXXeeYo..','..oZepXXXXpeYo..','..oXXXXXXXXXXo..','.ooXYYXXXXYYXoo.','okoXXXXXXXXXXoko','..oXYYXXXXYYXo..','okoXXXXXXXXXXoko','..ooXXXXXXXXoo..','.k..oooooooo..k.','k..............k']},
+  hantuG:{p:{o:'#3a3f5a',w:'#eef2ff',s:'#b8c0e0',p:'#1b1b2f',r:'#ff8fb1'},d:['....oooooo....','..oowwwwwwoo..','.owwwwwwwwwwo.','.owwppwwppwwo.','owwwppwwppwwwo','owwwwwwwwwwwwo','owwwwwrrwwwwwo','owwwwwwwwwwwwo','owswwwwwwwwswo','owswwwwwwwwswo','owwwwwwwwwwwwo','owwoowwwwoowwo','owo..owwo..owo','.o....oo....o.']},
+  petiKayu:{p:{o:'#4a2c16',L:'#d29a55',K:'#b07a3e',d:'#7f5428',m:'#b3c2d1'},d:['oooooooooooo','oLLLLLLLLLLo','oKKKKKKKKKKo','oooooooooooo','oKmKKKKKKmKo','oKmKKKKKKmKo','oKKKKKKKKKKo','oKmKKKKKKmKo','oddddddddddo','oooooooooooo']},
+  kuali:{p:{o:'#1b1b2f',b:'#bfffd0',g:'#7dff8a',a:'#5c6178',i:'#3a3f5a',I:'#7a8aa0'},d:['....b...b...','..oooooooo..','.oggggggggo.','oaaaaaaaaaao','oiiiiiiiiiio','oiIiiiiiiiio','oiIiiiiiiiio','.oiiiiiiiio.','..oooooooo..','..o......o..','.oo......oo.']},
+  struk:{p:{o:'#8a6a3a',w:'#fff8e8',l:'#8a8fa3'},d:['oooooooo','owwwwwwo','owllllwo','owwwwwwo','owlllwwo','owwwwwwo','owllllwo','owwwwwwo','owlwllwo','owwwwwwo','oo.oo.oo']},
+  pialaG:{p:{o:'#7a4a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',b:'#8a5a2b'},d:['..oooooooo..','ooowyyyyYooo','o.owyyyyYo.o','o.oyyyyyYo.o','oo.oyyyYo.oo','...oyyyYo...','....oyYo....','.....oo.....','.....yY.....','...oooooo...','...obbbbo...','...oooooo...']}
+});
+
+/* ============ PUSTAKA ADEGAN RPG ============ */
+const BT={batu:'#7d7f8f',batuT:'#9a9cab',batuG:'#5c5e6e',nat:'#3e4050',dinding:'#4b4e63',dindingT:'#666a82',dindingG:'#343648'};
+function lukisLantaiKayu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.lantai);
+  for(let yy=y;yy<y+h;yy+=8){kotak(q,x,yy,w,1,GB.lantaiG);kotak(q,x,yy+1,w,1,GB.lantaiT);for(let xx=x+((yy-y)/8%2)*24+Math.floor(a()*10);xx<x+w;xx+=48)kotak(q,xx,yy,1,8,GB.lantaiG)}
+  for(let i=0;i<w*h/600;i++)kotak(q,x+Math.floor(a()*w),y+Math.floor(a()*h),2,1,GB.lantaiG);
+}
+function lukisDindingKayu(q,x,y,w,h){
+  kotak(q,x,y,w,h,'#7a4a24');
+  for(let xx=x;xx<x+w;xx+=10){kotak(q,xx,y,1,h,'#4a2c16');kotak(q,xx+1,y,1,h,'#9a6234')}
+  kotak(q,x,y+h-3,w,3,'#4a2c16');kotak(q,x,y+h-3,w,1,'#9a6234');
+}
+function lukisLantaiBatu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,BT.nat);
+  for(let yy=y;yy<y+h;yy+=12){const off=((yy-y)/12%2)*8;for(let xx=x-off;xx<x+w;xx+=16){
+    kotak(q,xx+1,yy+1,15,11,BT.batu);kotak(q,xx+1,yy+1,15,1,BT.batuT);kotak(q,xx+1,yy+1,1,11,BT.batuT);kotak(q,xx+2,yy+11,14,1,BT.batuG);
+    if(a()<.35)kotak(q,xx+4+Math.floor(a()*8),yy+4+Math.floor(a()*5),2,1,BT.batuG);
+  }}
+}
+function lukisDindingBatu(q,x,y,w,h){
+  kotak(q,x,y,w,h,BT.dindingG);
+  for(let yy=y;yy<y+h;yy+=8){const off=((yy-y)/8%2)*6;for(let xx=x-off;xx<x+w;xx+=12){kotak(q,xx+1,yy+1,11,6,BT.dinding);kotak(q,xx+1,yy+1,11,1,BT.dindingT)}}
+  kotak(q,x,y+h-2,w,2,'#24263a');
+}
+function obor(g,x,y,t){
+  kotak(g,x-1,y+4,3,8,GB.kayuGG);kotak(g,x-3,y+2,7,3,'#5c6178');kotak(g,x-3,y+2,7,1,'#9aa7b8');
+  const f=GERAK?Math.floor(t*10)%3:0;
+  g.globalAlpha=.13;bulat(g,x,y-3,13+f,'#ffb84d');g.globalAlpha=1;
+  kotak(g,x-2,y-3+(f===1?1:0),5,5,'#ff7a1c');kotak(g,x-1,y-6+(f===2?1:0),3,5,'#ffd34d');kotak(g,x,y-7+f,1,2,'#fff7b0');
+}
+function gigi(g,cx,cy,r,sudut){
+  for(let i=0;i<8;i++){const a=sudut+i*Math.PI/4;kotak(g,Math.round(cx+Math.cos(a)*(r+1))-1,Math.round(cy+Math.sin(a)*(r+1))-1,3,3,'#6a4210')}
+  bulat(g,cx,cy,r,'#6a4210');bulat(g,cx,cy,r-1,'#e0a040');bulat(g,cx-1,cy-1,Math.max(1,r-3),'#f6c870');bulat(g,cx,cy,1,'#5a3a10');
+}
+function mesinKuningan(g,x,y,w,h,label,o={}){
+  const X=Math.round(x+(o.goy||0));
+  g.globalAlpha=.25;kotak(g,X+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,X,y,w,h,GB.kayuGG);kotak(g,X+1,y+1,w-2,h-2,'#8a5a2b');kotak(g,X+1,y+1,w-2,3,'#b07a3e');
+  kotak(g,X+3,y+5,w-6,h-10,'#c98a3a');kotak(g,X+3,y+5,w-6,1,'#f0c070');bingkai(g,X+3,y+5,w-6,h-10,'#5a3a10');
+  for(const [rx,ry] of [[X+5,y+7],[X+w-6,y+7],[X+5,y+h-7],[X+w-6,y+h-7]])kotak(g,rx,ry,1,1,'#fff3b0');
+  const pw=Math.max(30,lebarTeks(label,10,true)+8);panel(g,Math.round(X+w/2-pw/2),y+8,pw,13,GB.kertas,'#5a3a10');tulis(g,label,X+w/2,y+9,'#3a2410',{rata:'tengah',tebal:true});
+  gigi(g,X+Math.round(w/2)-10,y+h-17,5,o.sudut||0);gigi(g,X+Math.round(w/2)+10,y+h-17,5,-(o.sudut||0));
+  if(o.lampu)kotak(g,X+w-10,y+h-10,3,3,o.lampu);
+  kotak(g,X+3,y+h,4,2,GB.kayuGG);kotak(g,X+w-7,y+h,4,2,GB.kayuGG);
+}
+const WARNA_PETI={int:['#e0a020','#ffd34d','#8a5a10'],float:['#2a7fd8','#5cc8ff','#1a3f8a'],str:['#2f9e44','#7dff8a','#1a5a2a'],bool:['#d9558f','#ff9ccb','#8a2a55']};
+function petiHarta(g,x,y,w,h,tipe,o={}){
+  const [m,t,d]=WARNA_PETI[tipe],lh=14;
+  g.globalAlpha=.25;kotak(g,x+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,x,y,w,h,GB.garis);
+  kotak(g,x+1,y+1,w-2,lh-1,m);kotak(g,x+1,y+1,w-2,2,t);kotak(g,x+1,y+lh-2,w-2,1,d);
+  kotak(g,x+1,y+lh,w-2,h-lh-1,d);kotak(g,x+2,y+lh+1,w-4,h-lh-3,m);kotak(g,x+1,y+lh,w-2,1,GB.garis);
+  for(const bx of [x+4,x+w-7]){kotak(g,bx,y+lh+1,3,h-lh-2,'#ffd34d');kotak(g,bx+2,y+lh+1,1,h-lh-2,'#c09020')}
+  kotak(g,Math.round(x+w/2-3),y+lh-3,6,7,'#ffd34d');kotak(g,Math.round(x+w/2-1),y+lh,2,2,GB.garis);
+  if(o.kilau){bingkai(g,x-1,y-1,w+2,h+2,'#fff7b0');bingkai(g,x-2,y-2,w+4,h+4,t)}
+}
+function kuali(g,cx,cy,t,cair,o={}){
+  const goy=o.goy||0,X=cx+goy;
+  if(GERAK)for(let i=0;i<5;i++){const f=Math.floor(t*12+i*2)%3;kotak(g,X-12+i*5,cy+26-f,3,4+f,f===0?'#ffd34d':'#ff7a1c')}
+  kotak(g,X-15,cy+22,4,6,GB.garis);kotak(g,X+11,cy+22,4,6,GB.garis);
+  bulat(g,X,cy+10,17,GB.garis);bulat(g,X,cy+10,16,'#3a3f5a');bulat(g,X-5,cy+5,7,'#4b5068');
+  kotak(g,X-19,cy-3,38,6,GB.garis);kotak(g,X-18,cy-2,36,4,'#5c6178');kotak(g,X-18,cy-2,36,1,'#9aa7b8');
+  kotak(g,X-16,cy-5,32,3,cair);kotak(g,X-12,cy-6,24,1,cair);
+  if(GERAK)for(let i=0;i<3;i++){const ph=(t*1.4+i/3)%1;kotak(g,X-8+i*8,cy-6-ph*10,2,2,o.gelembung||'#ffffff')}
+  if(o.rune){panel(g,X-9,cy+7,18,14,'#2b2f3a','#ffd34d');tulis(g,o.rune,X,cy+9,o.runeWarna||'#ffd34d',{rata:'tengah',tebal:true})}
+}
+function bingkaiRPG(g,x,y,w,h){
+  kotak(g,x+1,y,w-2,h,GB.putih);kotak(g,x,y+1,w,h-2,GB.putih);
+  kotak(g,x+2,y+2,w-4,h-4,'#1c2340');bingkai(g,x+3,y+3,w-6,h-6,'#4b5aa0');
+}
+function asap(g,x,y,u,n=8){for(let k=0;k<n;k++){const a=k*Math.PI*2/n+u,r=4+u*26;g.globalAlpha=Math.max(0,1-u);kotak(g,x+Math.cos(a)*r-2,y+Math.sin(a)*r*.6-2-u*10,4,4,k%2?'#d0d0d8':'#a8a8b4');g.globalAlpha=1}}
+function letup(g,x,y,u,warnaP){for(let k=0;k<10;k++){const a=k*Math.PI/5,r=u*30;kotak(g,x+Math.cos(a)*r-1,y+Math.sin(a)*r-1,3,3,k%2?warnaP:'#fff7b0')}}
+
+
+/* ============ PENJADWAL ANIMASI ============ */
+const ADEGAN=[];
+const amati=new IntersectionObserver(es=>{for(const e of es){const a=ADEGAN.find(x=>x.c===e.target);if(a)a.lihat=e.isIntersecting}});
+function aturSkala(a){
+  const dpr=window.devicePixelRatio||1,cw=a.c.clientWidth;
+  const S=cw?jepit(Math.ceil(cw*dpr/a.W),2,6):Math.max(a.S,3);
+  if(S!==a.S){a.S=S;a.c.width=a.W*S;a.c.height=a.H*S}
+  a.g.setTransform(S,0,0,S,0,0);a.g.imageSmoothingEnabled=false;
+}
+function adegan(kanvas,gambar){const a={c:kanvas,g:kanvas.getContext('2d'),W:kanvas.width,H:kanvas.height,S:0,gambar,lihat:false,akhir:0,paksa:true};ADEGAN.push(a);amati.observe(kanvas);return a}
+function putar(ms){
+  const t=ms/1000;
+  for(const a of ADEGAN){
+    if(!a.lihat&&!a.paksa)continue;
+    if(!a.paksa&&t-a.akhir<1/30)continue;
+    const dt=a.akhir?Math.min(.1,t-a.akhir):0;a.akhir=t;a.paksa=false;
+    aturSkala(a);a.gambar(a.g,t,dt);
+  }
+  requestAnimationFrame(putar);
+}
+
+/* ============ PUSTAKA BERSAMA (dari materi Python) ============ */
+const BUG_SYN={X:'#ff9a3c',Y:'#c0561a',Z:'#ffd08a'},BUG_ABU={X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'};
+const WARNA_BUG={SyntaxError:BUG_SYN,IndentationError:BUG_SYN,NameError:{X:'#b58cff',Y:'#7a4fd1',Z:'#e0ccff'},TypeError:{X:'#ff5a5a',Y:'#b8263a',Z:'#ffb3b3'},ValueError:{X:'#4fb0ff',Y:'#2266c8',Z:'#bfe3ff'},EOFError:BUG_ABU,ZeroDivisionError:{X:'#ff77a8',Y:'#c0457a',Z:'#ffc6dc'},AttributeError:{X:'#d9a05a',Y:'#9a6a2a',Z:'#f3d3a3'},OverflowError:BUG_ABU};
+function gelembung(g,teks,x,y){
+  const w=lebarTeks(teks)+10;
+  panel(g,x,y,w,15,7,0);kotak(g,x+2,y+15,4,2,7);kotak(g,x,y+17,3,2,7);
+  tulis(g,teks,x+5,y+2,0);
+}
+const ribuanID=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+function hud(g,label,skor,hati,maksHati=3){
+  if(maksHati)hatiHUD(g,4,4,hati,maksHati);
+  const lx=maksHati?6+maksHati*9:4;
+  if(label){const w=lebarTeks(label,10,true)+6;g.globalAlpha=.8;kotak(g,lx,2,w,13,'#1c2340');g.globalAlpha=1;tulis(g,label,lx+2,3,'#ffffff',{tebal:true,bayang:'#0b0f22'})}
+  const tx=String(skor),w2=lebarTeks(tx,10,true)+15;g.globalAlpha=.8;kotak(g,252-w2,2,w2+2,13,'#1c2340');g.globalAlpha=1;
+  spr(g,'kepeng',252-w2+3,5);tulis(g,tx,252,3,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+}
+function layarJudul(g,judul,baris,t=0){
+  g.globalAlpha=.55;kotak(g,0,0,256,144,'#0b0f22');g.globalAlpha=1;
+  const w=204,h=36+baris.length*12,x=26,y=Math.round(70-h/2);
+  bingkaiRPG(g,x,y,w,h);
+  tulis(g,judul,128,y+7,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+  baris.forEach((b,i)=>tulis(g,b,128,y+31+i*12,'#ffffff',{rata:'tengah',bayang:'#0b0f22'}));
+  pamn(g,240,y+h+2,Math.sin(t*2)>.6?'sorak':'diam');
+}
+function simpanTerbaik(kunci,skor,el,fmt){const b=lsAmbil(kunci,0);if(skor>b)lsSimpan(kunci,skor);const t=Math.max(b,skor);el.textContent=t?fmt(t):''}
+
+
+/* ============ SPRITE TAMBAHAN: LONCENG & PENYUSUP ============ */
+Object.assign(SPRITE,{
+  lonceng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',k:'#4a2c16'},d:['....kk....','....oo....','...oyyo...','..oywyYo..','..oyyyYo..','.oywyyYYo.','.oyyyyyYo.','oyyyyyyYYo','oooooooooo','....oo....']},
+  buku:{p:{o:'#4a2c16',k:'#8a5a2b',K:'#b07a3e',p:'#f1e3b5',P:'#c9b27a',l:'#8a6a3a'},d:['oooooooooooo','oKKKKoKKKKKo','oKppppppppKo','oKplllpllpKo','oKppppppppKo','oKplllllppKo','oKppppppppKo','oKpllplllpKo','oKppppppppKo','okkkkokkkkko','oooooooooooo']}
+});
+/* Penyusup memakai sprite warga dengan jubah gelap (pedoman: sprite PAMN tidak dipakai untuk tokoh lain) */
+const JUBAH={H:'#2b2238',e:'#3d3354',E:'#2a2240',b:'#1f1a2b',B:'#16121f',L:'#0f0c16'};
+function penyusup(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2+(o.goy||0),kaki-h,1,{balik:o.balik,ganti:JUBAH,alpha:o.alpha});
+}
+function lonceng(g,cx,y,t,bunyiAktif){
+  kotak(g,cx-1,y-6,2,6,GB.kayuGG);kotak(g,cx-8,y-8,16,3,GB.kayuGG);kotak(g,cx-7,y-8,14,1,GB.kayuT);
+  const goy=bunyiAktif&&GERAK?Math.round(Math.sin(t*28)*2):0;
+  spr(g,'lonceng',cx-5+goy,y-1);
+  if(bunyiAktif){const f=GERAK?Math.floor(t*8)%2:0;for(const s of [-1,1]){kotak(g,cx+s*(9+f),y+2,1,3,'#ffd34d');kotak(g,cx+s*(12+f),y+1,1,5,'#ffd34d')}}
+}
+function gerbang(g,x,y,buka,goy=0){
+  // dua tiang batu dan dua daun pintu kayu; x = tepi kiri, lebar 34, y = alas
+  for(const px of [x,x+28]){kotak(g,px,y-30,6,30,GB.garis);kotak(g,px+1,y-29,4,28,BT.batu);kotak(g,px+1,y-29,1,28,BT.batuT);kotak(g,px-1,y-32,8,3,GB.garis);kotak(g,px,y-31,6,1,BT.batuT)}
+  const lebar=Math.round(11*(1-buka));
+  for(const [dx,arah] of [[6,1],[28,-1]]){
+    if(lebar<=0)continue;
+    const X=arah>0?x+dx+goy:x+dx-lebar+goy;
+    kotak(g,X,y-22,lebar,20,GB.kayuGG);if(lebar>2){kotak(g,X+1,y-21,lebar-2,18,GB.kayu);for(let k=X+3;k<X+lebar-1;k+=3)kotak(g,k,y-21,1,18,GB.kayuG);kotak(g,X+1,y-16,lebar-2,1,GB.kayuGG);kotak(g,X+1,y-8,lebar-2,1,GB.kayuGG)}
+  }
+}
+
+/* ============ SUARA ADEGAN ============ */
+/* Animasi yang berputar sendiri ikut bersuara (permintaan dosen), tetapi hanya bila suara aktif,
+   kanvasnya sedang terlihat, dan pengunjung sudah berinteraksi dengan halaman (syarat peramban). */
+Object.assign(BUNYI,{
+  lonceng:()=>{for(let i=0;i<3;i++){nada(1568,.32,{jenis:'triangle',vol:.05,tunda:i*.2});nada(2349,.22,{jenis:'sine',vol:.022,tunda:i*.2+.01})}},
+  ding:()=>{nada(1568,.25,{jenis:'triangle',vol:.03});nada(2349,.16,{jenis:'sine',vol:.014,tunda:.01})},
+  tulis:()=>{nada(2600,.03,{jenis:'derau',vol:.05});nada(3400,.025,{jenis:'derau',vol:.04,tunda:.05})},
+  pintu:()=>{nada(220,.16,{jenis:'derau',vol:.14});nada(140,.12,{jenis:'triangle',vol:.05,ke:110})},
+  tutup:()=>{nada(400,.1,{jenis:'derau',vol:.3});nada(70,.2,{jenis:'square',vol:.07,ke:40})}
+});
+SUARA.izin=false;
+['pointerdown','keydown','touchstart'].forEach(n=>addEventListener(n,()=>{SUARA.izin=true},{passive:true,capture:true}));
+function suaraAdegan(A,T,daftar){
+  const kini=performance.now()/1000,p=A.Tlalu,lompat=A.nyata!=null&&kini-A.nyata>.4;
+  A.Tlalu=T;A.nyata=kini;
+  if(p==null||lompat||!A.lihat||!GERAK||!SUARA.aktif||!SUARA.izin||document.hidden)return;
+  for(const [w,n] of daftar)if(p<=T?(w>p&&w<=T):(w>p||w<=T))bunyi(n);
+}
+function garisPx(g,x0,y0,x1,y1,c,tebal=1){const n=Math.max(1,Math.ceil(Math.max(Math.abs(x1-x0),Math.abs(y1-y0))));for(let i=0;i<=n;i++){const q=i/n;kotak(g,lerp(x0,x1,q),lerp(y0,y1,q),tebal,tebal,c)}}
+function bungkus(teks,maks,uk=10){const b=[];let s='';for(const k of teks.split(' ')){const c=s?s+' '+k:k;if(lebarTeks(c,uk)>maks&&s){b.push(s);s=k}else s=c}if(s)b.push(s);return b}
+const fmtID=n=>Math.round(n).toLocaleString('id-ID');
+const persen=(x,d=1)=>(x*100).toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+function belLoncengMini(g,x,y,c,cg){kotak(g,x+1,y,3,1,c);kotak(g,x,y+1,5,3,c);kotak(g,x,y+4,5,1,cg);kotak(g,x+2,y+5,1,1,cg)}
+
+/* Pencocokan syarat: sama persis dengan praktikum (deteksi-serangan.html) agar sintaksis di materi berlaku di praktikum */
+function cocok1(ev,c){
+  let f=ev[c.k];if(f===undefined)return false;
+  const v=c.v;
+  if(v.startsWith('!'))return String(f).toLowerCase()!==v.slice(1).toLowerCase();
+  if(v.startsWith('*')&&v.endsWith('*'))return String(f).toLowerCase().includes(v.slice(1,-1).toLowerCase());
+  if(/^>=/.test(v))return +f>=+v.slice(2);
+  if(/^<=/.test(v))return +f<=+v.slice(2);
+  if(/^>/.test(v))return +f>+v.slice(1);
+  if(/^</.test(v))return +f<+v.slice(1);
+  if(v.includes('|'))return v.split('|').some(x=>String(f).toLowerCase()===x.trim().toLowerCase());
+  return String(f).toLowerCase()===v.toLowerCase();
+}
+const keSyarat=s=>{const i=s.indexOf(':');return {k:s.slice(0,i),v:s.slice(i+1)}};
+
+
+/* ============ KONFIGURASI DUNIA: PENELUSURAN ALGORITMA ============ */
+const RPG={kunciSuara:'alg5rpg:suara',
+  mulai:{dialog:[[3.2,7.8,'Pengembang',['Ini rancangan algoritma','bonus penjualan toko.']],[8,11.4,'PAMN',['Sebelum dipakai, saya','telusuri baris demi baris.']],[11.6,14,'PAMN',['Hasilnya cocok. Algoritma','siap dipakai.']]]},
+  tab:{
+    t1:{prop:'hitung',judul:'Bercabang',judulBesar:'BONUS PENJUALAN',benar:['Tepat. Tabel penelusuran','cocok dengan jalannya algoritma.'],salah:['Belum tepat. Telusuri lagi','baris demi baris.']},
+    t2:{prop:'gudang',judul:'Berulang',judulBesar:'REKAP TRANSAKSI',benar:['Tepat. Setiap iterasi','tercatat dengan benar.'],salah:['Belum tepat. Periksa nilai','awal dan setiap iterasi.']},
+    t3:{prop:'papan',judul:'Nilai Uji',judulBesar:'NILAI UJI',benar:['Tepat. Tanda dan nilai uji','sesuai aturan bisnis.'],salah:['Belum tepat. Perhatikan','nilai batasnya.']},
+    t4:{prop:'bawah',judul:'Kesalahan',judulBesar:'BURU KESALAHAN',benar:['Tepat. Kesalahan logika','ditemukan dan diperbaiki.'],salah:['Belum tepat. Bandingkan dengan','keluaran yang seharusnya.']}}};
+
+/* ============ LAPISAN DUNIA PRAKTIKUM ============
+   Lapisan ini hanya membaca status latihan (DAFTAR, ST) dan bereaksi setiap kali catat() dipanggil.
+   Soal, pemeriksaan jawaban, dan penyimpanan pekerjaan tidak diubah. */
+const REAKSI={tab:null,k:null,ok:false,t0:-99,menang:false};
+const tabDari=k=>RPG.tabDari?RPG.tabDari(k):k.slice(0,2);
+const kunciTab=tab=>DAFTAR.map(([k])=>k).filter(k=>tabDari(k)===tab);
+const jumlahTepat=()=>ST?DAFTAR.filter(([k])=>ST.ok[k]).length:0;
+const detikKini=()=>performance.now()/1000;
+const asliCatat=catat;
+catat=function(k,ok){
+  const sebelum=jumlahTepat();
+  asliCatat(k,ok);
+  Object.assign(REAKSI,{tab:tabDari(k),k,ok,t0:detikKini()});
+  bunyi(ok?'koin':'salah');if(!ok)setTimeout(()=>bunyi('hehe'),300);
+  if(ok&&jumlahTepat()===DAFTAR.length&&sebelum<DAFTAR.length)setTimeout(()=>bunyi('menang'),650);
+};
+
+function permata(g,x,y,keadaan){
+  const c=keadaan==='y'?'#55d36b':keadaan==='n'?'#ff5a5a':'#3a3f5a',l=keadaan==='y'?'#b8ffc4':keadaan==='n'?'#ffb3b3':'#5c6178';
+  kotak(g,x+2,y,6,10,GB.garis);kotak(g,x,y+2,10,6,GB.garis);kotak(g,x+3,y+1,4,8,c);kotak(g,x+1,y+3,8,4,c);kotak(g,x+3,y+2,2,2,l);
+}
+const keadaanTugas=k=>!ST?'b':ST.ok[k]?'y':ST.att[k]?'n':'b';
+function deretPermata(g,daftar,cy=20){const w=daftar.length*14;daftar.forEach((k,i)=>permata(g,128-w/2+i*14+2,cy,keadaanTugas(k)))}
+
+/* ---------- properti panggung ---------- */
+function latarDalam(){return latar(256,144,q=>{lukisDindingKayu(q,0,0,256,46);lukisLantaiKayu(q,0,46,256,98,acakTetap(101))})}
+function latarBawah(){return latar(256,144,q=>{lukisDindingBatu(q,0,0,256,46);lukisLantaiBatu(q,0,46,256,98,acakTetap(103))})}
+const PROP={
+  hitung:{latar:latarDalam,gambar(g,t,aktif){mesinKuningan(g,156,44,72,58,'BONUS',{sudut:aktif?t*6:t*.6,lampu:aktif?'#55d36b':'#ffd34d'})},titik:[192,60]},
+  gudang:{latar:latarDalam,gambar(g,t,aktif){for(let r=0;r<3;r++)for(let c=0;c<3-r;c++)spr(g,'petiKayu',160+c*26+r*13,86-r*20,2);if(aktif){spr(g,'kepeng',214,40)}},titik:[200,60]},
+  papan:{latar:latarDalam,gambar(g,t){kotak(g,150,34,92,58,GB.kayuGG);kotak(g,152,36,88,54,'#2f4a3a');kotak(g,152,36,88,2,'#3e5f4b');
+    [['>=','#ffd34d'],['>','#7dff8a'],['<=','#5cc8ff'],['<','#ff9ccb']].forEach(([s,c],i)=>tulis(g,s,170+(i%2)*44,44+Math.floor(i/2)*22,c,{skala:2,tebal:true}));
+    kotak(g,160,92,4,14,GB.kayuGG);kotak(g,228,92,4,14,GB.kayuGG)},titik:[196,62]},
+  bawah:{latar:latarBawah,gambar(g,t){obor(g,20,26,t);obor(g,236,26,t);if(GERAK)spr(g,'hantuG',186,58+Math.round(Math.sin(t*2)*3),2,{alpha:.35})},titik:[200,72]},
+  tipe:{latar:latarDalam,gambar(g,t,aktif){['int','float','str','bool'].forEach((ti,i)=>petiHarta(g,146+(i%2)*50,40+Math.floor(i/2)*34,40,28,ti,{kilau:aktif&&Math.floor(t*4)%2===0}))},titik:[192,64]},
+  stempel:{latar:latarDalam,gambar(g){kotak(g,146,70,100,22,GB.garis);kotak(g,147,71,98,4,GB.kayuT);kotak(g,147,75,98,16,GB.kayu);
+    for(const [x,c,d] of [[166,'#2f9e44','#1a5a2a'],[206,'#c0392b','#7a1c14']]){kotak(g,x,46,20,24,GB.kayuGG);kotak(g,x+1,47,18,22,GB.kayu);kotak(g,x-4,64,28,6,'#5c6178');kotak(g,x-4,68,28,4,c);kotak(g,x-4,71,28,1,d)}
+    tulis(g,'SAH',176,96,'#7dff8a',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,'TIDAK',216,96,'#ff9a9a',{rata:'tengah',tebal:true,bayang:'#0b0f22'})},titik:[196,58]},
+  mesin:{latar:latarDalam,gambar(g,t,aktif){mesinKuningan(g,152,40,84,62,'PYTHON',{sudut:aktif?t*6:t*.6,lampu:aktif?'#55d36b':'#ffd34d'})},titik:[194,60]}
+};
+
+/* ---------- panggung tiap tab latihan ---------- */
+function panggung(tab,cfg){
+  const P=PROP[cfg.prop],bg=P.latar(),kunci=kunciTab(tab);
+  adegan($('#kv-'+tab),(g,t)=>{
+    g.drawImage(bg,0,0);
+    const kini=detikKini(),u=REAKSI.tab===tab?kini-REAKSI.t0:99,baru=u<2.6,ok=REAKSI.ok;
+    P.gambar(g,t,baru&&ok);
+    hud(g,cfg.judul,jumlahTepat(),0,0);
+    deretPermata(g,kunci,22);
+    const goyang=baru&&!ok&&u<.6,px=64+(goyang?Math.round(Math.sin(u*80)*2):0);
+    pamn(g,px,128,baru&&ok&&u<1.4?'sorak':(Math.sin(t*1.4)>.97?'kedip':'diam'),{skala:2,ganti:goyang?{b:'#ff8a8a',c:'#e04848',d:'#8a1c1c',h:'#ffc8c8',m:'#ff9a9a'}:null});
+    const [tx,ty]=P.titik;
+    if(baru&&ok&&u<1){const q=mulus(u);spr(g,'kepeng',lerp(tx,234,q)-4,lerp(ty,10,q)-Math.sin(q*Math.PI)*24-4,1);tulis(g,'+1',tx,ty-16-u*12,'#7dff8a',{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+    if(baru&&!ok&&u<1.8){spr(g,'hantuG',tx-14,ty-14+Math.round(Math.sin(u*6)*3),2,{alpha:.92});tulis(g,'hehe',tx,ty-26,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+    if(baru&&u>.4)kotakDialog(g,6,110,244,31,'PAMN',ok?cfg.benar:cfg.salah,u-.4);
+    else if(!ST)layarJudul(g,cfg.judulBesar,['Isi NIM di bagian atas','halaman untuk memulai.'],t);
+  });
+}
+
+/* ---------- rekap: peti harta ---------- */
+function panggungRekap(){
+  const bg=latarBawah();let tBuka=null;
+  adegan($('#kv-rekap'),(g,t)=>{
+    g.drawImage(bg,0,0);obor(g,20,24,t);obor(g,236,24,t);
+    const n=jumlahTepat(),semua=ST&&n===DAFTAR.length;
+    hud(g,'Rekap',n,0,0);
+    deretPermata(g,DAFTAR.map(([k])=>k),22);
+    if(semua&&tBuka==null)tBuka=t;if(!semua)tBuka=null;
+    const u=tBuka==null?0:t-tBuka;
+    petiHarta(g,150,70,56,38,'int',{kilau:semua&&Math.floor(u*4)%2===0});
+    if(semua){const q=mulus(u/.8);spr(g,'pialaG',166,lerp(72,46,q),2);for(let k=0;k<6;k++){const a=t*3+k;kotak(g,178+Math.cos(a)*22,54+Math.sin(a)*12,1,1,'#fff7b0')}}
+    pamn(g,80,128,semua?'sorak':(Math.sin(t*1.4)>.97?'kedip':'diam'),{skala:2});
+    tulis(g,`${n} dari ${DAFTAR.length} latihan tepat`,128,35,semua?'#55d36b':'#eef2ff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    if(!ST)layarJudul(g,'PETI HARTA',['Isi NIM di bagian atas','halaman untuk memulai.'],t);
+    else if(semua&&u>.9)kotakDialog(g,6,110,244,31,'PAMN',['Semua latihan tepat. Peti terbuka.','Lanjutkan ke pengumpulan.'],u-.9);
+  });
+}
+
+/* ---------- mulai: Toko Kopi Nusantara ---------- */
+function adeganMulaiAlg(cfg){
+  const P=16;
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(107);
+    lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
+    lukisPondok(q,6,0,112);lukisPeti(q,80,62);lukisPeti(q,96,64);pohon(q,236,14,12);
+    for(const [x,y,c] of [[140,120,'#ffffff'],[170,126,'#ff8fb1'],[210,120,'#ffffff'],[30,124,'#ff8fb1']])bunga(q,x,y,c);
+  });
+  const S=[[.1,'langkah'],[3.2,'cetak'],[8.2,'mesin'],[11.6,'benar']];
+  const A=adegan($('#kv-mulai'),(g,t)=>{
+    const T=GERAK?t%P:12;
+    suaraAdegan(A,T,S);
+    g.drawImage(bawah,0,0);
+    tulis(g,'KOPI',32,40,'#4a2c16',{rata:'tengah',tebal:true});
+    const wx=T<3?lerp(276,190,T/3):T<14?190:lerp(190,280,(T-14)/2);
+    warga(g,wx,104,T<3||T>=14?(Math.floor(t*7)%2?'jalan':'samping'):'samping',{balik:T<14});
+    const kerja=T>8&&T<11.4;
+    pamn(g,150,104,T>11.4&&T<14?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    if(T>3&&T<8){spr(g,'gulungan',158,72)}
+    if(kerja){gigi(g,150,68,5,t*6);if(Math.floor(t*6)%2)kotak(g,149,76,2,1,'#fff7b0')}
+    if(T>11.4&&T<14)spr(g,'kepeng',146,70);
+    const D=cfg.dialog;
+    for(const [a,b,n,l] of D)if(T>a&&T<b)kotakDialog(g,6,110,244,31,n,l,T-a);
+  });
+}
+
+/* ============ AWAL LAPISAN DUNIA ============ */
+(function(){
+  const labelSuara=()=>{$('#btn-suara').textContent=SUARA.aktif?'🔊 Suara aktif':'🔇 Suara mati'};
+  $('#btn-suara').onclick=()=>{SUARA.aktif=!SUARA.aktif;lsSimpan(RPG.kunciSuara,SUARA.aktif);labelSuara();bunyi('benar')};
+  labelSuara();
+  adeganMulaiAlg(RPG.mulai);
+  for(const [tab,cfg] of Object.entries(RPG.tab))panggung(tab,cfg);
+  panggungRekap();
+  requestAnimationFrame(putar);
+})();
 </script>
 </body>
 </html>

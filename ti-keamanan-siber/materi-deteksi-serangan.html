@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deteksi Serangan — Materi Pertemuan 5</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7' fill='%2318181b' stroke='%233f3f46'/%3E%3Cpath d='M8 10l6 6-6 6' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 22h7' stroke='%23e8e8ea' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+try{var tema=localStorage.getItem('tema')}catch(e){}
+document.documentElement.dataset.theme=tema||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+</script>
+<style>
+:root{
+  --bg:#111113; --panel:#1a1a1d; --panel2:#232327; --line:#333338;
+  --text:#e8e8ea; --muted:#9a9aa2; --accent:#ffffff; --accent-ink:#000;
+  --tp:#4ade80; --fp:#fbbf24; --fn:#f87171;
+  --row:#26262a; --code-bg:#0c0c0e; --code-text:#d4d4d8; --hint-text:#d8d8dc; --hover:#555;
+  --int:#ffb000; --float:#29adff; --str:#4ade80; --bool:#ff77a8;
+  --mono:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f5f7; --panel:#ffffff; --panel2:#f0f0f3; --line:#dcdce2;
+  --text:#18181b; --muted:#5c5c66; --accent:#18181b; --accent-ink:#fff;
+  --tp:#15803d; --fp:#b45309; --fn:#dc2626;
+  --row:#ececf0; --code-bg:#f6f6f8; --code-text:#27272a; --hint-text:#3f3f46; --hover:#a1a1aa;
+  --int:#b45309; --float:#0369a1; --str:#15803d; --bool:#be185d;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.back{display:inline-block;color:var(--muted);font-size:12.5px;text-decoration:none;margin-bottom:6px}
+.back:hover{color:var(--text)}
+.infobar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.infobar a{color:var(--text)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+nav button{background:none;border:none;color:var(--muted);padding:10px 12px;cursor:pointer;font-size:13.5px;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--text)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.card>h2{font-size:15px;margin-bottom:5px;font-weight:600}
+.card h3{font-size:13px;margin:14px 0 7px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card p{color:var(--muted);font-size:13px;margin-bottom:10px}
+.card p b,.card li b{color:var(--text)}
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hero h2{font-size:19px;letter-spacing:-.01em}
+.hero p{font-size:13.5px;margin:6px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+td{padding:6px 9px;border-bottom:1px solid var(--row);font-size:12.5px;vertical-align:top}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+.wide table{min-width:520px}
+code{background:var(--panel2);padding:1.5px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:11px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--code-text)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:12.5px;font-family:inherit}
+textarea{font-family:var(--mono);width:100%;resize:vertical;line-height:1.6}
+button.act,a.act{background:var(--accent);color:var(--accent-ink);border:none;border-radius:6px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-block}
+button.act:hover,a.act:hover{opacity:.85}
+button.act:disabled{opacity:.35;cursor:default}
+button.sec{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer;font-size:12.5px;font-family:inherit;white-space:nowrap}
+button.sec:hover{border-color:var(--hover)}
+button.sec:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:11px 0}
+.hint{background:color-mix(in srgb,var(--fp) 8%,transparent);border-left:3px solid var(--fp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:var(--hint-text);margin:10px 0}
+.ok{background:color-mix(in srgb,var(--tp) 8%,transparent);border-left:3px solid var(--tp);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.gagal{background:color-mix(in srgb,var(--fn) 9%,transparent);border-left:3px solid var(--fn);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12.5px;margin:10px 0}
+.lst{margin:4px 0 10px 20px;color:var(--muted);font-size:13px}
+.lst li{margin-bottom:5px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding-top:24px;border-top:1px solid var(--line);margin-top:30px}
+.label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px}
+/* kode bernomor */
+.kode{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:8px 0;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--code-text);overflow-x:auto}
+.kode .ln{display:flex;white-space:pre;padding-right:12px;min-height:1.75em}
+.kode .no{width:34px;text-align:right;padding-right:10px;color:var(--muted);user-select:none;flex:none}
+.kode .ln.jalan{background:color-mix(in srgb,var(--fp) 22%,transparent)}
+.kode .ln.galat{background:color-mix(in srgb,var(--fn) 25%,transparent)}
+.kode .cm{color:var(--muted)}
+.kode .s{color:var(--str)}
+/* layar keluaran: selalu gelap seperti terminal */
+.konsol{background:#0c0c0e;color:#e4e4e7;font-family:var(--mono);font-size:12.5px;line-height:1.6;padding:9px 12px;white-space:pre-wrap;word-break:break-word;margin:0;border:1px solid var(--line);border-radius:6px;min-height:44px}
+.konsol .k{color:#4ade80}
+.konsol .g{color:#f87171}
+.konsol .kosong{color:#71717a;font-style:italic}
+/* kanvas pixel art */
+.layar{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line);background:#1d2b53}
+.layar-wrap{max-width:760px}
+.ikon{image-rendering:pixelated;vertical-align:middle;flex:none}
+/* kartu tipe & peta */
+.kartu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.kartu{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--panel2);display:flex;flex-direction:column;gap:6px}
+.kartu .judul{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px}
+.kartu p{margin:0;font-size:12.5px}
+.kartu .sec{align-self:flex-start;margin-top:auto}
+/* permainan & simulator: jendela bergaya RPG, selalu gelap di kedua tema */
+.game,.sim{--bg:#141a33;--panel:#1c2340;--panel2:#232c52;--line:#4b5aa0;--row:#2b3460;--text:#eef2ff;--muted:#a9b3d6;--accent:#ffffff;--accent-ink:#000;
+  --tp:#55d36b;--fp:#ffc940;--fn:#ff6b6b;--hint-text:#e6eaf8;--code-bg:#10152b;--code-text:#e6eaf8;--hover:#f4f1e6;
+  --int:#ffd34d;--float:#5cc8ff;--str:#7dff8a;--bool:#ff9ccb;
+  color:var(--text);background:#1c2340;border:3px solid #f4f1e6;border-radius:10px;box-shadow:inset 0 0 0 2px #4b5aa0;padding:14px}
+.game .label,.sim .label{color:#c9d2f2}
+.game code,.sim code{background:#2b3460;color:#eef2ff}
+.game .kode .s,.sim .kode .s{color:#7dff8a}
+button.pilih{border-radius:4px;box-shadow:0 3px 0 #0b0f22}
+button.pilih:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.tombol-game{display:grid;gap:8px;margin-top:10px}
+.tombol-game.dua{grid-template-columns:1fr 1fr}
+.tombol-game.tiga{grid-template-columns:repeat(3,1fr)}
+.tombol-game.empat{grid-template-columns:repeat(4,1fr)}
+.tombol-game.lima{grid-template-columns:repeat(5,1fr)}
+@media(max-width:640px){.tombol-game.lima{grid-template-columns:1fr 1fr}.tombol-game.empat{grid-template-columns:1fr 1fr}}
+button.pilih{background:var(--panel);color:var(--text);border:2px solid var(--line);border-radius:7px;padding:10px 8px;cursor:pointer;font-size:13px;font-family:var(--mono);font-weight:600;touch-action:manipulation}
+button.pilih:hover:not(:disabled){border-color:var(--hover)}
+button.pilih:disabled{opacity:.45;cursor:default}
+button.pilih.int{border-color:color-mix(in srgb,var(--int) 60%,transparent);color:var(--int)}
+button.pilih.float{border-color:color-mix(in srgb,var(--float) 60%,transparent);color:var(--float)}
+button.pilih.str{border-color:color-mix(in srgb,var(--str) 60%,transparent);color:var(--str)}
+button.pilih.bool{border-color:color-mix(in srgb,var(--bool) 60%,transparent);color:var(--bool)}
+button.pilih.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 14%,transparent)}
+button.pilih.n{border-color:var(--fn);background:color-mix(in srgb,var(--fn) 14%,transparent)}
+button.pilih small{display:block;font-weight:400;font-size:10.5px;color:var(--muted);font-family:system-ui,sans-serif}
+.pesan-game{min-height:22px;font-size:12.5px;margin-top:8px}
+.skor-terbaik{font-size:12px;color:var(--muted)}
+/* pasangkan */
+.pasang{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pasang>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.pasang button{text-align:left;font-family:var(--mono);font-size:12px;padding:8px 10px;border-radius:6px;border:2px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;white-space:normal;word-break:break-word}
+.pasang button.pil{border-color:var(--fp)}
+.pasang button.y{border-color:var(--tp);background:color-mix(in srgb,var(--tp) 12%,transparent);cursor:default}
+.pasang button.n{border-color:var(--fn)}
+@media(max-width:640px){.pasang button{font-size:11px;padding:7px}}
+/* kuis */
+.soal-kuis{border-top:1px solid var(--row);padding:12px 0}
+.soal-kuis:first-child{border-top:none}
+.soal-kuis .tanya{font-size:13.5px;font-weight:600;margin-bottom:8px}
+.soal-kuis .opsi{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+/* log */
+.log-tabel td{font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+.log-tabel tr.jejak td{background:color-mix(in srgb,var(--fp) 20%,transparent)}
+.log-tabel .ok-t{color:var(--tp)}
+.log-tabel .gagal-t{color:var(--fn)}
+.game .wide{background:var(--panel)}
+.catatan-kanvas{font-size:12px;color:var(--muted);margin-top:6px}
+/* anatomi pesan kesalahan */
+.anatomi{font-family:var(--mono);font-size:12.5px;background:#0c0c0e;color:#e4e4e7;border-radius:6px;padding:10px 12px;line-height:1.9;overflow-x:auto;white-space:pre}
+.anatomi .t{border-radius:3px;padding:1px 3px}
+.anatomi .t1{background:#29adff33;outline:1px solid #29adff}
+.anatomi .t2{background:#ffa30033;outline:1px solid #ffa300}
+.anatomi .t3{background:#ff004d33;outline:1px solid #ff004d}
+.anatomi .t4{background:#00e43633;outline:1px solid #00e436}
+.nomor{display:inline-flex;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;align-items:center;justify-content:center;color:#000;margin-right:6px;font-family:system-ui,sans-serif;flex:none}
+/* hasil deteksi */
+.pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;font-family:system-ui,sans-serif}
+.pill.tp{background:color-mix(in srgb,var(--tp) 16%,transparent);color:var(--tp)}
+.pill.fp{background:color-mix(in srgb,var(--fp) 16%,transparent);color:var(--fp)}
+.pill.fn{background:color-mix(in srgb,var(--fn) 16%,transparent);color:var(--fn)}
+.pill.tn{background:color-mix(in srgb,var(--muted) 16%,transparent);color:var(--muted)}
+.log-tabel tr.salah td{background:color-mix(in srgb,var(--fn) 22%,transparent)}
+.log-tabel tr.dipilih td{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.log-tabel tr[data-id]{cursor:pointer}
+.log-tabel input[type=checkbox]{width:15px;height:15px;cursor:pointer}
+.metrik{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px}
+.metrik .m{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 6px;text-align:center}
+.metrik .m b{display:block;font-size:17px;font-family:var(--mono)}
+.metrik .m span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+input[type=range]{accent-color:var(--accent)}
+@media(max-width:640px){
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  input,select,textarea{font-size:16px!important}
+  h1{font-size:17px}
+  .pasang{gap:6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <a class="back" href="index.html">← Daftar praktikum Keamanan Siber</a>
+    <h1>Materi: Deteksi Serangan</h1>
+    <div class="sub">MK44 Keamanan Siber · Pertemuan 5 · Bahan utama Praktikum Pertemuan 5 — Program Studi Teknologi Informasi, Fakultas Teknik dan Informatika, Universitas Pendidikan Nasional</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="sec" id="btn-suara"></button><button class="sec" id="btn-tema"></button></div>
+</header>
+
+<div class="infobar">
+  <span>Halaman materi ini tidak memerlukan NIM. Setelah selesai membaca dan mencoba, kerjakan</span>
+  <a href="deteksi-serangan.html">Praktikum Pertemuan 5 →</a>
+</div>
+
+<nav>
+  <button class="on" data-t="mulai">Mulai</button>
+  <button data-t="b1">1 · Log &amp; Pola Serangan</button>
+  <button data-t="b2">2 · IDS, IPS &amp; Aturan</button>
+  <button data-t="b3">3 · Empat Hasil Deteksi</button>
+  <button data-t="b4">4 · Presisi, Recall &amp; Ambang</button>
+  <button data-t="b5">5 · Laju Dasar</button>
+  <button data-t="b6">6 · Korelasi</button>
+  <button data-t="kuis">★ Kuis &amp; Rangkuman</button>
+</nav>
+
+<!-- ========== MULAI ========== -->
+<div class="tab on" id="t-mulai">
+  <div class="card hero">
+    <div class="eyebrow">Materi Pertemuan 5</div>
+    <h2>Deteksi Serangan: Log, Aturan Deteksi, dan Analisis Alert</h2>
+    <p>Bahan utama sebelum mengerjakan Praktikum Pertemuan 5. Setiap bab berisi penjelasan singkat, contoh log, animasi, dan permainan kecil untuk menguji pemahaman.</p>
+  </div>
+  <div class="card">
+    <div class="layar-wrap" style="margin:0 auto"><canvas class="layar" id="kv-gerbang" width="256" height="144" aria-label="Animasi gerbang Toko Kopi Nusantara: PAMN mempersilakan pengunjung yang berhasil masuk, lalu membunyikan lonceng ketika seorang penyusup gagal masuk berulang kali"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Kenalan dengan PAMN, Penjaga Gerbang</h2>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <img class="ikon" data-ikon="pamnD" data-skala="4" alt="PAMN">
+      <div>
+        <p><b>PAMN</b> adalah robot penjaga Toko Kopi Nusantara. Toko itu kini punya <b>situs web</b> untuk pesanan daring, layanan <b>SSH</b> untuk admin server, dan <b>VPN</b> untuk karyawan yang bekerja dari rumah. Setiap kali seseorang mencoba masuk atau membuka halaman, PAMN mencatatnya di buku log.</p>
+        <p>Di halaman ini PAMN berperan sebagai <b>sistem deteksi intrusi</b> (<i>Intrusion Detection System</i>, IDS): ia membaca setiap catatan, mencocokkannya dengan <b>aturan</b>, lalu membunyikan <b>lonceng</b> (<i>alert</i>) bila sebuah aturan terpenuhi.</p>
+        <p style="margin:0">Seperti mesin pada umumnya, PAMN bekerja <b>persis menurut aturan</b>. Aturan yang terlalu longgar membuat lonceng terus berbunyi untuk pengunjung biasa. Aturan yang terlalu ketat membuat penyusup lolos tanpa suara. Materi ini mengajarkan cara menulis aturan yang seimbang dan cara mengukurnya.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Peta Materi</h2>
+    <p>Bacalah berurutan. Setiap bab diakhiri permainan atau latihan singkat.</p>
+    <div class="kartu-grid" id="peta"></div>
+  </div>
+  <div class="card">
+    <h2>Cara Memakai Halaman Ini</h2>
+    <ul class="lst">
+      <li><b>Baca penjelasan, lalu perhatikan contoh log.</b> Contoh di halaman ini memakai bidang yang sama dengan dataset praktikum.</li>
+      <li><b>Mainkan permainan di akhir bab.</b> Soalnya dibangkitkan acak, jadi setiap permainan berbeda. Skor terbaik Anda tersimpan di peramban ini.</li>
+      <li><b>Kerjakan kuis</b> pada tab terakhir, lalu lanjutkan ke Praktikum Pertemuan 5.</li>
+      <li><b>Efek suara</b> dapat dimatikan dengan tombol 🔊 di kanan atas halaman.</li>
+    </ul>
+    <div class="hint">Semua log di halaman ini adalah contoh buatan untuk latihan. Alamat dan nama akunnya berbeda dari dataset praktikum, jadi pola yang Anda pelajari di sini tetap harus Anda temukan sendiri di praktikum.</div>
+  </div>
+</div>
+
+<!-- ========== BAB 1 ========== -->
+<div class="tab" id="t-b1">
+  <div class="card">
+    <div class="eyebrow">Bab 1</div>
+    <h2>Log: Catatan Setiap Kejadian</h2>
+    <p>Setiap kali seseorang mencoba masuk ke sebuah layanan atau membuka halaman situs, sistem menulis satu baris catatan yang disebut <b><i>log</i></b>. Log mirip buku tamu yang terisi otomatis: kapan, dari alamat mana, siapa, ke layanan apa, dan apa hasilnya.</p>
+    <p>Analis keamanan membaca log untuk menemukan kejadian yang tidak wajar. Masalahnya, jumlah barisnya bisa ribuan sampai jutaan per hari, dan serangan hanya segelintir di antaranya.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-log" width="256" height="144" aria-label="Animasi PAMN menulis buku log: beberapa pengunjung berhasil masuk, satu pengunjung lupa kata sandi, lalu satu alamat gagal masuk berulang kali"></canvas></div>
+    <p class="catatan-kanvas">Di buku log PAMN, angka seperti <code>.45</code> adalah bagian akhir alamat IP, ✓ berarti berhasil, dan ✗ berarti gagal.</p>
+  </div>
+  <div class="card">
+    <h2>Dua Sumber Log di Praktikum</h2>
+    <h3>Log autentikasi</h3>
+    <p>Catatan setiap percobaan masuk ke layanan SSH, web, atau VPN.</p>
+    <div class="wide"><table class="log-tabel">
+      <tr><th>Waktu</th><th>src_ip</th><th>user</th><th>service</th><th>status</th><th>country</th></tr>
+      <tr><td>08:02:11</td><td>36.72.14.21</td><td>made</td><td>vpn</td><td class="ok-t">success</td><td>ID</td></tr>
+      <tr><td>08:15:40</td><td>36.81.3.34</td><td>sari</td><td>web</td><td class="gagal-t">failed</td><td>ID</td></tr>
+      <tr><td>08:15:52</td><td>36.81.3.34</td><td>sari</td><td>web</td><td class="ok-t">success</td><td>ID</td></tr>
+      <tr><td>13:02:01</td><td>203.0.113.45</td><td>admin</td><td>ssh</td><td class="gagal-t">failed</td><td>NL</td></tr>
+    </table></div>
+    <h3>Log server web</h3>
+    <p>Catatan setiap permintaan halaman ke situs toko.</p>
+    <div class="wide"><table class="log-tabel">
+      <tr><th>Waktu</th><th>src_ip</th><th>method</th><th>path dan query</th><th>status_code</th></tr>
+      <tr><td>10:20:05</td><td>36.90.8.17</td><td>GET</td><td>/menu</td><td>200</td></tr>
+      <tr><td>10:20:31</td><td>36.90.8.17</td><td>GET</td><td>/cari?q=arabika</td><td>200</td></tr>
+      <tr><td>10:41:09</td><td>36.66.120.4</td><td>GET</td><td>/promo-lama</td><td>404</td></tr>
+      <tr><td>11:05:47</td><td>36.77.5.200</td><td>POST</td><td>/login</td><td>200</td></tr>
+    </table></div>
+    <h3>Arti setiap bidang</h3>
+    <div class="wide"><table>
+      <tr><th>Bidang</th><th>Arti</th></tr>
+      <tr><td><code>src_ip</code></td><td>Alamat IP sumber, yaitu alamat komputer yang mengirim permintaan.</td></tr>
+      <tr><td><code>user</code></td><td>Nama akun yang dicoba.</td></tr>
+      <tr><td><code>service</code></td><td>Layanan yang dituju: <code>ssh</code>, <code>web</code>, atau <code>vpn</code>.</td></tr>
+      <tr><td><code>status</code></td><td>Hasil percobaan masuk: <code>success</code> atau <code>failed</code>.</td></tr>
+      <tr><td><code>country</code></td><td>Kode negara asal alamat IP, misalnya <code>ID</code> untuk Indonesia.</td></tr>
+      <tr><td><code>method</code></td><td>Jenis permintaan web: <code>GET</code> untuk membuka halaman, <code>POST</code> untuk mengirim formulir.</td></tr>
+      <tr><td><code>path</code> dan <code>query</code></td><td>Halaman yang diminta dan parameternya, yaitu bagian setelah tanda <code>?</code>.</td></tr>
+      <tr><td><code>status_code</code></td><td>Jawaban server: <code>200</code> berhasil, <code>404</code> halaman tidak ada, <code>403</code> dilarang, <code>500</code> galat di server.</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Satu Baris Tidak Cukup: Lihat Polanya</h2>
+    <p>Satu kali gagal masuk itu wajar, begitu pula satu halaman 404. Serangan baru terlihat ketika baris-baris log <b>dikelompokkan</b>, misalnya per alamat IP atau per akun, lalu diperhatikan jumlah dan kerapatan waktunya. Berikut empat pola serangan yang paling sering muncul beserta aktivitas wajar yang mirip dengannya.</p>
+    <div class="wide"><table>
+      <tr><th>Pola serangan</th><th>Ciri di log</th><th>Mirip aktivitas wajar</th></tr>
+      <tr><td><b><i>Brute force</i></b></td><td>Satu alamat mencoba <b>satu akun</b> berkali-kali, gagal beruntun dalam hitungan detik. Sasarannya sering akun umum seperti <code>admin</code> atau <code>root</code>.</td><td>Pengguna yang lupa kata sandi: gagal 1–3 kali, lalu berhasil.</td></tr>
+      <tr><td><b><i>Password spraying</i></b></td><td>Satu alamat mencoba <b>banyak akun berbeda</b>, masing-masing hanya sekali atau dua kali, agar tidak memicu penguncian akun.</td><td>Beberapa karyawan salah mengetik kata sandi, tetapi dari alamat yang berbeda-beda.</td></tr>
+      <tr><td><b>Injeksi SQL</b> (<i>SQL injection</i>)</td><td><code>query</code> berisi potongan perintah basis data, misalnya <code>' OR '1'='1</code>, <code>UNION SELECT</code>, atau <code>--</code>. Kode respons sering <code>500</code>.</td><td>Pencarian biasa yang hanya berisi kata atau angka, misalnya <code>?q=kopi</code>.</td></tr>
+      <tr><td><b>Pemindaian direktori</b></td><td>Satu alamat meminta <b>banyak jalur berbeda</b> yang tidak ada, seperti <code>/admin</code>, <code>/.env</code>, atau <code>/backup.zip</code>, dalam waktu singkat. Hasilnya beruntun <code>404</code>.</td><td>Tautan lama yang rusak: satu atau dua <code>404</code> dari pengunjung yang berbeda-beda.</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Langkah Membaca Log</h2>
+    <ol class="lst">
+      <li><b>Kelompokkan per alamat IP.</b> Di praktikum, gunakan tombol <b>Ringkasan per IP</b>. Alamat dengan jumlah kegagalan atau jumlah 404 yang menonjol patut dicurigai.</li>
+      <li><b>Perhatikan kerapatan waktu.</b> Manusia mengetik kata sandi dalam hitungan detik sampai menit. Puluhan percobaan dalam satu menit biasanya dilakukan program.</li>
+      <li><b>Perhatikan akun yang disasar.</b> Satu akun berulang-ulang atau banyak akun berbeda? Keduanya pola yang berbeda.</li>
+      <li><b>Baca isi kueri dan jalur.</b> Tanda kutip, kata <code>SELECT</code>, atau berkas yang tidak lazim diminta pengunjung biasa adalah tanda bahaya.</li>
+      <li><b>Bandingkan dengan perilaku wajar</b> sebelum menyimpulkan. Tidak semua kegagalan adalah serangan.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Permainan: Pembaca Jejak</h2>
+    <p>Setiap kasus menampilkan potongan log. Tentukan polanya: serangan jenis apa, atau aktivitas wajar.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-jejak" width="256" height="144" aria-label="Permainan Pembaca Jejak"></canvas></div>
+      <div class="label" style="margin-top:10px" id="jejak-judul">Potongan log</div>
+      <div class="wide" id="jejak-log"></div>
+      <div class="tombol-game lima" id="jejak-tombol"></div>
+      <div id="jejak-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="jejak-mulai">Mulai main</button><span class="skor-terbaik" id="jejak-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><span></span><button class="act" data-go="b2">Bab 2 · IDS, IPS &amp; Aturan →</button></div>
+</div>
+
+<!-- ========== BAB 2 ========== -->
+<div class="tab" id="t-b2">
+  <div class="card">
+    <div class="eyebrow">Bab 2</div>
+    <h2>IDS dan IPS: Lonceng atau Gerbang</h2>
+    <p><b><i>Intrusion Detection System</i> (IDS)</b> memantau lalu lintas atau log, lalu memunculkan <b>alert</b> bila menemukan sesuatu yang cocok dengan aturan. IDS tidak menghentikan apa pun: pengunjung tetap lewat, dan analis yang memutuskan tindakan selanjutnya.</p>
+    <p><b><i>Intrusion Prevention System</i> (IPS)</b> memakai aturan yang serupa, tetapi berdiri tepat di jalur lalu lintas dan <b>langsung memblokir</b>. Lebih cepat menghentikan serangan, tetapi kesalahannya lebih mahal: bila aturannya keliru, pengguna sah ikut tertolak.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-ids" width="256" height="144" aria-label="Animasi perbandingan IDS dan IPS: pada mode IDS lonceng berbunyi tetapi penyusup tetap lewat; pada mode IPS gerbang ditutup, termasuk untuk pelanggan yang keliru dicurigai"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Perbandingan IDS dan IPS</h2>
+    <div class="wide"><table>
+      <tr><th>Aspek</th><th>IDS</th><th>IPS</th></tr>
+      <tr><td><b>Tindakan</b></td><td>Memunculkan alert; lalu lintas tetap berjalan</td><td>Memblokir lalu lintas yang cocok dengan aturan</td></tr>
+      <tr><td><b>Posisi</b></td><td>Memantau salinan lalu lintas atau membaca log</td><td>Berada di jalur lalu lintas, seperti gerbang</td></tr>
+      <tr><td><b>Bila pengguna sah ikut tertandai</b></td><td>Alarm palsu; waktu analis terbuang</td><td>Pengguna sah tertolak; layanan terganggu</td></tr>
+      <tr><td><b>Bila serangan tidak dikenali</b></td><td>Serangan lolos tanpa alert</td><td>Serangan lolos tanpa diblokir</td></tr>
+      <tr><td><b>Contoh perangkat</b></td><td>Suricata atau Snort dalam mode IDS</td><td>Suricata atau Snort dalam mode IPS</td></tr>
+    </table></div>
+    <div class="hint">Simulator di praktikum berperan sebagai <b>IDS</b>: aturan Anda memunculkan alert, tidak memblokir apa pun.</div>
+  </div>
+  <div class="card">
+    <h2>Dua Cara Mengenali Serangan</h2>
+    <div class="kartu-grid">
+      <div class="kartu"><div class="judul">Berbasis aturan (<i>signature</i>)</div><p>Mencocokkan peristiwa dengan pola serangan yang sudah dikenal, misalnya "query mengandung <code>UNION</code>". Alasan setiap alert jelas, tetapi serangan jenis baru yang belum punya aturan tidak dikenali.</p></div>
+      <div class="kartu"><div class="judul">Berbasis anomali</div><p>Mempelajari perilaku normal, lalu menandai yang menyimpang, misalnya lonjakan login tengah malam. Dapat menemukan serangan baru, tetapi lebih sering menghasilkan alarm palsu.</p></div>
+    </div>
+    <p style="margin:10px 0 0">Praktikum memakai deteksi <b>berbasis aturan</b> dengan sintaksis yang meniru Suricata dan Snort.</p>
+  </div>
+  <div class="card">
+    <h2>Anatomi Aturan Deteksi</h2>
+<div class="anatomi"><span class="t t1">alert auth</span> (
+  <span class="t t2">msg:"Brute force SSH";</span>
+  <span class="t t3">service:ssh;</span>
+  <span class="t t3">status:failed;</span>
+  <span class="t t4">threshold:count 10, seconds 60, track by_src;</span>
+)</div>
+    <div class="alur">
+      <div><b><span class="nomor" style="background:#29adff">1</span>Aksi dan sumber</b><code>alert</code> lalu sumber log: <code>auth</code> atau <code>web</code>.</div>
+      <div><b><span class="nomor" style="background:#ffa300">2</span>Pesan</b>Teks yang tampil saat alert muncul. Tulis yang menjelaskan serangannya.</div>
+      <div><b><span class="nomor" style="background:#ff004d">3</span>Syarat</b><code>bidang:nilai;</code>. Semua syarat digabung dengan <b>DAN</b>: peristiwa harus memenuhi semuanya.</div>
+      <div><b><span class="nomor" style="background:#00e436">4</span>Ambang (opsional)</b>Alert baru muncul bila kejadian serupa berulang. Dibahas di Bab 4.</div>
+    </div>
+    <h3>Bentuk nilai pada syarat</h3>
+    <div class="wide"><table>
+      <tr><th>Bentuk</th><th>Makna</th><th>Contoh</th></tr>
+      <tr><td><code>bidang:nilai</code></td><td>Sama persis (huruf besar dan kecil tidak dibedakan)</td><td><code>service:ssh;</code></td></tr>
+      <tr><td><code>bidang:!nilai</code></td><td>Tidak sama dengan</td><td><code>country:!ID;</code></td></tr>
+      <tr><td><code>bidang:*teks*</code></td><td>Mengandung teks</td><td><code>query:*UNION*;</code></td></tr>
+      <tr><td><code>bidang:&gt;N</code>, <code>&gt;=N</code>, <code>&lt;N</code>, <code>&lt;=N</code></td><td>Perbandingan angka</td><td><code>status_code:&gt;=400;</code></td></tr>
+      <tr><td><code>bidang:a|b|c</code></td><td>Sama persis dengan salah satu nilai dalam daftar</td><td><code>user:admin|root;</code></td></tr>
+    </table></div>
+    <div class="hint">Satu syarat hanya memakai satu bentuk. <code>query:*UNION*|*SELECT*</code> <b>tidak</b> berarti "mengandung UNION atau SELECT". Untuk dua pola yang berbeda, tulis dua aturan terpisah.</div>
+  </div>
+  <div class="card">
+    <h2>Permainan: Rakit Aturan</h2>
+    <p>Setiap level berisi sepuluh peristiwa beserta labelnya. Pilih syarat-syarat yang menurut Anda tepat, lalu jalankan. Lulus bila semua serangan tertangkap <b>tanpa satu pun alarm palsu</b>.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-rakit" width="256" height="144" aria-label="Permainan Rakit Aturan: sepuluh tokoh melewati gerbang, lonceng berbunyi di atas tokoh yang cocok dengan aturan"></canvas></div>
+      <div id="rakit-tugas" style="margin-top:10px"></div>
+      <div class="label" style="margin-top:10px">Pilih syarat (digabung dengan DAN)</div>
+      <div class="tombol-game tiga" id="rakit-chip"></div>
+      <pre id="rakit-aturan" style="margin-top:10px"></pre>
+      <div class="row"><button class="act" id="rakit-jalan">Jalankan aturan</button><button class="sec" id="rakit-ulang">Mulai dari level 1</button><span class="skor-terbaik" id="rakit-terbaik"></span></div>
+      <div id="rakit-hasil"></div>
+      <div class="wide" id="rakit-log"></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b1">← Bab 1</button><button class="act" data-go="b3">Bab 3 · Empat Hasil Deteksi →</button></div>
+</div>
+
+<!-- ========== BAB 3 ========== -->
+<div class="tab" id="t-b3">
+  <div class="card">
+    <div class="eyebrow">Bab 3</div>
+    <h2>Empat Kemungkinan Hasil Deteksi</h2>
+    <p>Setiap peristiwa punya dua sisi: apakah ia <b>benar-benar serangan</b>, dan apakah lonceng <b>berbunyi</b>. Dua sisi itu menghasilkan empat kemungkinan.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-empat" width="256" height="144" aria-label="Animasi empat kemungkinan hasil deteksi: true positive, false positive, false negative, dan true negative"></canvas></div>
+    <div class="wide" style="margin-top:12px"><table>
+      <tr><th></th><th>Benar-benar serangan</th><th>Bukan serangan</th></tr>
+      <tr><td><b>Lonceng berbunyi</b></td><td><span class="pill tp">TP</span> <i>True positive</i>: penyusup tertangkap</td><td><span class="pill fp">FP</span> <i>False positive</i>: alarm palsu</td></tr>
+      <tr><td><b>Lonceng diam</b></td><td><span class="pill fn">FN</span> <i>False negative</i>: penyusup lolos</td><td><span class="pill tn">TN</span> <i>True negative</i>: pelanggan lewat dengan tenang</td></tr>
+    </table></div>
+    <p style="margin:10px 0 0">Cara mengingatnya: kata kedua (<i>positive</i> atau <i>negative</i>) menyebut <b>apa yang dilakukan lonceng</b>, sedangkan kata pertama (<i>true</i> atau <i>false</i>) menyebut <b>apakah tindakan itu benar</b>.</p>
+  </div>
+  <div class="card">
+    <h2>Mana yang Lebih Berbahaya?</h2>
+    <ul class="lst">
+      <li><b>FP</b> membuang waktu analis. Bila jumlahnya ratusan per hari, analis kelelahan dan mulai mengabaikan alert, termasuk yang sungguhan. Ini disebut <b>kelelahan alert</b>.</li>
+      <li><b>FN</b> berarti serangan berjalan tanpa diketahui. Kerugiannya baru terasa ketika data sudah dicuri.</li>
+      <li>Aturan yang baik menekan <b>keduanya sekaligus</b>. Menghilangkan FP dengan cara mematikan aturan sama saja dengan membiarkan semua serangan menjadi FN.</li>
+    </ul>
+    <div class="hint">Di praktikum, tab <b>Hasil &amp; Metrik</b> menampilkan keempat angka ini. Penyaring <b>FP saja</b> dan <b>FN saja</b> membantu Anda melihat peristiwa mana yang perlu diperbaiki.</div>
+  </div>
+  <div class="card">
+    <h2>Permainan: Stempel Alert</h2>
+    <p>Setiap kartu berisi satu peristiwa dan keadaan lonceng. Tentukan sendiri apakah peristiwa itu serangan, lalu stempel hasilnya sebelum waktu habis.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-stempel" width="256" height="144" aria-label="Permainan Stempel Alert"></canvas></div>
+      <div class="tombol-game empat" id="stempel-tombol"></div>
+      <div class="pesan-game" id="stempel-pesan"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="stempel-mulai">Mulai main</button><span class="skor-terbaik" id="stempel-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b2">← Bab 2</button><button class="act" data-go="b4">Bab 4 · Presisi, Recall &amp; Ambang →</button></div>
+</div>
+
+<!-- ========== BAB 4 ========== -->
+<div class="tab" id="t-b4">
+  <div class="card">
+    <div class="eyebrow">Bab 4</div>
+    <h2>Presisi dan Recall</h2>
+    <p>Dua angka berikut mengukur seberapa baik sebuah aturan. Keduanya dihitung dari empat hasil di Bab 3.</p>
+<pre>Presisi = TP ÷ (TP + FP)   → dari semua lonceng yang berbunyi, berapa yang benar penyusup?
+Recall  = TP ÷ (TP + FN)   → dari semua penyusup, berapa yang membuat lonceng berbunyi?
+F1      = 2 × Presisi × Recall ÷ (Presisi + Recall)   → rata-rata harmonik keduanya</pre>
+    <div class="kartu-grid" style="margin-top:12px">
+      <div class="kartu"><div class="judul">Aturan terlalu longgar</div><p>Hampir semua kegagalan memicu alert. Recall tinggi, tetapi presisi rendah: lonceng berbunyi untuk banyak pelanggan biasa.</p></div>
+      <div class="kartu"><div class="judul">Aturan terlalu ketat</div><p>Hanya kasus yang sangat jelas yang memicu alert. Presisi tinggi, tetapi recall rendah: banyak penyusup lolos.</p></div>
+      <div class="kartu"><div class="judul">F1 sebagai penengah</div><p>F1 hanya tinggi bila presisi <b>dan</b> recall sama-sama tinggi. Satu angka yang buruk menyeret F1 ke bawah.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Ambang Batas</h2>
+    <p>Sekali gagal masuk itu wajar; puluhan kali dalam semenit dari alamat yang sama tidak. <b>Ambang batas</b> (<i>threshold</i>) membuat alert baru muncul bila kejadian serupa berulang sejumlah tertentu dalam jangka waktu tertentu.</p>
+<pre>threshold:count 10, seconds 60, track by_src;</pre>
+    <ul class="lst">
+      <li><code>count</code>: jumlah kejadian serupa yang diperlukan.</li>
+      <li><code>seconds</code>: lebar jendela waktu yang dihitung mundur dari setiap kejadian.</li>
+      <li><code>track</code>: kunci pengelompokan. <code>by_src</code> per alamat sumber, <code>by_user</code> per akun, <code>by_path</code> per jalur.</li>
+    </ul>
+    <div class="hint">Konsekuensinya: kejadian ke-1 sampai ke-9 sebelum ambang tercapai <b>tidak</b> memicu alert, sehingga tercatat sebagai FN walaupun berasal dari penyerang. Inilah pertukaran nyata antara menekan alarm palsu dan menangkap seluruh serangan.</div>
+  </div>
+  <div class="card">
+    <h2>Latihan: Atur Ambang</h2>
+    <p>Data berikut berisi kegagalan login SSH selama sehari: pengguna yang salah ketik, dua kantor yang banyak karyawannya berbagi satu alamat, tiga penyerang cepat, dan satu penyerang lambat. Geser ambangnya dan amati presisi serta recall.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-ambang" width="256" height="144" aria-label="Grafik presisi dan recall terhadap nilai count"></canvas></div>
+      <div class="grid2" style="margin-top:10px">
+        <div>
+          <div class="label">count: <b id="ambang-n-teks"></b></div>
+          <input type="range" id="ambang-n" min="1" max="40" value="3" style="width:100%">
+          <div class="label" style="margin-top:10px">seconds</div>
+          <select id="ambang-s"><option>10</option><option>30</option><option selected>60</option><option>120</option><option>300</option><option>600</option></select>
+          <pre id="ambang-aturan" style="margin-top:10px"></pre>
+        </div>
+        <div><div class="metrik" id="ambang-metrik"></div></div>
+      </div>
+      <div id="ambang-misi"></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b3">← Bab 3</button><button class="act" data-go="b5">Bab 5 · Laju Dasar →</button></div>
+</div>
+
+<!-- ========== BAB 5 ========== -->
+<div class="tab" id="t-b5">
+  <div class="card">
+    <div class="eyebrow">Bab 5</div>
+    <h2>Kekeliruan Laju Dasar</h2>
+    <p>Serangan jauh lebih jarang daripada aktivitas normal. Akibatnya, tingkat kesalahan yang terdengar kecil tetap menghasilkan banjir alarm palsu, karena dikalikan dengan jumlah peristiwa normal yang sangat besar. Kekeliruan menilai sistem tanpa memperhitungkan kelangkaan ini disebut <b>kekeliruan laju dasar</b> (<i>base rate fallacy</i>).</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-laju" width="256" height="144" aria-label="Animasi banjir lonceng: dari ribuan alert, hanya sedikit yang berasal dari penyusup sungguhan"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Kalkulator Laju Dasar</h2>
+    <div class="grid2">
+      <div>
+        <div class="label">Peristiwa per hari</div>
+        <select id="laju-tot"><option value="10000">10.000</option><option value="100000" selected>100.000</option><option value="1000000">1.000.000</option></select>
+        <div class="label" style="margin-top:10px">Serangan nyata per hari: <b id="laju-atk-t"></b></div>
+        <input type="range" id="laju-atk" min="1" max="100" value="20" style="width:100%">
+        <div class="label" style="margin-top:10px">Recall sistem: <b id="laju-rec-t"></b></div>
+        <input type="range" id="laju-rec" min="50" max="100" value="95" style="width:100%">
+        <div class="label" style="margin-top:10px">Laju positif palsu: <b id="laju-fpr-t"></b></div>
+        <input type="range" id="laju-fpr" min="1" max="50" value="20" style="width:100%">
+      </div>
+      <div><div class="metrik" id="laju-metrik"></div></div>
+    </div>
+    <div id="laju-jelas"></div>
+    <p style="margin:6px 0 0;font-size:12px"><b>Laju positif palsu</b> adalah persentase peristiwa normal yang keliru memicu alert: FP ÷ (FP + TN).</p>
+  </div>
+  <div class="card">
+    <h2>Pelajaran dari Laju Dasar</h2>
+    <ul class="lst">
+      <li><b>Akurasi menyesatkan.</b> Sistem yang tidak pernah membunyikan lonceng pun tetap "akurat" hampir 100%, karena hampir semua peristiwa memang normal.</li>
+      <li><b>Nilailah dengan presisi dan recall</b>, bukan akurasi. Itulah sebabnya praktikum menilai aturan Anda dengan keduanya.</li>
+      <li><b>Laju positif palsu harus sangat kecil</b>, jauh di bawah 1%, agar alert tetap bermakna. Ambang batas dan syarat yang spesifik adalah cara utamanya.</li>
+    </ul>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b4">← Bab 4</button><button class="act" data-go="b6">Bab 6 · Korelasi →</button></div>
+</div>
+
+<!-- ========== BAB 6 ========== -->
+<div class="tab" id="t-b6">
+  <div class="card">
+    <div class="eyebrow">Bab 6</div>
+    <h2>Korelasi Lintas Sumber</h2>
+    <p>Sebagian serangan tidak terlihat bila setiap log dibaca sendiri-sendiri. Satu login yang berhasil tampak wajar di log autentikasi; satu kunjungan ke <code>/admin</code> tampak wajar di log web. <b>Korelasi</b> menghubungkan peristiwa dari beberapa sumber melalui <b>kunci bersama</b>, misalnya alamat IP, nama akun, dan kedekatan waktu, sehingga rangkaian serangan menjadi utuh.</p>
+    <div class="layar-wrap"><canvas class="layar" id="kv-korelasi" width="256" height="144" aria-label="Animasi benang merah yang menghubungkan baris log autentikasi dan log web yang berasal dari alamat yang sama"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Langkah Mengorelasikan</h2>
+    <ol class="lst">
+      <li><b>Mulai dari peristiwa yang paling mencurigakan</b>, misalnya unduhan data atau login berhasil dari luar negeri pada dini hari.</li>
+      <li><b>Ambil kuncinya</b>: alamat IP, nama akun, dan waktunya.</li>
+      <li><b>Telusuri mundur dan maju</b> di sumber log lain dengan kunci yang sama, dalam rentang waktu yang berdekatan.</li>
+      <li><b>Susun urutannya</b>: apa yang terjadi lebih dahulu, apa yang menyusul. Rangkaian yang masuk akal adalah bukti yang kuat.</li>
+      <li><b>Waspadai kebetulan.</b> Alamat yang berbeda atau waktu yang berjauhan biasanya bukan bagian dari rangkaian yang sama.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Permainan: Benang Merah</h2>
+    <p>Setiap kasus berakhir dengan pengunduhan data pelanggan. Centang semua peristiwa di kedua log yang termasuk rangkaian serangan itu, lalu periksa.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-benang" width="256" height="96" aria-label="Permainan Benang Merah"></canvas></div>
+      <div class="label" style="margin-top:10px">Log autentikasi</div>
+      <div class="wide" id="benang-auth"></div>
+      <div class="label" style="margin-top:10px">Log server web</div>
+      <div class="wide" id="benang-web"></div>
+      <div class="row"><button class="act" id="benang-periksa">Periksa</button><button class="sec" id="benang-mulai">Mulai main</button><span class="skor-terbaik" id="benang-terbaik"></span></div>
+      <div id="benang-hasil"></div>
+    </div>
+  </div>
+  <div class="lanjut"><button class="sec" data-go="b5">← Bab 5</button><button class="act" data-go="kuis">Kuis &amp; Rangkuman →</button></div>
+</div>
+
+<!-- ========== KUIS ========== -->
+<div class="tab" id="t-kuis">
+  <div class="card">
+    <div class="eyebrow">Rangkuman</div>
+    <h2>Lembar Contekan Pertemuan 5</h2>
+    <div class="kartu-grid">
+      <div class="kartu"><div class="judul">Log</div><p>Satu baris per kejadian. Serangan terlihat dari pola: kelompokkan per alamat atau akun, lalu perhatikan jumlah dan kerapatan waktunya.</p></div>
+      <div class="kartu"><div class="judul">Empat pola</div><p><i>Brute force</i>: satu akun, banyak gagal. <i>Password spraying</i>: banyak akun, sedikit gagal. Injeksi SQL: perintah basis data di query. Pemindaian: banyak jalur 404.</p></div>
+      <div class="kartu"><div class="judul">IDS dan IPS</div><p>IDS memunculkan alert, IPS memblokir. Aturannya serupa; akibat kesalahannya berbeda.</p></div>
+      <div class="kartu"><div class="judul">Aturan</div><p><code>alert auth ( msg:"…"; bidang:nilai; )</code>. Syarat digabung DAN. Bentuk nilai: sama, <code>!</code>, <code>*teks*</code>, perbandingan, daftar <code>a|b</code>.</p></div>
+      <div class="kartu"><div class="judul">Empat hasil</div><p>TP tertangkap, FP alarm palsu, FN lolos, TN wajar dan diam. <i>Positive</i> atau <i>negative</i> = tindakan lonceng.</p></div>
+      <div class="kartu"><div class="judul">Presisi dan recall</div><p>Presisi = TP ÷ (TP + FP). Recall = TP ÷ (TP + FN). Melonggarkan aturan menaikkan recall dan menurunkan presisi.</p></div>
+      <div class="kartu"><div class="judul">Ambang batas</div><p><code>threshold:count N, seconds M, track by_src;</code> Menekan FP, tetapi kejadian sebelum ambang menjadi FN.</p></div>
+      <div class="kartu"><div class="judul">Laju dasar dan korelasi</div><p>Serangan langka, jadi akurasi menyesatkan. Korelasi menghubungkan log berbeda melalui alamat, akun, dan waktu.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Kuis Akhir</h2>
+    <p>Sepuluh soal acak. Setiap jawaban langsung diperiksa beserta penjelasannya. Isi kesepuluh permata untuk membuka peti harta PAMN.</p>
+    <div class="game">
+      <div class="layar-wrap"><canvas class="layar" id="kv-kuis" width="256" height="96" aria-label="Gerbang ujian: permata terisi setiap kali soal dijawab"></canvas></div>
+      <div id="kuis" style="margin-top:6px"></div>
+      <div id="kuis-hasil"></div>
+      <div class="row" style="margin-bottom:0"><button class="act" id="kuis-ulang">Soal baru</button><span class="skor-terbaik" id="kuis-terbaik"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Langkah Berikutnya</h2>
+    <p>Bila Anda sudah memahami seluruh bab, kerjakan Praktikum Pertemuan 5. Halaman materi ini tetap dapat dibuka sebagai rujukan selama mengerjakan praktikum.</p>
+    <a class="act" href="deteksi-serangan.html">Buka Praktikum Pertemuan 5 →</a>
+  </div>
+</div>
+
+<footer>Materi ini berjalan sepenuhnya di peramban. Tidak ada data yang dikirim ke mana pun. · v1.0</footer>
+</div>
+
+<script>
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const acakSalin=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const lsAmbil=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSimpan=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const GERAK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const jepit=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mulus=t=>{t=jepit(t,0,1);return t*t*(3-2*t)};
+
+/* ============ EFEK SUARA ============ */
+/* Bunyi 8-bit disintesis langsung dengan Web Audio; tidak ada berkas suara yang diunduh */
+const SUARA={aktif:lsAmbil('materi5ks:suara',true),ctx:null,derau:null};
+function konteksSuara(){
+  if(!SUARA.aktif)return null;
+  try{
+    if(!SUARA.ctx){
+      const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+      SUARA.ctx=new C();
+      const b=SUARA.ctx.createBuffer(1,Math.floor(SUARA.ctx.sampleRate*.5),SUARA.ctx.sampleRate),d=b.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+      SUARA.derau=b;
+    }
+    if(SUARA.ctx.state==='suspended')SUARA.ctx.resume();
+    return SUARA.ctx;
+  }catch(e){return null}
+}
+function nada(f,dur,o={}){
+  const c=konteksSuara();if(!c)return;
+  const t=c.currentTime+(o.tunda||0),gn=c.createGain();
+  gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(o.vol??.06,t+.008);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  gn.connect(c.destination);
+  let src;
+  if(o.jenis==='derau'){src=c.createBufferSource();src.buffer=SUARA.derau;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=f;src.connect(fl);fl.connect(gn)}
+  else{src=c.createOscillator();src.type=o.jenis||'square';src.frequency.setValueAtTime(f,t);if(o.ke)src.frequency.exponentialRampToValueAtTime(o.ke,t+dur);src.connect(gn)}
+  src.start(t);src.stop(t+dur+.03);
+}
+const BUNYI={
+  klik:()=>nada(880,.04,{vol:.03}),
+  langkah:()=>nada(520,.07,{jenis:'triangle',vol:.09,ke:660}),
+  simpan:()=>{nada(440,.05,{jenis:'triangle',vol:.09});nada(880,.09,{jenis:'triangle',vol:.09,tunda:.05})},
+  cetak:()=>{nada(1200,.03,{vol:.03});nada(1500,.03,{vol:.03,tunda:.05});nada(1200,.03,{vol:.03,tunda:.1})},
+  benar:()=>{nada(660,.07,{vol:.05});nada(880,.07,{vol:.05,tunda:.07});nada(1320,.14,{vol:.05,tunda:.14})},
+  salah:()=>nada(200,.28,{jenis:'sawtooth',vol:.05,ke:90}),
+  galat:()=>{nada(160,.12,{vol:.06});nada(120,.25,{vol:.06,tunda:.12,ke:70})},
+  koin:()=>{nada(988,.06,{vol:.05});nada(1319,.16,{vol:.05,tunda:.06})},
+  lempar:()=>nada(260,.25,{jenis:'triangle',vol:.07,ke:900}),
+  stempel:()=>{nada(500,.12,{jenis:'derau',vol:.25});nada(110,.12,{jenis:'sine',vol:.2,ke:50})},
+  jatuh:()=>nada(700,.4,{vol:.04,ke:80}),
+  mesin:()=>{for(let i=0;i<6;i++)nada(110+(i%2)*35,.1,{jenis:'sawtooth',vol:.035,tunda:i*.1})},
+  tembak:()=>nada(1600,.2,{vol:.045,ke:180}),
+  ledak:()=>nada(1200,.5,{jenis:'derau',vol:.3}),
+  hehe:()=>{nada(900,.07,{vol:.04});nada(700,.07,{vol:.04,tunda:.1});nada(900,.07,{vol:.04,tunda:.2})},
+  menang:()=>[523,659,784,1047].forEach((f,i)=>nada(f,i===3?.3:.1,{vol:.05,tunda:i*.1})),
+  kalah:()=>[392,330,262].forEach((f,i)=>nada(f,.2,{jenis:'triangle',vol:.08,tunda:i*.17})),
+  selesai:()=>{nada(784,.08,{jenis:'triangle',vol:.08});nada(1047,.16,{jenis:'triangle',vol:.08,tunda:.08})}
+};
+function bunyi(n){try{if(SUARA.aktif&&BUNYI[n])BUNYI[n]()}catch(e){}}
+
+/* ============ PIXEL ART ============ */
+/* Palet 16 warna; sprite ditulis sebagai larik string, satu karakter = satu piksel, '.' = transparan */
+const PAL=['#000000','#1d2b53','#7e2553','#008751','#ab5236','#5f574f','#c2c3c7','#fff1e8','#ff004d','#ffa300','#ffec27','#00e436','#29adff','#83769c','#ff77a8','#ffccaa'];
+const WARNA_TIPE={int:10,float:12,str:11,bool:14};
+const FONT='Consolas,Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace';
+const warna=c=>typeof c==='number'?PAL[c]:c;
+function siapLayar(c){const g=c.getContext('2d');g.imageSmoothingEnabled=false;return g}
+function kotak(g,x,y,w,h,c){g.fillStyle=warna(c);g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function bingkai(g,x,y,w,h,c){kotak(g,x,y,w,1,c);kotak(g,x,y+h-1,w,1,c);kotak(g,x,y,1,h,c);kotak(g,x+w-1,y,1,h,c)}
+function panel(g,x,y,w,h,isi,tepi){kotak(g,x+1,y,w-2,h,isi);kotak(g,x,y+1,w,h-2,isi);if(tepi!=null){kotak(g,x+1,y,w-2,1,tepi);kotak(g,x+1,y+h-1,w-2,1,tepi);kotak(g,x,y+1,1,h-2,tepi);kotak(g,x+w-1,y+1,1,h-2,tepi)}}
+
+const SPRITE={
+  pito:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoA:['.....88.....','.....55.....','..55555555..','.5666666665.','.5611661165.','.5611661165.','.5666666665.','.5666886665.','..55555555..','5....55....5','555555555555','.5cccccccc5.','.5ca9cc9ac5.','.5cccccccc5.','..55555555..','..55....55..'],
+  pitoK:['.....88.....','.....55.....','..55555555..','.5666666665.','.5666666665.','.5611661165.','.5666666665.','.5666886665.','..55555555..','.....55.....','.5555555555.','55cccccccc55','55ca9cc9ac55','.5cccccccc5.','..55555555..','..55....55..'],
+  orang:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','..1..1..','..1..1..','.00..00.'],
+  orang2:['..4444..','.444444.','.4ffff4.','.f1ff1f.','.ffffff.','..ffff..','...ff...','.eeeeee.','eeeeeeee','feeeeeef','f.eeee.f','..1111..','..1111..','.1....1.','.1....1.','00....00'],
+  koin:['..9999..','.9aaaa9.','9aa77aa9','9a7aaaa9','9aaaaaa9','9aaaaaa9','.9aaaa9.','..9999..'],
+  gelas:['6......6','6......6','6......6','6cccccc6','6cccccc6','6c7cccc6','6cccccc6','6cccccc6','.6cccc6.','..6666..'],
+  lampu:['..aaaa..','.aa77aa.','aa7aaaaa','aaaaaaaa','aaaaaaaa','.aaaaaa.','..6666..','..5555..','..6666..','...55...'],
+  lampuMati:['..dddd..','.dd66dd.','dd6ddddd','dddddddd','dddddddd','.dddddd.','..6666..','..5555..','..6666..','...55...'],
+  tag:['..bbbbbbbb','.bb3b3bbbb','bbb3b3bbbb','bbbbbbbbbb','bb7777777b','bbbbbbbbbb','.bbbbbbbbb','..bbbbbbbb'],
+  hati:['.88.88.','8888888','8888888','.88888.','..888..','...8...'],
+  hatiK:['.55.55.','5555555','5555555','.55555.','..555..','...5...'],
+  kumbang:['..5........5..','...5......5...','....XXXXXX....','..XXXXXXXXXX..','.XX77XXXX77XX.','.XX70XXXX70XX.','XXXXXXXXXXXXXX','XYYYYYYYYYYYYX','XYYXYYXXYYXYYX','.XYYYYYYYYYYX.','..XXXXXXXXXX..','.5..5....5..5.'],
+  hantu:['...777777...','..77777777..','.7777777777.','.7700770077.','.7700770077.','.7777777777.','.7777887777.','.7777777777.','.7777777777.','.7777777777.','.77.7777.77.','.7...77...7.'],
+  piala:['aaaaaaaaaaaa','a.a7aaaaaa.a','a.a7aaaaaa.a','.aa7aaaaaaa.','..aaaaaaaa..','...aaaaaa...','....aaaa....','.....99.....','.....99.....','...999999...','..44444444..','..44444444..'],
+  peti:['44444444','49999994','49444494','49499494','49499494','49444494','49999994','44444444'],
+  printer:['..777777..','..700007..','5555555555','566666b665','5666666665','5555555555','..777777..','..777777..'],
+  papanKetik:['5555555555','5767676765','5676767675','5767676765','5677777765','5555555555'],
+  roda:['...66...','.6.66.6.','..6666..','666..666','666..666','..6666..','.6.66.6.','...66...'],
+  tambah:['...aa...','...aa...','...aa...','aaaaaaaa','aaaaaaaa','...aa...','...aa...','...aa...'],
+  labu:['..6666..','...66...','...66...','..6bb6..','.6bbbb6.','6bb7bbb6','6bbbbbb6','6bbbbbb6','.666666.']
+};
+const _spr=new Map();
+function gambarSprite(nama,k,balik,ganti){
+  const key=nama+'|'+k+'|'+(balik?1:0)+'|'+(ganti?JSON.stringify(ganti):'');
+  let c=_spr.get(key);if(c)return c;
+  const S=barisSprite(nama),pal=Array.isArray(SPRITE[nama])?null:SPRITE[nama].p,w=S[0].length,h=S.length;
+  c=document.createElement('canvas');c.width=w*k;c.height=h*k;const q=c.getContext('2d');
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const ch=S[y][x];if(ch==='.')continue;
+    const col=ganti&&ganti[ch]!=null?ganti[ch]:pal?pal[ch]:ch==='X'?6:ch==='Y'?5:parseInt(ch,16);
+    if(col==null)continue;
+    q.fillStyle=warna(col);q.fillRect((balik?w-1-x:x)*k,y*k,k,k);
+  }
+  _spr.set(key,c);return c;
+}
+function spr(g,nama,x,y,k=1,o={}){
+  const c=gambarSprite(nama,k,o.balik,o.ganti);
+  if(o.alpha!=null)g.globalAlpha=o.alpha;
+  g.drawImage(c,Math.round(x),Math.round(y));
+  g.globalAlpha=1;return c;
+}
+const barisSprite=nama=>{const S=SPRITE[nama];return Array.isArray(S)?S:S.d};
+const ukuranSprite=nama=>({w:barisSprite(nama)[0].length,h:barisSprite(nama).length});
+function ikonURL(nama,k=3,ganti){return gambarSprite(nama,k,false,ganti).toDataURL()}
+
+/* ============ PAMN & DUNIA RPG ============ */
+/* Sprite berpalet sendiri: {p: warna per karakter, d: baris piksel} */
+const PAL_PAMN={o:'#1b1b2f',k:'#4a4f63',g:'#ffc940',G:'#d18b1c',h:'#e6eef5',m:'#b3c2d1',n:'#7a8aa0',v:'#23304a',e:'#6ff7ff',E:'#ffffff',b:'#f0b067',c:'#c97a36',d:'#8a4a1e',s:'#3fd1b9',t:'#1f8f80',l:'#6b4426',L:'#4a2c16'};
+const PAL_ORANG={o:'#2a1a14',H:'#7a4a24',S:'#f5c9a0',e:'#ff8fb1',E:'#d9607f',b:'#4a6fd1',B:'#2f4aa0',L:'#3a2a20'};
+Object.assign(SPRITE,{
+  pamnD:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnK:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohvvvvvvvvmo..','..ohveevveevmo..','..ohhhhhhhmmmo..','...ommmmmmmno...','....okkkkkko....','..ossssssssttto.','.obbbsssstttcdo.','obbobbbeecccoddo','obkobbbbccccokdo','obcobbbbccccocdo','.kkobbbccccdokk.','.oooddddddddooo.','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnA:{p:PAL_PAMN,d:['......oggo......','.......kk.......','....oooooooo....','...ohhhhhhhmo...','..ohhhhhhhhmmo..','..ohvvvvvvvvmo..','..ohveEvvEevmo..','..ohvvvvvvvvmo..','.kohhhhhhhmmmok.','.kkommmmmmmnokk.','.bc.okkkkkko.cd.','.bcossssssttocd.','.obbbsssstttcdo.','..obbbbeecccco..','..obbbbeecccdo..','..obbbbccccddo..','...obbccccddo...','...oddddddddo...','....okkkkkko....','....okcoocko....','....okcoocko....','...ollloolllo...','..oLllloolllLo..','..oooooooooooo..']},
+  pamnS1:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','...okco.ocko....','..okco...ocko...','.olllo...olllo..','oLlllo..olllLo..','oooooo..oooooo..']},
+  pamnS2:{p:PAL_PAMN,d:['.....oggo.......','......kk........','...ooooooo......','..ohhhhhhmo.....','.ohhhhhhhmmo....','.ohhhhhvvvvo....','.ohhhhhvvEeo....','.ohhhhhvvvvo....','.ohhhhhhhmmo....','..ommmmmmmno....','...okkkkko......','.ttosssssso.....','tt.obbbbccdo....','...obbbbccdo....','...obbokkodo....','...obbobcodo....','...obbokkodo....','...odddooddo....','....okkkkko.....','.....okco.......','.....okco.......','....olllo.......','....olllLo......','....oooooo......']},
+  warga1:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','...obbobBo......','..obbo.obBo.....','.obbo...obBo....','.oLLo...oLLLo...','.oooo...ooooo...']},
+  warga2:{p:PAL_ORANG,d:['......oooo......','....oHHHHHo.....','...oHHHHHHHo....','...oHHHHSSSo....','...oHHHSSoSo....','...oHHHSSSSo....','....oHHSSSo.....','.....oSSSo......','....oeeeeeo.....','...oeeeeeeeo....','...oeeeeeEEo....','...oeeoSoEEo....','...oeeEEEEEo....','....obbbbbo.....','....obbbbBo.....','....obbbbBo.....','....obbbBo......','.....obBo.......','....oLLLo.......','....ooooo.......']},
+  wargaB:{p:PAL_ORANG,d:['......oooo......','....oHHHHHHo....','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','...oHHHHHHHHo...','....oHHHHHHo....','.....oSSSSo.....','....oeeeeeeo....','...oeeeeeeeeo...','..oSeeeeeeeeSo..','..oSeEEEEEEeSo..','...oEEEEEEEEo...','....obbbbbbo....','....obbbbbBo....','....obboobBo....','....obboobBo....','....oLLooLLo....','....oLLooLLo....','....oooooooo....']},
+  kepeng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0'},d:['..oooo..','.owyyyo.','owyooyYo','oyo..oYo','oyo..oYo','oyYooYYo','.oYYYYo.','..oooo..']},
+  ramuan:{p:{o:'#1b1b2f',k:'#b07a3e',K:'#7a4a1f',g:'#d8f0ff',b:'#29adff',B:'#1a6fd1',w:'#ffffff'},d:['..okko..','..oKKo..','..ogBo..','.oggbbo.','ogwbbbBo','obwbbbBo','obbbbbBo','obbbbBBo','.oBBBBo.','..oooo..']},
+  gulungan:{p:{o:'#5a3a1a',P:'#c9b27a',p:'#f1e3b5',l:'#8a6a3a',g:'#2fbf4f',G:'#1a8a35'},d:['.oooooooo.','oPppggppPo','oPlpgGplPo','oPppgGppPo','oPlpgGplPo','oPppggppPo','.oooooooo.']},
+  lentera:{p:{o:'#2a1a0a',m:'#8a5a2b',M:'#b07a3e',g:'#ffd0e4',f:'#ff77a8',F:'#ffffff'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  lenteraMati:{p:{o:'#2a1a0a',m:'#6b4a2a',M:'#8a6a4a',g:'#5f6070',f:'#3c3d4a',F:'#4a4b58'},d:['..oooo..','..o..o..','.ommmmo.','.oMMMMo.','omgffgmo','omfFFfmo','omgffgmo','.ommmmo.','..oMMo..','..oooo..']},
+  hatiG:{p:{o:'#5a0a1a',w:'#ffd0d0',r:'#e83a3a',R:'#a01c2c'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']},
+  hatiGK:{p:{o:'#3a2a3a',w:'#5a4a5a',r:'#4a3a4a',R:'#3a2a3a'},d:['.oo.oo.','owrorro','orrrrro','orrrrRo','.oRrRo.','..oRo..','...o...']}
+});
+const ikonTipe=v=>v.t==='int'?'kepeng':v.t==='float'?'ramuan':v.t==='str'?'gulungan':v.t==='bool'?(v.v?'lentera':'lenteraMati'):null;
+const TEKS_TIPE={int:'#ffd34d',float:'#5cc8ff',str:'#7dff8a',bool:'#ff9ccb'};
+const POSE_PAMN={diam:'pamnD',kedip:'pamnK',sorak:'pamnA',samping1:'pamnS1',samping2:'pamnS2'};
+/* PAMN digambar dengan titik tengah x dan telapak kaki y */
+function pamn(g,cx,kaki,pose='diam',o={}){
+  const nama=POSE_PAMN[pose]||'pamnD',k=o.skala||1,{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-6*k,kaki-1*k,12*k,2*k,0);kotak(g,cx-4*k,kaki-2*k,8*k,4*k,0);g.globalAlpha=1;
+  spr(g,nama,cx-w*k/2,kaki-h*k,k,{balik:o.balik,ganti:o.ganti,alpha:o.alpha});
+}
+function warga(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2,kaki-h,1,{balik:o.balik});
+}
+
+
+/* Teks: font piksel "Kepeng" buatan sendiri (huruf kapital 7 piksel, lebar proporsional),
+   digambar pada kisi piksel yang sama dengan sprite agar menyatu dengan gaya gim */
+const GLIF={"A":[5,0,[".###.","#...#","#...#","#####","#...#","#...#","#...#"]],"B":[5,0,["####.","#...#","#...#","####.","#...#","#...#","####."]],"C":[5,0,[".###.","#...#","#....","#....","#....","#...#",".###."]],"D":[5,0,["####.","#...#","#...#","#...#","#...#","#...#","####."]],"E":[5,0,["#####","#....","#....","####.","#....","#....","#####"]],"F":[5,0,["#####","#....","#....","####.","#....","#....","#...."]],"G":[5,0,[".###.","#...#","#....","#.###","#...#","#...#",".####"]],"H":[5,0,["#...#","#...#","#...#","#####","#...#","#...#","#...#"]],"I":[3,0,["###",".#.",".#.",".#.",".#.",".#.","###"]],"J":[5,0,["..###","...#.","...#.","...#.","#..#.","#..#.",".##.."]],"K":[5,0,["#...#","#..#.","#.#..","##...","#.#..","#..#.","#...#"]],"L":[5,0,["#....","#....","#....","#....","#....","#....","#####"]],"M":[5,0,["#...#","##.##","#.#.#","#.#.#","#...#","#...#","#...#"]],"N":[5,0,["#...#","##..#","#.#.#","#..##","#...#","#...#","#...#"]],"O":[5,0,[".###.","#...#","#...#","#...#","#...#","#...#",".###."]],"P":[5,0,["####.","#...#","#...#","####.","#....","#....","#...."]],"Q":[5,0,[".###.","#...#","#...#","#...#","#.#.#","#..#.",".##.#"]],"R":[5,0,["####.","#...#","#...#","####.","#.#..","#..#.","#...#"]],"S":[5,0,[".####","#....","#....",".###.","....#","....#","####."]],"T":[5,0,["#####","..#..","..#..","..#..","..#..","..#..","..#.."]],"U":[5,0,["#...#","#...#","#...#","#...#","#...#","#...#",".###."]],"V":[5,0,["#...#","#...#","#...#","#...#","#...#",".#.#.","..#.."]],"W":[5,0,["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"]],"X":[5,0,["#...#","#...#",".#.#.","..#..",".#.#.","#...#","#...#"]],"Y":[5,0,["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."]],"Z":[5,0,["#####","....#","...#.","..#..",".#...","#....","#####"]],"0":[5,0,[".###.","#...#","#..##","#.#.#","##..#","#...#",".###."]],"1":[5,0,["..#..",".##..","..#..","..#..","..#..","..#..",".###."]],"2":[5,0,[".###.","#...#","....#","...#.","..#..",".#...","#####"]],"3":[5,0,["####.","....#","....#",".###.","....#","....#","####."]],"4":[5,0,["...#.","..##.",".#.#.","#..#.","#####","...#.","...#."]],"5":[5,0,["#####","#....","####.","....#","....#","#...#",".###."]],"6":[5,0,["..##.",".#...","#....","####.","#...#","#...#",".###."]],"7":[5,0,["#####","....#","...#.","..#..",".#...",".#...",".#..."]],"8":[5,0,[".###.","#...#","#...#",".###.","#...#","#...#",".###."]],"9":[5,0,[".###.","#...#","#...#",".####","....#","...#.",".##.."]],"a":[5,2,[".###.","....#",".####","#...#",".####"]],"b":[5,0,["#....","#....","####.","#...#","#...#","#...#","####."]],"c":[4,2,[".###","#...","#...","#...",".###"]],"d":[5,0,["....#","....#",".####","#...#","#...#","#...#",".####"]],"e":[5,2,[".###.","#...#","#####","#....",".###."]],"f":[4,0,["..##",".#..","####",".#..",".#..",".#..",".#.."]],"g":[5,2,[".####","#...#","#...#","#...#",".####","....#",".###."]],"h":[5,0,["#....","#....","#.##.","##..#","#...#","#...#","#...#"]],"i":[1,0,["#",".","#","#","#","#","#"]],"j":[3,0,["..#","...","..#","..#","..#","..#","..#","#.#",".#."]],"k":[4,0,["#...","#...","#..#","#.#.","##..","#.#.","#..#"]],"l":[2,0,["#.","#.","#.","#.","#.","#.",".#"]],"m":[5,2,["##.#.","#.#.#","#.#.#","#.#.#","#.#.#"]],"n":[5,2,["#.##.","##..#","#...#","#...#","#...#"]],"o":[5,2,[".###.","#...#","#...#","#...#",".###."]],"p":[5,2,["####.","#...#","#...#","#...#","####.","#....","#...."]],"q":[5,2,[".####","#...#","#...#","#...#",".####","....#","....#"]],"r":[4,2,["#.##","##..","#...","#...","#..."]],"s":[5,2,[".####","#....",".###.","....#","####."]],"t":[4,0,[".#..",".#..","####",".#..",".#..",".#..","..##"]],"u":[5,2,["#...#","#...#","#...#","#..##",".##.#"]],"v":[5,2,["#...#","#...#","#...#",".#.#.","..#.."]],"w":[5,2,["#...#","#...#","#.#.#","#.#.#",".#.#."]],"x":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"y":[5,2,["#...#","#...#","#...#","#...#",".####","....#",".###."]],"z":[5,2,["#####","...#.","..#..",".#...","#####"]]," ":[3,0,[]],"!":[1,0,["#","#","#","#","#",".","#"]],"\"":[3,0,["#.#","#.#"]],"#":[5,1,[".#.#.","#####",".#.#.","#####",".#.#."]],"$":[5,0,["..#..",".####","#.#..",".###.","..#.#","####.","..#.."]],"%":[5,0,["##...","##..#","...#.","..#..",".#...","#..##","...##"]],"&":[5,0,[".##..","#..#.","#.#..",".#...","#.#.#","#..#.",".##.#"]],"'":[1,0,["#","#"]],"(":[2,0,[".#","#.","#.","#.","#.","#.",".#"]],")":[2,0,["#.",".#",".#",".#",".#",".#","#."]],"*":[5,1,["..#..","#.#.#",".###.","#.#.#","..#.."]],"+":[5,1,["..#..","..#..","#####","..#..","..#.."]],",":[2,5,[".#",".#","#."]],"-":[4,3,["####"]],".":[1,6,["#"]],"/":[5,0,["....#","...#.","...#.","..#..",".#...",".#...","#...."]],":":[1,2,["#",".",".",".","#"]],";":[2,2,[".#","..","..",".#",".#","#."]],"<":[3,1,["..#",".#.","#..",".#.","..#"]],"=":[4,2,["####","....","####"]],">":[3,1,["#..",".#.","..#",".#.","#.."]],"?":[5,0,[".###.","#...#","....#","...#.","..#..",".....","..#.."]],"@":[5,0,[".###.","#...#","#.###","#.#.#","#.###","#....",".###."]],"[":[3,0,["###","#..","#..","#..","#..","#..","###"]],"\\":[5,0,["#....",".#...",".#...","..#..","...#.","...#.","....#"]],"]":[3,0,["###","..#","..#","..#","..#","..#","###"]],"^":[5,0,["..#..",".#.#.","#...#"]],"_":[5,7,["#####"]],"`":[2,0,["#.",".#"]],"{":[4,0,["..##",".#..",".#..","#...",".#..",".#..","..##"]],"|":[1,0,["#","#","#","#","#","#","#","#"]],"}":[4,0,["##..","..#.","..#.","...#","..#.","..#.","##.."]],"~":[5,2,[".#...","#.#.#","...#."]],"▶":[4,1,["#...","##..","###.","##..","#..."]],"▼":[5,2,["#####",".###.","..#.."]],"✓":[5,2,["....#","...#.","#.#..",".#..."]],"✗":[5,1,["#...#",".#.#.","..#..",".#.#.","#...#"]],"×":[5,2,["#...#",".#.#.","..#..",".#.#.","#...#"]],"…":[5,6,["#.#.#"]],"→":[5,2,["...#.","#####","...#."]],"←":[5,2,[".#...","#####",".#..."]],"·":[1,3,["#"]],"°":[3,0,[".#.","#.#",".#."]]};
+const _glif=new Map();
+const skalaTeks=uk=>Math.max(1,Math.round(uk/10));
+function kanvasGlif(ch,col,tebal){
+  const key=ch+'|'+col+'|'+(tebal?1:0);let c=_glif.get(key);if(c)return c;
+  const [w,y0,rows]=GLIF[ch]||GLIF['?'];
+  c=document.createElement('canvas');c.width=Math.max(1,w+(tebal?1:0));c.height=10;const q=c.getContext('2d');q.fillStyle=warna(col);
+  rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='#'){q.fillRect(x,y0+y,1,1);if(tebal&&r[x+2]!=='#')q.fillRect(x+1,y0+y,1,1)}});
+  _glif.set(key,c);return c;
+}
+const lebarGlif=(ch,tebal,mono)=>mono?6:(GLIF[ch]||GLIF['?'])[0]+1+(tebal?1:0);
+function lebarTeks(s,uk=10,tebal,mono){
+  let w=0;for(const ch of String(s))w+=lebarGlif(ch,tebal,mono);
+  return Math.max(0,w-1)*skalaTeks(uk)+2;
+}
+function tulis(g,s,x,y,col=7,o={}){
+  s=String(s);if(!s)return 0;
+  const uk=(o.uk||10)*(o.skala||1),k=skalaTeks(uk),w=lebarTeks(s,uk,o.tebal,o.mono);
+  let xx=x+1;if(o.rata==='tengah')xx=x-w/2+1;else if(o.rata==='kanan')xx=x-w+1;
+  xx=Math.round(xx);const yy=Math.round(y)+1;
+  const lapis=o.bayang!=null?[[o.bayang,k],[col,0]]:[[col,0]];
+  for(const [c,d] of lapis){
+    let cx=xx;
+    for(const ch of s){
+      const [gw]=GLIF[ch]||GLIF['?'];
+      if(ch!==' '){const im=kanvasGlif(ch,warna(c),o.tebal),ox=o.mono?Math.floor((5-gw)/2)*k:0;g.drawImage(im,cx+ox+d,yy+d,im.width*k,im.height*k)}
+      cx+=lebarGlif(ch,o.tebal,o.mono)*k;
+    }
+  }
+  return w;
+}
+function potong(s,maks,uk=10){s=String(s);if(lebarTeks(s,uk)<=maks)return s;while(s.length>1&&lebarTeks(s+'…',uk)>maks)s=s.slice(0,-1);return s+'…'}
+
+
+
+/* ============ LATAR GAYA RPG GBA ============ */
+const GB={rumput:'#6cc04a',rumputT:'#8ad65a',rumputG:'#4a9a3a',rumputGG:'#357a2c',tanah:'#d9b26b',tanahG:'#b8894a',tanahT:'#ecd08e',
+  jerami:'#e8b84a',jeramiG:'#c08a2a',jeramiT:'#f7d982',jeramiGG:'#8f5f1a',dinding:'#e8dcc0',dindingG:'#c4b392',batu:'#9a8c70',
+  kayu:'#b07a3e',kayuG:'#7f5428',kayuT:'#d29a55',kayuGG:'#4a2c16',daun:'#2f8a35',daunT:'#55b84f',daunG:'#1d5a22',ceri:'#d23c3c',
+  tenda:'#2bb3a3',tendaG:'#1f8f80',putih:'#f4f1e6',lantai:'#c08b4f',lantaiG:'#946433',lantaiT:'#d7a56a',kertas:'#f1e3b5',kertasG:'#b49a62',garis:'#1b1b2f'};
+function acakTetap(benih){let s=benih>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+function latar(w,h,lukis){const c=document.createElement('canvas');c.width=w;c.height=h;lukis(c.getContext('2d'));return c}
+function bulat(q,cx,cy,r,col){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y)+.35);kotak(q,cx-w,cy+y,2*w+1,1,col)}}
+function lukisRumput(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.rumput);
+  for(let i=0;i<w*h/22;i++){
+    const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h),r=a();
+    if(r<.5){kotak(q,px,py+1,1,1,GB.rumputG);kotak(q,px+1,py,1,1,GB.rumputG);kotak(q,px+2,py+1,1,1,GB.rumputG)}
+    else if(r<.8)kotak(q,px,py,1,1,GB.rumputT);
+    else if(r<.86)kotak(q,px,py,2,1,GB.rumputGG);
+  }
+}
+function lukisJalan(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.tanah);
+  for(let i=0;i<w*h/14;i++){const px=x+Math.floor(a()*w),py=y+Math.floor(a()*h);kotak(q,px,py,1,1,a()<.6?GB.tanahG:GB.tanahT)}
+}
+function bunga(q,x,y,c){kotak(q,x,y-1,1,1,c);kotak(q,x-1,y,3,1,c);kotak(q,x,y+1,1,1,c);kotak(q,x,y,1,1,'#ffe066')}
+function semak(q,x,y,r,buah){
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-1,y-1,r-2,GB.daunT);
+  kotak(q,x-r+2,y-1,1,1,GB.daunG);kotak(q,x+1,y+2,1,1,GB.daunG);
+  if(buah)for(const [dx,dy] of [[-2,1],[2,-1],[0,3],[3,2]])kotak(q,x+dx,y+dy,1,1,GB.ceri);
+}
+function pohon(q,x,y,r){
+  kotak(q,x-3,y+r-2,6,10,GB.kayuG);kotak(q,x-3,y+r-2,2,10,GB.kayu);
+  bulat(q,x,y+1,r+1,GB.daunG);bulat(q,x,y,r,GB.daun);bulat(q,x-3,y-3,r-4,GB.daunT);
+  const a=acakTetap(x*7+y);for(let i=0;i<r*3;i++){const px=x+Math.floor((a()-.5)*r*1.6),py=y+Math.floor((a()-.5)*r*1.6);kotak(q,px,py,2,1,GB.daunG)}
+}
+function lukisPondok(q,x,y,w){
+  const ha=34,hd=24;
+  kotak(q,x+4,y+ha,w-8,hd,GB.dinding);
+  const a=acakTetap(11);
+  for(let i=0;i<26;i++)kotak(q,x+6+Math.floor(a()*(w-14)),y+ha+3+Math.floor(a()*(hd-8)),4,2,GB.dindingG);
+  kotak(q,x+4,y+ha+hd-3,w-8,3,GB.batu);bingkai(q,x+3,y+ha,w-6,hd+1,GB.garis);
+  for(let r=0;r<ha;r++){const t=Math.max(0,5-r);kotak(q,x+t,y+r,w-2*t,1,GB.jerami)}
+  for(let b=1;b<ha-3;b+=5)for(let i=x+3+((b/5|0)%2)*2;i<x+w-3;i+=4){kotak(q,i,y+b,1,3,GB.jeramiG);kotak(q,i+1,y+b-1,1,1,GB.jeramiT)}
+  kotak(q,x,y+ha-3,w,3,GB.jeramiGG);kotak(q,x+5,y,w-10,1,GB.garis);
+  for(let r=0;r<6;r++){kotak(q,x+5-r,y+r,1,1,GB.garis);kotak(q,x+w-6+r,y+r,1,1,GB.garis)}
+  kotak(q,x,y+5,1,ha-5,GB.garis);kotak(q,x+w-1,y+5,1,ha-5,GB.garis);kotak(q,x,y+ha,w,1,GB.garis);
+  const dx=x+48;kotak(q,dx,y+ha+6,16,hd-6,GB.kayuG);kotak(q,dx+2,y+ha+8,12,hd-8,GB.kayu);kotak(q,dx+7,y+ha+8,1,hd-8,GB.kayuG);
+  kotak(q,dx+2,y+ha+5,12,2,GB.kayuGG);kotak(q,dx+10,y+ha+15,2,2,'#ffd34d');bingkai(q,dx-1,y+ha+5,18,hd-4,GB.garis);
+  kotak(q,x+78,y+ha+5,16,11,GB.garis);kotak(q,x+79,y+ha+6,14,9,'#7ec8e3');kotak(q,x+85,y+ha+6,1,9,GB.garis);kotak(q,x+79,y+ha+10,14,1,GB.garis);kotak(q,x+80,y+ha+7,3,2,'#d8f4ff');
+  kotak(q,x+10,y+ha+6,32,12,GB.kayuGG);kotak(q,x+11,y+ha+7,30,10,GB.kayuT);kotak(q,x+11,y+ha+15,30,2,GB.kayu);
+}
+function lukisPeti(q,x,y){kotak(q,x,y,14,12,GB.kayuGG);kotak(q,x+1,y+1,12,10,GB.kayu);kotak(q,x+1,y+1,12,3,'#5a3418');for(let i=0;i<5;i++)kotak(q,x+2+i*2,y+2,1,1,'#2a1a10');kotak(q,x+1,y+6,12,1,GB.kayuG)}
+function kotakDialog(g,x,y,w,h,nama,baris,u){
+  bingkaiRPG(g,x,y,w,h);
+  if(nama){const tw=lebarTeks(nama,8,true)+10;panel(g,x+8,y-9,tw,12,GB.tenda,GB.putih);tulis(g,nama,x+13,y-8,'#ffffff',{uk:8,tebal:true,bayang:GB.tendaG})}
+  let sisa=GERAK?Math.floor(u*45):1e9;
+  baris.forEach((b,i)=>{const t=b.slice(0,Math.max(0,sisa));sisa-=b.length;tulis(g,t,x+9,y+5+i*12,'#ffffff',{bayang:'#0b0f22'})});
+  if(sisa>4&&Math.floor(u*3)%2===0){const ax=x+w-12,ay=y+h-9;kotak(g,ax,ay,5,1,'#ffffff');kotak(g,ax+1,ay+1,3,1,'#ffffff');kotak(g,ax+2,ay+2,1,1,'#ffffff')}
+}
+function hatiHUD(g,x,y,isi,maks=3){for(let i=0;i<maks;i++)spr(g,i<isi?'hatiG':'hatiGK',x+i*9,y)}
+
+Object.assign(SPRITE,{
+  bugG:{p:{o:'#1b1b2f',k:'#3a2a3a',e:'#ffffff',p:'#1b1b2f',X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'},d:['...k........k...','....k......k....','....oooooooo....','...oZZXXXXYYo...','..oZeeXXXXeeYo..','..oZepXXXXpeYo..','..oXXXXXXXXXXo..','.ooXYYXXXXYYXoo.','okoXXXXXXXXXXoko','..oXYYXXXXYYXo..','okoXXXXXXXXXXoko','..ooXXXXXXXXoo..','.k..oooooooo..k.','k..............k']},
+  hantuG:{p:{o:'#3a3f5a',w:'#eef2ff',s:'#b8c0e0',p:'#1b1b2f',r:'#ff8fb1'},d:['....oooooo....','..oowwwwwwoo..','.owwwwwwwwwwo.','.owwppwwppwwo.','owwwppwwppwwwo','owwwwwwwwwwwwo','owwwwwrrwwwwwo','owwwwwwwwwwwwo','owswwwwwwwwswo','owswwwwwwwwswo','owwwwwwwwwwwwo','owwoowwwwoowwo','owo..owwo..owo','.o....oo....o.']},
+  petiKayu:{p:{o:'#4a2c16',L:'#d29a55',K:'#b07a3e',d:'#7f5428',m:'#b3c2d1'},d:['oooooooooooo','oLLLLLLLLLLo','oKKKKKKKKKKo','oooooooooooo','oKmKKKKKKmKo','oKmKKKKKKmKo','oKKKKKKKKKKo','oKmKKKKKKmKo','oddddddddddo','oooooooooooo']},
+  kuali:{p:{o:'#1b1b2f',b:'#bfffd0',g:'#7dff8a',a:'#5c6178',i:'#3a3f5a',I:'#7a8aa0'},d:['....b...b...','..oooooooo..','.oggggggggo.','oaaaaaaaaaao','oiiiiiiiiiio','oiIiiiiiiiio','oiIiiiiiiiio','.oiiiiiiiio.','..oooooooo..','..o......o..','.oo......oo.']},
+  struk:{p:{o:'#8a6a3a',w:'#fff8e8',l:'#8a8fa3'},d:['oooooooo','owwwwwwo','owllllwo','owwwwwwo','owlllwwo','owwwwwwo','owllllwo','owwwwwwo','owlwllwo','owwwwwwo','oo.oo.oo']},
+  pialaG:{p:{o:'#7a4a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',b:'#8a5a2b'},d:['..oooooooo..','ooowyyyyYooo','o.owyyyyYo.o','o.oyyyyyYo.o','oo.oyyyYo.oo','...oyyyYo...','....oyYo....','.....oo.....','.....yY.....','...oooooo...','...obbbbo...','...oooooo...']}
+});
+
+/* ============ PUSTAKA ADEGAN RPG ============ */
+const BT={batu:'#7d7f8f',batuT:'#9a9cab',batuG:'#5c5e6e',nat:'#3e4050',dinding:'#4b4e63',dindingT:'#666a82',dindingG:'#343648'};
+function lukisLantaiKayu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,GB.lantai);
+  for(let yy=y;yy<y+h;yy+=8){kotak(q,x,yy,w,1,GB.lantaiG);kotak(q,x,yy+1,w,1,GB.lantaiT);for(let xx=x+((yy-y)/8%2)*24+Math.floor(a()*10);xx<x+w;xx+=48)kotak(q,xx,yy,1,8,GB.lantaiG)}
+  for(let i=0;i<w*h/600;i++)kotak(q,x+Math.floor(a()*w),y+Math.floor(a()*h),2,1,GB.lantaiG);
+}
+function lukisDindingKayu(q,x,y,w,h){
+  kotak(q,x,y,w,h,'#7a4a24');
+  for(let xx=x;xx<x+w;xx+=10){kotak(q,xx,y,1,h,'#4a2c16');kotak(q,xx+1,y,1,h,'#9a6234')}
+  kotak(q,x,y+h-3,w,3,'#4a2c16');kotak(q,x,y+h-3,w,1,'#9a6234');
+}
+function lukisLantaiBatu(q,x,y,w,h,a){
+  kotak(q,x,y,w,h,BT.nat);
+  for(let yy=y;yy<y+h;yy+=12){const off=((yy-y)/12%2)*8;for(let xx=x-off;xx<x+w;xx+=16){
+    kotak(q,xx+1,yy+1,15,11,BT.batu);kotak(q,xx+1,yy+1,15,1,BT.batuT);kotak(q,xx+1,yy+1,1,11,BT.batuT);kotak(q,xx+2,yy+11,14,1,BT.batuG);
+    if(a()<.35)kotak(q,xx+4+Math.floor(a()*8),yy+4+Math.floor(a()*5),2,1,BT.batuG);
+  }}
+}
+function lukisDindingBatu(q,x,y,w,h){
+  kotak(q,x,y,w,h,BT.dindingG);
+  for(let yy=y;yy<y+h;yy+=8){const off=((yy-y)/8%2)*6;for(let xx=x-off;xx<x+w;xx+=12){kotak(q,xx+1,yy+1,11,6,BT.dinding);kotak(q,xx+1,yy+1,11,1,BT.dindingT)}}
+  kotak(q,x,y+h-2,w,2,'#24263a');
+}
+function obor(g,x,y,t){
+  kotak(g,x-1,y+4,3,8,GB.kayuGG);kotak(g,x-3,y+2,7,3,'#5c6178');kotak(g,x-3,y+2,7,1,'#9aa7b8');
+  const f=GERAK?Math.floor(t*10)%3:0;
+  g.globalAlpha=.13;bulat(g,x,y-3,13+f,'#ffb84d');g.globalAlpha=1;
+  kotak(g,x-2,y-3+(f===1?1:0),5,5,'#ff7a1c');kotak(g,x-1,y-6+(f===2?1:0),3,5,'#ffd34d');kotak(g,x,y-7+f,1,2,'#fff7b0');
+}
+function gigi(g,cx,cy,r,sudut){
+  for(let i=0;i<8;i++){const a=sudut+i*Math.PI/4;kotak(g,Math.round(cx+Math.cos(a)*(r+1))-1,Math.round(cy+Math.sin(a)*(r+1))-1,3,3,'#6a4210')}
+  bulat(g,cx,cy,r,'#6a4210');bulat(g,cx,cy,r-1,'#e0a040');bulat(g,cx-1,cy-1,Math.max(1,r-3),'#f6c870');bulat(g,cx,cy,1,'#5a3a10');
+}
+function mesinKuningan(g,x,y,w,h,label,o={}){
+  const X=Math.round(x+(o.goy||0));
+  g.globalAlpha=.25;kotak(g,X+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,X,y,w,h,GB.kayuGG);kotak(g,X+1,y+1,w-2,h-2,'#8a5a2b');kotak(g,X+1,y+1,w-2,3,'#b07a3e');
+  kotak(g,X+3,y+5,w-6,h-10,'#c98a3a');kotak(g,X+3,y+5,w-6,1,'#f0c070');bingkai(g,X+3,y+5,w-6,h-10,'#5a3a10');
+  for(const [rx,ry] of [[X+5,y+7],[X+w-6,y+7],[X+5,y+h-7],[X+w-6,y+h-7]])kotak(g,rx,ry,1,1,'#fff3b0');
+  const pw=Math.max(30,lebarTeks(label,10,true)+8);panel(g,Math.round(X+w/2-pw/2),y+8,pw,13,GB.kertas,'#5a3a10');tulis(g,label,X+w/2,y+9,'#3a2410',{rata:'tengah',tebal:true});
+  gigi(g,X+Math.round(w/2)-10,y+h-17,5,o.sudut||0);gigi(g,X+Math.round(w/2)+10,y+h-17,5,-(o.sudut||0));
+  if(o.lampu)kotak(g,X+w-10,y+h-10,3,3,o.lampu);
+  kotak(g,X+3,y+h,4,2,GB.kayuGG);kotak(g,X+w-7,y+h,4,2,GB.kayuGG);
+}
+const WARNA_PETI={int:['#e0a020','#ffd34d','#8a5a10'],float:['#2a7fd8','#5cc8ff','#1a3f8a'],str:['#2f9e44','#7dff8a','#1a5a2a'],bool:['#d9558f','#ff9ccb','#8a2a55']};
+function petiHarta(g,x,y,w,h,tipe,o={}){
+  const [m,t,d]=WARNA_PETI[tipe],lh=14;
+  g.globalAlpha=.25;kotak(g,x+2,y+h,w-2,3,0);g.globalAlpha=1;
+  kotak(g,x,y,w,h,GB.garis);
+  kotak(g,x+1,y+1,w-2,lh-1,m);kotak(g,x+1,y+1,w-2,2,t);kotak(g,x+1,y+lh-2,w-2,1,d);
+  kotak(g,x+1,y+lh,w-2,h-lh-1,d);kotak(g,x+2,y+lh+1,w-4,h-lh-3,m);kotak(g,x+1,y+lh,w-2,1,GB.garis);
+  for(const bx of [x+4,x+w-7]){kotak(g,bx,y+lh+1,3,h-lh-2,'#ffd34d');kotak(g,bx+2,y+lh+1,1,h-lh-2,'#c09020')}
+  kotak(g,Math.round(x+w/2-3),y+lh-3,6,7,'#ffd34d');kotak(g,Math.round(x+w/2-1),y+lh,2,2,GB.garis);
+  if(o.kilau){bingkai(g,x-1,y-1,w+2,h+2,'#fff7b0');bingkai(g,x-2,y-2,w+4,h+4,t)}
+}
+function kuali(g,cx,cy,t,cair,o={}){
+  const goy=o.goy||0,X=cx+goy;
+  if(GERAK)for(let i=0;i<5;i++){const f=Math.floor(t*12+i*2)%3;kotak(g,X-12+i*5,cy+26-f,3,4+f,f===0?'#ffd34d':'#ff7a1c')}
+  kotak(g,X-15,cy+22,4,6,GB.garis);kotak(g,X+11,cy+22,4,6,GB.garis);
+  bulat(g,X,cy+10,17,GB.garis);bulat(g,X,cy+10,16,'#3a3f5a');bulat(g,X-5,cy+5,7,'#4b5068');
+  kotak(g,X-19,cy-3,38,6,GB.garis);kotak(g,X-18,cy-2,36,4,'#5c6178');kotak(g,X-18,cy-2,36,1,'#9aa7b8');
+  kotak(g,X-16,cy-5,32,3,cair);kotak(g,X-12,cy-6,24,1,cair);
+  if(GERAK)for(let i=0;i<3;i++){const ph=(t*1.4+i/3)%1;kotak(g,X-8+i*8,cy-6-ph*10,2,2,o.gelembung||'#ffffff')}
+  if(o.rune){panel(g,X-9,cy+7,18,14,'#2b2f3a','#ffd34d');tulis(g,o.rune,X,cy+9,o.runeWarna||'#ffd34d',{rata:'tengah',tebal:true})}
+}
+function bingkaiRPG(g,x,y,w,h){
+  kotak(g,x+1,y,w-2,h,GB.putih);kotak(g,x,y+1,w,h-2,GB.putih);
+  kotak(g,x+2,y+2,w-4,h-4,'#1c2340');bingkai(g,x+3,y+3,w-6,h-6,'#4b5aa0');
+}
+function asap(g,x,y,u,n=8){for(let k=0;k<n;k++){const a=k*Math.PI*2/n+u,r=4+u*26;g.globalAlpha=Math.max(0,1-u);kotak(g,x+Math.cos(a)*r-2,y+Math.sin(a)*r*.6-2-u*10,4,4,k%2?'#d0d0d8':'#a8a8b4');g.globalAlpha=1}}
+function letup(g,x,y,u,warnaP){for(let k=0;k<10;k++){const a=k*Math.PI/5,r=u*30;kotak(g,x+Math.cos(a)*r-1,y+Math.sin(a)*r-1,3,3,k%2?warnaP:'#fff7b0')}}
+
+
+/* ============ PENJADWAL ANIMASI ============ */
+const ADEGAN=[];
+const amati=new IntersectionObserver(es=>{for(const e of es){const a=ADEGAN.find(x=>x.c===e.target);if(a)a.lihat=e.isIntersecting}});
+function aturSkala(a){
+  const dpr=window.devicePixelRatio||1,cw=a.c.clientWidth;
+  const S=cw?jepit(Math.ceil(cw*dpr/a.W),2,6):Math.max(a.S,3);
+  if(S!==a.S){a.S=S;a.c.width=a.W*S;a.c.height=a.H*S}
+  a.g.setTransform(S,0,0,S,0,0);a.g.imageSmoothingEnabled=false;
+}
+function adegan(kanvas,gambar){const a={c:kanvas,g:kanvas.getContext('2d'),W:kanvas.width,H:kanvas.height,S:0,gambar,lihat:false,akhir:0,paksa:true};ADEGAN.push(a);amati.observe(kanvas);return a}
+function putar(ms){
+  const t=ms/1000;
+  for(const a of ADEGAN){
+    if(!a.lihat&&!a.paksa)continue;
+    if(!a.paksa&&t-a.akhir<1/30)continue;
+    const dt=a.akhir?Math.min(.1,t-a.akhir):0;a.akhir=t;a.paksa=false;
+    aturSkala(a);a.gambar(a.g,t,dt);
+  }
+  requestAnimationFrame(putar);
+}
+
+/* ============ PUSTAKA BERSAMA (dari materi Python) ============ */
+const BUG_SYN={X:'#ff9a3c',Y:'#c0561a',Z:'#ffd08a'},BUG_ABU={X:'#8a8fa3',Y:'#5c6178',Z:'#c3c7d6'};
+const WARNA_BUG={SyntaxError:BUG_SYN,IndentationError:BUG_SYN,NameError:{X:'#b58cff',Y:'#7a4fd1',Z:'#e0ccff'},TypeError:{X:'#ff5a5a',Y:'#b8263a',Z:'#ffb3b3'},ValueError:{X:'#4fb0ff',Y:'#2266c8',Z:'#bfe3ff'},EOFError:BUG_ABU,ZeroDivisionError:{X:'#ff77a8',Y:'#c0457a',Z:'#ffc6dc'},AttributeError:{X:'#d9a05a',Y:'#9a6a2a',Z:'#f3d3a3'},OverflowError:BUG_ABU};
+function gelembung(g,teks,x,y){
+  const w=lebarTeks(teks)+10;
+  panel(g,x,y,w,15,7,0);kotak(g,x+2,y+15,4,2,7);kotak(g,x,y+17,3,2,7);
+  tulis(g,teks,x+5,y+2,0);
+}
+const ribuanID=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+function hud(g,label,skor,hati,maksHati=3){
+  if(maksHati)hatiHUD(g,4,4,hati,maksHati);
+  const lx=maksHati?6+maksHati*9:4;
+  if(label){const w=lebarTeks(label,10,true)+6;g.globalAlpha=.8;kotak(g,lx,2,w,13,'#1c2340');g.globalAlpha=1;tulis(g,label,lx+2,3,'#ffffff',{tebal:true,bayang:'#0b0f22'})}
+  const tx=String(skor),w2=lebarTeks(tx,10,true)+15;g.globalAlpha=.8;kotak(g,252-w2,2,w2+2,13,'#1c2340');g.globalAlpha=1;
+  spr(g,'kepeng',252-w2+3,5);tulis(g,tx,252,3,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+}
+function layarJudul(g,judul,baris,t=0){
+  g.globalAlpha=.55;kotak(g,0,0,256,144,'#0b0f22');g.globalAlpha=1;
+  const w=204,h=36+baris.length*12,x=26,y=Math.round(70-h/2);
+  bingkaiRPG(g,x,y,w,h);
+  tulis(g,judul,128,y+7,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+  baris.forEach((b,i)=>tulis(g,b,128,y+31+i*12,'#ffffff',{rata:'tengah',bayang:'#0b0f22'}));
+  pamn(g,240,y+h+2,Math.sin(t*2)>.6?'sorak':'diam');
+}
+function simpanTerbaik(kunci,skor,el,fmt){const b=lsAmbil(kunci,0);if(skor>b)lsSimpan(kunci,skor);const t=Math.max(b,skor);el.textContent=t?fmt(t):''}
+
+
+/* ============ SPRITE TAMBAHAN: LONCENG & PENYUSUP ============ */
+Object.assign(SPRITE,{
+  lonceng:{p:{o:'#5a3a10',y:'#ffd34d',Y:'#e0a020',w:'#fff3b0',k:'#4a2c16'},d:['....kk....','....oo....','...oyyo...','..oywyYo..','..oyyyYo..','.oywyyYYo.','.oyyyyyYo.','oyyyyyyYYo','oooooooooo','....oo....']},
+  buku:{p:{o:'#4a2c16',k:'#8a5a2b',K:'#b07a3e',p:'#f1e3b5',P:'#c9b27a',l:'#8a6a3a'},d:['oooooooooooo','oKKKKoKKKKKo','oKppppppppKo','oKplllpllpKo','oKppppppppKo','oKplllllppKo','oKppppppppKo','oKpllplllpKo','oKppppppppKo','okkkkokkkkko','oooooooooooo']}
+});
+/* Penyusup memakai sprite warga dengan jubah gelap (pedoman: sprite PAMN tidak dipakai untuk tokoh lain) */
+const JUBAH={H:'#2b2238',e:'#3d3354',E:'#2a2240',b:'#1f1a2b',B:'#16121f',L:'#0f0c16'};
+function penyusup(g,cx,kaki,pose,o={}){
+  const nama=pose==='belakang'?'wargaB':pose==='jalan'?'warga2':'warga1',{w,h}=ukuranSprite(nama);
+  g.globalAlpha=.22;kotak(g,cx-5,kaki-1,10,2,0);g.globalAlpha=1;
+  spr(g,nama,cx-w/2+(o.goy||0),kaki-h,1,{balik:o.balik,ganti:JUBAH,alpha:o.alpha});
+}
+function lonceng(g,cx,y,t,bunyiAktif){
+  kotak(g,cx-1,y-6,2,6,GB.kayuGG);kotak(g,cx-8,y-8,16,3,GB.kayuGG);kotak(g,cx-7,y-8,14,1,GB.kayuT);
+  const goy=bunyiAktif&&GERAK?Math.round(Math.sin(t*28)*2):0;
+  spr(g,'lonceng',cx-5+goy,y-1);
+  if(bunyiAktif){const f=GERAK?Math.floor(t*8)%2:0;for(const s of [-1,1]){kotak(g,cx+s*(9+f),y+2,1,3,'#ffd34d');kotak(g,cx+s*(12+f),y+1,1,5,'#ffd34d')}}
+}
+function gerbang(g,x,y,buka,goy=0){
+  // dua tiang batu dan dua daun pintu kayu; x = tepi kiri, lebar 34, y = alas
+  for(const px of [x,x+28]){kotak(g,px,y-30,6,30,GB.garis);kotak(g,px+1,y-29,4,28,BT.batu);kotak(g,px+1,y-29,1,28,BT.batuT);kotak(g,px-1,y-32,8,3,GB.garis);kotak(g,px,y-31,6,1,BT.batuT)}
+  const lebar=Math.round(11*(1-buka));
+  for(const [dx,arah] of [[6,1],[28,-1]]){
+    if(lebar<=0)continue;
+    const X=arah>0?x+dx+goy:x+dx-lebar+goy;
+    kotak(g,X,y-22,lebar,20,GB.kayuGG);if(lebar>2){kotak(g,X+1,y-21,lebar-2,18,GB.kayu);for(let k=X+3;k<X+lebar-1;k+=3)kotak(g,k,y-21,1,18,GB.kayuG);kotak(g,X+1,y-16,lebar-2,1,GB.kayuGG);kotak(g,X+1,y-8,lebar-2,1,GB.kayuGG)}
+  }
+}
+
+/* ============ ADEGAN: GERBANG TOKO ============ */
+function adeganGerbang(){
+  const P=20;
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(13);
+    lukisRumput(q,0,0,256,144,a);
+    lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
+    lukisPondok(q,6,0,112);
+    for(let x=122;x<158;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,122,78,36,2,GB.kayu);
+    for(let x=196;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,196,78,60,2,GB.kayu);
+    pohon(q,236,14,12);
+    for(const [x,y,c] of [[130,118,'#ffffff'],[150,124,'#ff8fb1'],[210,120,'#ffffff'],[240,126,'#ff8fb1'],[20,120,'#ffffff'],[60,126,'#ffffff']])bunga(q,x,y,c);
+  });
+  const A=adegan($('#kv-gerbang'),(g,t)=>{
+    const T=GERAK?t%P:15.2;
+    suaraAdegan(A,T,[[.1,'langkah'],[3,'benar'],[4,'pintu'],[7.5,'pintu'],[8.1,'langkah'],[10.5,'salah'],[11.3,'salah'],[12.1,'salah'],[12.9,'salah'],[13.7,'salah'],[14.5,'lonceng'],[17,'lempar']]);
+    g.drawImage(bawah,0,0);
+    // pengunjung sah
+    let buka=0,wx=null,wpose='samping',wBalik=true;
+    if(T<3){wx=lerp(276,206,T/3);wpose=Math.floor(t*7)%2?'jalan':'samping'}
+    else if(T<5.5){wx=206;buka=jepit((T-4)/.5,0,1)}
+    else if(T<8){wx=lerp(206,96,(T-5.5)/2.5);wpose=Math.floor(t*7)%2?'jalan':'samping';buka=T<7.5?1:jepit(1-(T-7.5)/.5,0,1)}
+    // penyusup
+    let px=null,pBalik=true,coba=0,pgoy=0;
+    if(T>=8&&T<10.5){px=lerp(276,206,(T-8)/2.5)}
+    else if(T>=10.5&&T<17){px=206;coba=Math.min(5,Math.floor((T-10.5)/.8)+1);const fase=(T-10.5)%.8;if(T<14.5&&fase<.25)pgoy=-2}
+    else if(T>=17&&T<20){px=lerp(206,290,(T-17)/2);pBalik=false}
+    const alarm=T>14.5&&T<17.5;
+    gerbang(g,166,104,buka,coba&&T<14.5&&((T-10.5)%.8)<.15?1:0);
+    lonceng(g,140,52,t,alarm);
+    kotak(g,139,52,2,40,GB.kayuGG);
+    pamn(g,152,104,alarm?'sorak':(T>3&&T<5.5?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam')));
+    if(wx!=null&&(T<8))warga(g,wx,104,wpose,{balik:wBalik});
+    if(px!=null)penyusup(g,px,104,T>=17?(Math.floor(t*9)%2?'jalan':'samping'):(T<10.5?(Math.floor(t*7)%2?'jalan':'samping'):'samping'),{balik:pBalik,goy:pgoy});
+    if(coba&&T<14.5){const fase=(T-10.5)%.8;if(fase<.5)tulis(g,'✗',px,78-fase*10,'#ff5a5a',{rata:'tengah',skala:1,tebal:true,bayang:'#0b0f22'})}
+    if(T>3&&T<5.5)tulis(g,'✓',206,78-(T-3)*3,'#55d36b',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    if(alarm&&Math.floor(t*4)%2===0)tulis(g,'ALERT',140,24,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    // penghitung percobaan
+    const n=(T>3?1:0)+coba;
+    g.globalAlpha=.8;kotak(g,4,2,92,13,'#1c2340');g.globalAlpha=1;tulis(g,'LOG: '+n+' baris',6,3,'#ffffff',{tebal:true,bayang:'#0b0f22'});
+    const D=[[3.2,5.4,'PAMN',['Login made berhasil.','Silakan masuk.']],[11,14.4,'PAMN',['Akun admin gagal lagi,','dari alamat yang sama.']],[14.6,17.6,'PAMN',['Lima kali gagal beruntun.','Lonceng dibunyikan.']]];
+    for(const [a,b,nm,l] of D)if(T>a&&T<b)kotakDialog(g,6,110,244,31,nm,l,T-a);
+  });
+}
+
+/* ============ ADEGAN: BUKU LOG ============ */
+function adeganLog(){
+  const P=17;
+  const E=[[.6,'08:02','.21','made',1],[1.8,'08:15','.34','sari',0],[3,'08:15','.34','sari',1],[4.2,'09:40','.52','budi',1],
+    [5.6,'13:02','.45','admin',0],[6.2,'13:02','.45','admin',0],[6.8,'13:02','.45','admin',0],[7.4,'13:02','.45','admin',0],[8,'13:02','.45','admin',0],[8.6,'13:02','.45','admin',0],[9.2,'13:03','.45','admin',0]];
+  const bg=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,30);lukisLantaiKayu(q,0,30,256,114,acakTetap(5));
+    kotak(q,104,14,148,112,'#8a6a3a');kotak(q,105,15,146,110,GB.kertas);kotak(q,105,121,146,4,'#e0cc94');
+    kotak(q,177,15,2,110,'#c9b27a');
+    kotak(q,10,96,80,6,GB.garis);kotak(q,11,97,78,4,GB.kayuT);kotak(q,14,101,4,18,GB.kayuGG);kotak(q,82,101,4,18,GB.kayuGG);
+  });
+  const A=adegan($('#kv-log'),(g,t)=>{
+    const T=GERAK?t%P:16;
+    suaraAdegan(A,T,[...E.map(e=>[e[0],'tulis']),[9.6,'galat'],[13.2,'benar']]);
+    g.drawImage(bg,0,0);
+    tulis(g,'LOG AUTENTIKASI',112,18,'#8a6a3a',{uk:8,tebal:true});
+    const tampil=E.filter(e=>T>=e[0]),awal=Math.max(0,tampil.length-8);
+    tampil.slice(awal).forEach((e,i)=>{
+      const y=32+i*11,baru=T-e[0]<.35;
+      if(baru)kotak(g,108,y-1,140,10,'#ffe9a8');
+      tulis(g,e[1],110,y,'#3a2410',{mono:true});
+      tulis(g,e[2],151,y,'#8a6a3a',{});
+      tulis(g,e[3],174,y,'#3a2410',{});
+      tulis(g,e[4]?'✓':'✗',236,y,e[4]?'#2f9e44':'#c0392b',{tebal:true});
+    });
+    const curiga=T>9.6;
+    pamn(g,50,96,curiga&&T<13?'diam':(T>13.2?'sorak':(Math.sin(t*1.4)>.97?'kedip':'diam')),{skala:2});
+    spr(g,'buku',22,84);
+    if(T<9.6&&GERAK&&Math.floor(t*6)%2)kotak(g,34,90,2,1,'#fff7b0');
+    if(curiga&&T<13.2){const b=GERAK?Math.round(Math.sin(t*8)):0;panel(g,66,30+b,12,14,'#ffffff',GB.garis);tulis(g,'!',72,32+b,'#ff5a5a',{rata:'tengah',tebal:true})}
+    const D=[[9.8,13,'PAMN',['Satu alamat (.45), satu akun,','tujuh kali gagal dalam semenit.']],[13.2,16.4,'PAMN',['Sari juga gagal, tetapi sekali','lalu berhasil. Itu wajar.']]];
+    for(const [a,b,nm,l] of D)if(T>a&&T<b)kotakDialog(g,6,110,244,31,nm,l,T-a);
+  });
+}
+
+/* ============ PERMAINAN: PEMBACA JEJAK ============ */
+const acakInt=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pilihSatu=a=>a[Math.floor(Math.random()*a.length)];
+const ipWajar=()=>`36.${acakInt(64,95)}.${acakInt(1,250)}.${acakInt(2,250)}`;
+const ipPenyerang=()=>pilihSatu(['203.0.113.','198.51.100.','192.0.2.'])+acakInt(2,250);
+const AKUN=['made','sari','budi','ayu','dewi','putu','komang','wayan','nyoman','gede','rina','agus'];
+const jam=d=>{const s=((d%86400)+86400)%86400;return [s/3600|0,(s%3600)/60|0,s%60].map(x=>String(x).padStart(2,'0')).join(':')};
+function wajarAuth(t,n){const r=[];for(let i=0;i<n;i++){t+=acakInt(40,600);r.push({w:t,ip:ipWajar(),u:pilihSatu(AKUN),s:pilihSatu(['web','vpn','web']),st:'success',c:'ID'})}return r}
+function wajarWeb(t,n){const J=['/','/menu','/produk?id='+acakInt(1,40),'/cari?q='+pilihSatu(['kopi','arabika','gula+aren','madu']),'/keranjang','/tentang'];const r=[];for(let i=0;i<n;i++){t+=acakInt(20,400);r.push({w:t,ip:ipWajar(),m:'GET',p:pilihSatu(J),sc:200})}return r}
+const POLA={
+  bf:{nama:'Brute force',kasus(){
+    const ip=ipPenyerang(),u=pilihSatu(['admin','root','backup']),c=pilihSatu(['NL','RU','US','CN']);let t=acakInt(0,23)*3600+acakInt(0,3000);
+    const r=wajarAuth(t-900,2);for(let i=0;i<7;i++){t+=acakInt(2,6);r.push({w:t,ip,u,s:'ssh',st:'failed',c,j:1})}
+    if(Math.random()<.4){t+=acakInt(2,6);r.push({w:t,ip,u,s:'ssh',st:'success',c,j:1})}
+    r.push(...wajarAuth(t+30,1));return {src:'auth',r,alasan:`Satu alamat (${ip}) mencoba satu akun (${u}) berkali-kali, hanya beberapa detik sekali. Pengguna yang lupa kata sandi gagal 1–3 kali lalu berhasil, bukan beruntun seperti ini.`}}},
+  ps:{nama:'Password spraying',kasus(){
+    const ip=ipPenyerang(),s=pilihSatu(['vpn','web']),c=pilihSatu(['NL','RU','US','SG']);let t=acakInt(0,23)*3600+acakInt(0,3000);
+    const r=wajarAuth(t-700,2);for(const u of acakSalin(AKUN).slice(0,6)){t+=acakInt(12,45);r.push({w:t,ip,u,s,st:'failed',c,j:1})}
+    r.push(...wajarAuth(t+20,1));return {src:'auth',r,alasan:`Satu alamat (${ip}) mencoba enam akun berbeda, masing-masing hanya sekali. Penyerang menebak kata sandi umum ke banyak akun agar tidak ada akun yang terkunci.`}}},
+  sqli:{nama:'Injeksi SQL',kasus(){
+    const ip=ipPenyerang(),id=acakInt(2,30);let t=acakInt(8,22)*3600+acakInt(0,3000);
+    const r=wajarWeb(t-600,3);
+    const S=[[`/produk?id=${id}`,200,0],[`/produk?id=${id}'`,500,1],[`/produk?id=${id}' OR '1'='1`,200,1],[`/produk?id=${id} UNION SELECT user,pass FROM akun`,500,1],[`/cari?q=kopi'--`,500,1]];
+    for(const [p,sc,j] of S){t+=acakInt(3,20);r.push({w:t,ip,m:'GET',p,sc,j})}
+    r.push(...wajarWeb(t+15,1));return {src:'web',r,alasan:`Kueri dari ${ip} berisi potongan perintah basis data: tanda kutip, ' OR '1'='1, UNION SELECT, dan --. Pencarian wajar hanya berisi kata atau angka. Kode 500 menandakan server kebingungan membaca kueri tersebut.`}}},
+  dir:{nama:'Pemindaian direktori',kasus(){
+    const ip=ipPenyerang();let t=acakInt(0,23)*3600+acakInt(0,3000);
+    const r=wajarWeb(t-500,2);
+    for(const p of acakSalin(['/admin','/.env','/backup.zip','/wp-login.php','/config.php.bak','/phpmyadmin','/server-status','/.git/config','/db.sql']).slice(0,7)){t+=acakInt(1,3);r.push({w:t,ip,m:'GET',p,sc:pilihSatu([404,404,404,403]),j:1})}
+    r.push(...wajarWeb(t+25,1));return {src:'web',r,alasan:`Satu alamat (${ip}) meminta tujuh jalur berbeda yang tidak ada di situs, hanya terpaut satu sampai tiga detik. Program pemindai mencari berkas rahasia atau halaman admin yang tertinggal.`}}},
+  normal:{nama:'Aktivitas wajar',kasus(){
+    let t=acakInt(8,17)*3600+acakInt(0,3000);
+    if(Math.random()<.5){
+      const ip=ipWajar(),u=pilihSatu(AKUN),s=pilihSatu(['web','vpn']),r=wajarAuth(t,3);t=r[r.length-1].w;
+      for(let i=0;i<2;i++){t+=acakInt(8,25);r.push({w:t,ip,u,s,st:'failed',c:'ID'})}
+      t+=acakInt(8,25);r.push({w:t,ip,u,s,st:'success',c:'ID'});r.push(...wajarAuth(t,2));
+      return {src:'auth',r,alasan:`Ada kegagalan, tetapi hanya dua kali dari satu akun (${u}), dari Indonesia, lalu berhasil. Itu ciri pengguna yang salah mengetik kata sandi, bukan serangan.`};
+    }
+    const r=wajarWeb(t,4);t=r[r.length-1].w;r.push({w:t+acakInt(30,200),ip:ipWajar(),m:'GET',p:'/promo-lama',sc:404});r.push(...wajarWeb(t+300,2));
+    return {src:'web',r,alasan:'Hanya satu 404 dari seorang pengunjung yang membuka tautan promo lama. Permintaan lainnya halaman biasa dari alamat yang berbeda-beda. Tidak ada pola serangan.'};
+  }}
+};
+const PILIHAN_JEJAK=['bf','ps','sqli','dir','normal'];
+function tabelLog(K,tandai){
+  const r=[...K.r].sort((a,b)=>a.w-b.w);
+  if(K.src==='auth')return `<table class="log-tabel"><tr><th>Waktu</th><th>src_ip</th><th>user</th><th>service</th><th>status</th><th>country</th></tr>${r.map(x=>`<tr${tandai&&x.j?' class="jejak"':''}><td>${jam(x.w)}</td><td>${x.ip}</td><td>${x.u}</td><td>${x.s}</td><td class="${x.st==='success'?'ok-t':'gagal-t'}">${x.st}</td><td>${x.c}</td></tr>`).join('')}</table>`;
+  return `<table class="log-tabel"><tr><th>Waktu</th><th>src_ip</th><th>method</th><th>path dan query</th><th>status_code</th></tr>${r.map(x=>`<tr${tandai&&x.j?' class="jejak"':''}><td>${jam(x.w)}</td><td>${x.ip}</td><td>${x.m}</td><td>${esc(x.p)}</td><td>${x.sc}</td></tr>`).join('')}</table>`;
+}
+function permainanJejak(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0},N=8,hasil=$('#jejak-hasil'),bMulai=$('#jejak-mulai'),wadahLog=$('#jejak-log');
+  $('#jejak-tombol').innerHTML=PILIHAN_JEJAK.map((k,i)=>`<button class="pilih" data-j="${k}" style="font-size:12px;font-family:system-ui,sans-serif">${POLA[k].nama}<small>tombol ${i+1}</small></button>`).join('');
+  const tombol=$$('#jejak-tombol button');
+  const fmt=s=>`Skor terbaik: ${s}`;simpanTerbaik('materi5ks:jejak',0,$('#jejak-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>{b.disabled=G.status!=='tanya';b.classList.remove('y','n')});
+  aktif();
+  wadahLog.innerHTML='<table class="log-tabel"><tr><th>Waktu</th><th>src_ip</th><th>…</th></tr><tr><td colspan="3" style="font-family:system-ui;color:var(--muted)">Tekan "Mulai main" untuk menampilkan potongan log.</td></tr></table>';
+  function tampil(){
+    const K=G.daftar[G.i];
+    $('#jejak-judul').textContent=`Potongan ${K.src==='auth'?'log autentikasi':'log server web'} · kasus ${G.i+1} dari ${N}`;
+    wadahLog.innerHTML=tabelLog(K,false);hasil.innerHTML='';
+  }
+  function mulai(){
+    const jenis=acakSalin([...PILIHAN_JEJAK,'normal',pilihSatu(['bf','ps','sqli','dir']),pilihSatu(['bf','ps','sqli','dir'])]);
+    Object.assign(G,{status:'tanya',skor:0,hati:3,i:0,daftar:jenis.map(j=>({...POLA[j].kasus(),jenis:j})),tJawab:null});
+    tampil();bMulai.textContent='Mulai ulang';aktif();
+  }
+  function jawab(j){
+    if(G.status!=='tanya')return;
+    const K=G.daftar[G.i],ok=j===K.jenis;
+    if(ok)G.skor+=10;else G.hati--;
+    G.status='jawab';G.ok=ok;G.tJawab=G.t;aktif();
+    if(ok)bunyi(K.jenis==='normal'?'benar':'koin');else bunyi('salah');
+    if(K.jenis!=='normal')setTimeout(()=>bunyi('mesin'),250);
+    tombol.forEach(b=>{if(b.dataset.j===K.jenis)b.classList.add('y');else if(b.dataset.j===j)b.classList.add('n')});
+    wadahLog.innerHTML=tabelLog(K,true);
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Tepat':'✗ Keliru'}: ${POLA[K.jenis].nama}.</b> ${esc(K.alasan)}${K.jenis!=='normal'?' Baris yang menjadi jejaknya ditandai.':''}</div>
+      <div class="row"><button class="act" id="jejak-lanjut">${G.i<N-1&&G.hati>0?'Kasus berikutnya →':'Lihat hasil'}</button></div>`;
+    $('#jejak-lanjut').onclick=lanjut;
+  }
+  function lanjut(){
+    G.i++;
+    if(G.hati<=0||G.i>=N){
+      G.status='selesai';bunyi(G.skor>=60&&G.hati>0?'menang':'kalah');
+      hasil.innerHTML=`<div class="${G.skor>=60?'ok':'hint'}">Permainan selesai. Skor <b>${G.skor} dari ${N*10}</b>. ${G.skor>=60?'Anda siap menjelajahi log di praktikum.':'Baca lagi tabel pola serangan di atas, lalu coba lagi.'}</div>`;
+      simpanTerbaik('materi5ks:jejak',G.skor,$('#jejak-terbaik'),fmt);bMulai.textContent='Main lagi';
+    }else{G.status='tanya';tampil()}
+    aktif();
+  }
+  tombol.forEach(b=>b.onclick=()=>jawab(b.dataset.j));bMulai.onclick=mulai;
+  G.kunci=k=>{const i='12345'.indexOf(k);if(i>=0)jawab(PILIHAN_JEJAK[i])};
+  const bg=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,34);lukisLantaiKayu(q,0,34,256,110,acakTetap(17));
+    kotak(q,100,8,56,22,'#4a2c16');kotak(q,102,10,52,18,'#2b3460');for(let x=104;x<152;x+=4)kotak(q,x,10,1,18,'#1c2340');
+  });
+  adegan($('#kv-jejak'),(g,t)=>{
+    G.t=t;
+    g.drawImage(bg,0,0);
+    const u=G.status==='jawab'?t-G.tJawab:0,K=G.daftar[G.i];
+    const serang=K&&K.jenis!=='normal',bunyiL=G.status==='jawab'&&serang&&u<2.4;
+    lonceng(g,128,46,t,bunyiL);
+    hud(g,G.status==='awal'?'Pembaca Jejak':G.status==='selesai'?'Selesai':`Kasus ${Math.min(G.i+1,N)}/${N}`,G.skor,G.hati);
+    if(G.status==='awal'){pamn(g,56,128,'diam',{skala:2});penyusup(g,196,128,'samping',{balik:true});layarJudul(g,'PEMBACA JEJAK',['Tekan "Mulai main".','Kenali pola di potongan log.'],t);return}
+    if(G.status==='selesai'){
+      pamn(g,56,128,G.skor>=60?'sorak':'diam',{skala:2});bingkaiRPG(g,92,52,148,56);if(G.skor>=60)spr(g,'pialaG',160,58,1);
+      tulis(g,`Skor ${G.skor} dari ${N*10}`,166,76,'#ffd34d',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+      tulis(g,G.skor>=60?'Pembaca jejak andal.':'Baca lagi Bab 1.',166,90,'#ffffff',{rata:'tengah',bayang:'#0b0f22'});return;
+    }
+    const salah=G.status==='jawab'&&!G.ok&&u<.6,px=56+(salah?Math.round(Math.sin(u*80)*2):0);
+    pamn(g,px,128,G.status==='jawab'&&G.ok&&u<1.2?'sorak':'diam',{skala:2,ganti:salah?{b:'#ff8a8a',c:'#e04848',d:'#8a1c1c',h:'#ffc8c8',m:'#ff9a9a'}:null});
+    const tokoh=196,kaki=128,lompat=GERAK&&G.status==='tanya'?Math.round(Math.abs(Math.sin(t*2))*1):0;
+    g.globalAlpha=.25;kotak(g,tokoh-10,kaki-1,20,3,0);g.globalAlpha=1;
+    if(G.status==='tanya'){
+      spr(g,'warga1',tokoh-16,kaki-40-lompat,2,{balik:true,ganti:{H:'#3a3f5a',S:'#3a3f5a',e:'#3a3f5a',E:'#2b2f45',b:'#2b2f45',B:'#22263a',L:'#1b1b2f',o:'#1b1b2f'}});
+      tulis(g,'?',tokoh,kaki-58,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    }else{
+      const lari=serang&&u>2.4?(u-2.4)*90:0;
+      if(serang)spr(g,'warga1',tokoh-16+lari,kaki-40,2,{balik:lari===0,ganti:JUBAH});
+      else spr(g,'warga1',tokoh-16,kaki-40-(GERAK&&u<1?Math.round(Math.abs(Math.sin(u*10))*3):0),2,{balik:true});
+      const label=serang?POLA[K.jenis].nama:'Wajar ✓',c=serang?'#ff5a5a':'#55d36b';
+      if(lari<40){const w=lebarTeks(label,10,true)+10;g.globalAlpha=.85;kotak(g,tokoh-w/2,kaki-60,w,13,'#1c2340');g.globalAlpha=1;tulis(g,label,tokoh,kaki-59,c,{rata:'tengah',tebal:true,bayang:'#0b0f22'})}
+      if(u<1)tulis(g,G.ok?'+10':'✗',px+24,70-u*14,G.ok?'#7dff8a':'#ff5a5a',{rata:'tengah',skala:G.ok?1:2,tebal:true,bayang:'#0b0f22'});
+    }
+  });
+  return G;
+}
+
+/* ============ SUARA ADEGAN ============ */
+/* Animasi yang berputar sendiri ikut bersuara (permintaan dosen), tetapi hanya bila suara aktif,
+   kanvasnya sedang terlihat, dan pengunjung sudah berinteraksi dengan halaman (syarat peramban). */
+Object.assign(BUNYI,{
+  lonceng:()=>{for(let i=0;i<3;i++){nada(1568,.32,{jenis:'triangle',vol:.05,tunda:i*.2});nada(2349,.22,{jenis:'sine',vol:.022,tunda:i*.2+.01})}},
+  ding:()=>{nada(1568,.25,{jenis:'triangle',vol:.03});nada(2349,.16,{jenis:'sine',vol:.014,tunda:.01})},
+  tulis:()=>{nada(2600,.03,{jenis:'derau',vol:.05});nada(3400,.025,{jenis:'derau',vol:.04,tunda:.05})},
+  pintu:()=>{nada(220,.16,{jenis:'derau',vol:.14});nada(140,.12,{jenis:'triangle',vol:.05,ke:110})},
+  tutup:()=>{nada(400,.1,{jenis:'derau',vol:.3});nada(70,.2,{jenis:'square',vol:.07,ke:40})}
+});
+SUARA.izin=false;
+['pointerdown','keydown','touchstart'].forEach(n=>addEventListener(n,()=>{SUARA.izin=true},{passive:true,capture:true}));
+function suaraAdegan(A,T,daftar){
+  const kini=performance.now()/1000,p=A.Tlalu,lompat=A.nyata!=null&&kini-A.nyata>.4;
+  A.Tlalu=T;A.nyata=kini;
+  if(p==null||lompat||!A.lihat||!GERAK||!SUARA.aktif||!SUARA.izin||document.hidden)return;
+  for(const [w,n] of daftar)if(p<=T?(w>p&&w<=T):(w>p||w<=T))bunyi(n);
+}
+function garisPx(g,x0,y0,x1,y1,c,tebal=1){const n=Math.max(1,Math.ceil(Math.max(Math.abs(x1-x0),Math.abs(y1-y0))));for(let i=0;i<=n;i++){const q=i/n;kotak(g,lerp(x0,x1,q),lerp(y0,y1,q),tebal,tebal,c)}}
+function bungkus(teks,maks,uk=10){const b=[];let s='';for(const k of teks.split(' ')){const c=s?s+' '+k:k;if(lebarTeks(c,uk)>maks&&s){b.push(s);s=k}else s=c}if(s)b.push(s);return b}
+const fmtID=n=>Math.round(n).toLocaleString('id-ID');
+const persen=(x,d=1)=>(x*100).toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+function belLoncengMini(g,x,y,c,cg){kotak(g,x+1,y,3,1,c);kotak(g,x,y+1,5,3,c);kotak(g,x,y+4,5,1,cg);kotak(g,x+2,y+5,1,1,cg)}
+
+/* Pencocokan syarat: sama persis dengan praktikum (deteksi-serangan.html) agar sintaksis di materi berlaku di praktikum */
+function cocok1(ev,c){
+  let f=ev[c.k];if(f===undefined)return false;
+  const v=c.v;
+  if(v.startsWith('!'))return String(f).toLowerCase()!==v.slice(1).toLowerCase();
+  if(v.startsWith('*')&&v.endsWith('*'))return String(f).toLowerCase().includes(v.slice(1,-1).toLowerCase());
+  if(/^>=/.test(v))return +f>=+v.slice(2);
+  if(/^<=/.test(v))return +f<=+v.slice(2);
+  if(/^>/.test(v))return +f>+v.slice(1);
+  if(/^</.test(v))return +f<+v.slice(1);
+  if(v.includes('|'))return v.split('|').some(x=>String(f).toLowerCase()===x.trim().toLowerCase());
+  return String(f).toLowerCase()===v.toLowerCase();
+}
+const keSyarat=s=>{const i=s.indexOf(':');return {k:s.slice(0,i),v:s.slice(i+1)}};
+
+/* ============ ADEGAN: IDS vs IPS ============ */
+function adeganIDS(){
+  const P=24;
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(23);
+    lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
+    lukisPondok(q,-52,0,112);
+    for(let x=66;x<112;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,66,78,46,2,GB.kayu);
+    for(let x=150;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,150,78,106,2,GB.kayu);
+    pohon(q,232,16,12);semak(q,184,34,7,true);
+    for(const [x,y,c] of [[150,120,'#ffffff'],[170,126,'#ff8fb1'],[220,122,'#ffffff'],[30,124,'#ff8fb1']])bunga(q,x,y,c);
+  });
+  const A=adegan($('#kv-ids'),(g,t)=>{
+    const T=GERAK?t%P:12.4;
+    suaraAdegan(A,T,[[.1,'langkah'],[3.5,'lonceng'],[8.1,'langkah'],[10.5,'tutup'],[10.8,'salah'],[16.1,'langkah'],[18.5,'tutup'],[18.8,'salah']]);
+    g.drawImage(bawah,0,0);
+    const fase=T<8?0:T<16?1:2,jalan=()=>Math.floor(t*7)%2?'jalan':'samping';
+    let buka=1,goy=0,fx,pose='samping',balik=true;
+    if(fase===0){fx=lerp(276,-20,T/8);pose=jalan()}
+    else{
+      const u=T-(fase===1?8:16);
+      if(u<2.5){fx=lerp(276,156,u/2.5);pose=jalan()}
+      else if(u<4.4)fx=156+(u<2.8?Math.round(Math.sin(u*70)*2):0);
+      else{fx=lerp(156,290,(u-4.4)/3.6);pose=jalan();balik=false}
+      buka=u<2.5?1:0;if(u>=2.5&&u<2.8)goy=Math.round(Math.sin(u*90));
+    }
+    const alarm=fase===0&&T>3.5&&T<6.5;
+    kotak(g,87,50,2,42,GB.kayuGG);lonceng(g,88,50,t,alarm);
+    gerbang(g,118,104,buka,goy);
+    pamn(g,104,104,alarm?'sorak':(Math.sin(t*1.3)>.985?'kedip':'diam'));
+    if(fase===2)warga(g,fx,104,pose,{balik});else penyusup(g,fx,104,pose,{balik});
+    if(fase===2&&T>18.6&&T<20.4)tulis(g,'?',fx,74,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    if(alarm&&Math.floor(t*4)%2===0)tulis(g,'ALERT',88,22,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    const mode=fase===0?'MODE IDS':'MODE IPS',w=lebarTeks(mode,10,true)+12;
+    bingkaiRPG(g,128-w/2-3,3,w+6,19);tulis(g,mode,128,7,fase===0?'#ffd34d':'#5cc8ff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    const D=[[4,7.8,['Mode IDS: lonceng berbunyi,','tetapi penyusup tetap lewat.']],[11,15.8,['Mode IPS: gerbang langsung','ditutup sebelum ia masuk.']],[19,23.8,['Aturan keliru mencurigai pelanggan.','Di IPS, ia ikut tertolak.']]];
+    for(const [a,b,l] of D)if(T>a&&T<b)kotakDialog(g,6,110,244,31,'PAMN',l,T-a);
+  });
+}
+
+/* ============ ADEGAN: EMPAT HASIL ============ */
+const HASIL4={TP:{c:'#55d36b',j:'TRUE POSITIVE'},FP:{c:'#ffc940',j:'FALSE POSITIVE'},FN:{c:'#ff5a5a',j:'FALSE NEGATIVE'},TN:{c:'#a9b3d6',j:'TRUE NEGATIVE'}};
+function adeganEmpat(){
+  const P=16,V=[{k:'TP',jahat:1,lc:1,d:['Penyusup datang dan lonceng','berbunyi. Tepat sasaran.']},{k:'FP',jahat:0,lc:1,d:['Pelanggan biasa, tetapi lonceng','berbunyi. Alarm palsu.']},
+    {k:'FN',jahat:1,lc:0,d:['Penyusup lewat dan lonceng','diam. Serangan lolos.']},{k:'TN',jahat:0,lc:0,d:['Pelanggan lewat dan lonceng','diam. Memang seharusnya.']}];
+  const bawah=latar(256,144,q=>{
+    const a=acakTetap(29);
+    lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,92,256,16,a);kotak(q,0,91,256,1,GB.tanahG);kotak(q,0,108,256,1,GB.rumputG);
+    lukisPondok(q,-60,0,112);
+    for(let x=60;x<112;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,60,78,52,2,GB.kayu);
+    for(let x=150;x<256;x+=8){kotak(q,x,74,3,12,GB.kayuGG);kotak(q,x+1,75,1,10,GB.kayuT)}kotak(q,150,78,106,2,GB.kayu);
+    pohon(q,226,18,11);
+  });
+  const S=[];V.forEach((v,i)=>{S.push([i*4+.1,'langkah']);if(v.lc)S.push([i*4+1.5,'lonceng']);if(v.k==='FP')S.push([i*4+2.1,'salah']);if(v.k==='FN')S.push([i*4+2.3,'hehe']);if(v.k==='TN')S.push([i*4+2,'benar'])});
+  const A=adegan($('#kv-empat'),(g,t)=>{
+    const T=GERAK?t%P:4.8,k=Math.floor(T/4),u=T-k*4,v=V[k];
+    suaraAdegan(A,T,S);
+    g.drawImage(bawah,0,0);
+    const fx=lerp(276,40,jepit(u/3.7,0,1)),pose=Math.floor(t*7)%2?'jalan':'samping',alarm=v.lc&&u>1.5&&u<3.5;
+    kotak(g,87,50,2,42,GB.kayuGG);lonceng(g,88,50,t,alarm);
+    gerbang(g,118,104,1);
+    pamn(g,104,104,alarm&&v.jahat?'sorak':'diam');
+    if(v.jahat)penyusup(g,fx,104,pose,{balik:true});else warga(g,fx,104,pose,{balik:true});
+    if(v.k==='FP'&&u>1.9)tulis(g,'?',fx,74,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    if(v.k==='FN'&&u>2.2)tulis(g,'!',fx,72,'#ff5a5a',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+    const H=HASIL4[v.k],teks=`${H.j} (${v.k})`,w=lebarTeks(teks,10,true)+12;
+    bingkaiRPG(g,128-w/2-3,3,w+6,19);tulis(g,teks,128,7,H.c,{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    for(let i=0;i<4;i++)kotak(g,110+i*10,26,6,3,i===k?HASIL4[V[i].k].c:'#3a3f5a');
+    if(u>.3)kotakDialog(g,6,110,244,31,'PAMN',v.d,u-.3);
+  });
+}
+
+/* ============ PERMAINAN: RAKIT ATURAN ============ */
+const LEVEL_RAKIT=[
+  {judul:'Injeksi SQL',src:'web',tugas:'Tangkap setiap permintaan yang menyisipkan perintah basis data ke dalam query, tanpa menandai pencarian dan halaman biasa.',
+   chip:["query:*'*",'status_code:500','method:GET','path:/produk','query:*UNION*'],
+   catatan:'Ciri injeksi SQL ada pada isi query, bukan pada akibatnya (kode respons) atau letaknya (jalur).',
+   alasan:{"query:*'*":'Keempat serangan menyisipkan tanda kutip ke query agar keluar dari nilai yang diharapkan basis data. Pencarian dan halaman biasa tidak memuat tanda kutip.',
+     'status_code:500':"Kode 500 hanyalah akibat, bukan ciri serangan. Serangan ' OR '1'='1 justru dijawab 200, sedangkan /produk?id=3 yang wajar juga 500 karena gangguan server.",
+     'method:GET':'Hampir semua permintaan memakai GET, baik serangan maupun kunjungan biasa, sehingga syarat ini tidak membedakan apa pun.',
+     'path:/produk':"Serangan juga terjadi di /cari (q=kopi'--), sementara banyak kunjungan wajar membuka /produk.",
+     'query:*UNION*':'Hanya cocok dengan satu varian serangan. Serangan lain tidak memakai kata UNION.'},
+   ev:[{src_ip:'36.70.2.9',method:'GET',path:'/produk',query:'id=12',status_code:200},{src_ip:'198.51.100.23',method:'GET',path:'/produk',query:"id=7'",status_code:500,atk:1},
+     {src_ip:'36.81.4.7',method:'GET',path:'/cari',query:'q=arabika',status_code:200},{src_ip:'198.51.100.23',method:'GET',path:'/produk',query:"id=7' OR '1'='1",status_code:200,atk:1},
+     {src_ip:'36.66.5.1',method:'GET',path:'/menu',query:'',status_code:200},{src_ip:'36.90.1.3',method:'POST',path:'/login',query:'',status_code:200},
+     {src_ip:'198.51.100.23',method:'GET',path:'/produk',query:"id=7' UNION SELECT user,pass FROM akun",status_code:500,atk:1},{src_ip:'36.77.8.8',method:'GET',path:'/cari',query:'q=gula aren',status_code:200},
+     {src_ip:'198.51.100.23',method:'GET',path:'/cari',query:"q=kopi'--",status_code:500,atk:1},{src_ip:'36.72.3.3',method:'GET',path:'/produk',query:'id=3',status_code:500}]},
+  {judul:'Login SSH dari luar negeri',src:'auth',tugas:'Tangkap percobaan masuk SSH yang gagal dari luar Indonesia. Karyawan yang sedang bertugas di luar negeri memakai VPN dan web, dan itu wajar.',
+   chip:['service:ssh','status:failed','country:!ID','user:admin','country:NL','service:ssh|vpn'],
+   wajar:['status:failed'],
+   catatan:'Syarat yang baik menggambarkan pola serangannya secara umum (layanan, hasil, asal), bukan menyalin nama akun atau negara yang kebetulan muncul di data.',
+   alasan:{'service:ssh':'Tugasnya hanya tentang SSH. VPN dan web sah dipakai karyawan yang bertugas di luar negeri.',
+     'status:failed':'Tugasnya menyebut percobaan yang gagal. Di data ini memang belum ada login SSH berhasil dari luar negeri, tetapi syarat ini menjaga aturan tetap sesuai tugas bila kelak ada.',
+     'country:!ID':'Membedakan alamat luar negeri dari admin kantor di Indonesia yang salah mengetik kata sandi.',
+     'user:admin':'Penyerang juga mencoba akun root. Penyerang bebas memilih akun, jadi menyalin nama akun membuat aturan mudah dikelabui.',
+     'country:NL':'Terlalu sempit: serangan dari Rusia (RU) lolos. Bentuk !ID mencakup semua negara selain Indonesia.',
+     'service:ssh|vpn':'Ikut memasukkan VPN, padahal karyawan di Singapura yang salah mengetik kata sandi VPN adalah aktivitas wajar.'},
+   ev:[{src_ip:'203.0.113.45',user:'admin',service:'ssh',status:'failed',country:'NL',atk:1},{src_ip:'36.81.3.34',user:'admin',service:'ssh',status:'failed',country:'ID'},
+     {src_ip:'192.0.2.77',user:'root',service:'ssh',status:'failed',country:'RU',atk:1},{src_ip:'103.10.2.5',user:'ayu',service:'vpn',status:'failed',country:'SG'},
+     {src_ip:'203.0.113.45',user:'admin',service:'ssh',status:'failed',country:'NL',atk:1},{src_ip:'36.81.3.34',user:'admin',service:'ssh',status:'success',country:'ID'},
+     {src_ip:'103.10.2.5',user:'ayu',service:'vpn',status:'success',country:'SG'},{src_ip:'192.0.2.77',user:'root',service:'ssh',status:'failed',country:'RU',atk:1},
+     {src_ip:'36.72.14.21',user:'made',service:'web',status:'failed',country:'ID'},{src_ip:'45.9.8.7',user:'budi',service:'web',status:'success',country:'JP'}]},
+  {judul:'Berkas rahasia',src:'web',tugas:'Tangkap permintaan ke berkas dan halaman rahasia yang dicari pemindai, tanpa menandai tautan promo lama yang rusak.',
+   chip:['status_code:404','status_code:>=400','path:/.env|/backup.zip|/.git/config|/db.sql|/admin','path:*admin*','method:GET'],
+   catatan:'Daftar jalur rahasia tepat untuk data kecil ini. Di praktikum, pemindaian juga dapat dikenali dari perilakunya, yaitu banyak 404 dari satu alamat dalam waktu singkat, dengan ambang batas per alamat (Bab 4). Cara itu tetap bekerja walaupun pemindai mencoba jalur yang tidak ada di daftar.',
+   alasan:{'path:/.env|/backup.zip|/.git/config|/db.sql|/admin':'Daftar persis jalur rahasia yang dicari pemindai. Jalur yang dibuka pengunjung biasa tidak ada di daftar ini.',
+     'status_code:404':'Tautan /promo-lama yang rusak juga 404, sedangkan /admin dijawab 403, bukan 404.',
+     'status_code:>=400':'Menangkap 404 dan 403 sekaligus, tetapi tautan /promo-lama yang rusak ikut tertandai.',
+     'path:*admin*':'Hanya cocok dengan /admin. Berkas rahasia lain seperti /.env dan /backup.zip lolos.',
+     'method:GET':'Semua permintaan di level ini memakai GET, sehingga syarat ini tidak membedakan pemindai dari pengunjung biasa.'},
+   ev:[{src_ip:'36.70.9.1',method:'GET',path:'/menu',query:'',status_code:200},{src_ip:'192.0.2.150',method:'GET',path:'/.env',query:'',status_code:404,atk:1},
+     {src_ip:'192.0.2.150',method:'GET',path:'/backup.zip',query:'',status_code:404,atk:1},{src_ip:'36.84.2.40',method:'GET',path:'/promo-lama',query:'',status_code:404},
+     {src_ip:'192.0.2.150',method:'GET',path:'/.git/config',query:'',status_code:404,atk:1},{src_ip:'36.91.7.7',method:'GET',path:'/produk',query:'id=3',status_code:200},
+     {src_ip:'192.0.2.150',method:'GET',path:'/db.sql',query:'',status_code:404,atk:1},{src_ip:'36.66.1.9',method:'GET',path:'/keranjang',query:'',status_code:200},
+     {src_ip:'192.0.2.150',method:'GET',path:'/admin',query:'',status_code:403,atk:1},{src_ip:'36.80.5.5',method:'GET',path:'/tentang',query:'',status_code:200}]}
+];
+const pill=k=>`<span class="pill ${k.toLowerCase()}">${k}</span>`;
+/* Hitung hasil sekumpulan syarat pada satu level */
+function nilaiRakit(Lv,chips){
+  const S=chips.map(keSyarat),h={TP:0,FP:0,FN:0,TN:0};
+  Lv.ev.forEach(e=>{const a=chips.length>0&&S.every(c=>cocok1(e,c));h[e.atk?(a?'TP':'FN'):(a?'FP':'TN')]++});
+  h.lulus=!h.FP&&!h.FN;return h;
+}
+function dampak(h){const b=[];if(h.FN)b.push(`${h.FN} serangan lolos (FN)`);if(h.FP)b.push(`${h.FP} alarm palsu (FP)`);return b.length?b.join(' dan '):'tidak mengubah hasil'}
+/* Penjelasan setelah lulus: peran tiap syarat yang dipilih dan alasan pilihan lain tidak dipakai */
+function penjelasanRakit(Lv,pilih){
+  const kode=c=>`<code>${esc(c)}</code>`;
+  const dipilih=pilih.map(c=>{
+    const tanpa=nilaiRakit(Lv,pilih.filter(x=>x!==c));
+    const peran=tanpa.lulus?((Lv.wajar||[]).includes(c)?'<b>sesuai bunyi tugas</b>: di data ini hasilnya sama tanpa syarat ini':'<b>tidak diperlukan</b>: tanpa syarat ini aturan tetap lulus'):`<b>diperlukan</b>: tanpa syarat ini, ${dampak(tanpa)}`;
+    return `<li>${kode(c)} ${peran}. ${esc(Lv.alasan[c]||'')}</li>`;
+  }).join('');
+  const lain=Lv.chip.filter(c=>!pilih.includes(c)).map(c=>{
+    const tambah=nilaiRakit(Lv,[...pilih,c]),sendiri=nilaiRakit(Lv,[c]);
+    return `<li>${kode(c)} ${esc(Lv.alasan[c]||'')} <span style="color:var(--muted)">Bila ditambahkan ke aturan Anda: ${dampak(tambah)}. Bila dipakai sendiri: ${dampak(sendiri)}.</span></li>`;
+  }).join('');
+  // aturan lulus yang paling ringkas
+  let ringkas=null;for(let m=1;m<1<<Lv.chip.length;m++){const c=Lv.chip.filter((_,i)=>m>>i&1);if((Lv.wajar||[]).every(w=>c.includes(w))&&nilaiRakit(Lv,c).lulus&&(!ringkas||c.length<ringkas.length))ringkas=c}
+  const sama=ringkas&&ringkas.length===pilih.length&&ringkas.every(c=>pilih.includes(c));
+  return `<div class="hint" style="color:var(--text)"><b>Mengapa aturan Anda benar</b><ul class="lst" style="margin-top:6px">${dipilih}</ul>
+    <b>Mengapa pilihan lain tidak dipakai</b><ul class="lst" style="margin-top:6px">${lain||'<li>Semua pilihan sudah Anda pakai.</li>'}</ul>
+    ${ringkas?`<p style="margin:0 0 6px">${sama?'Aturan Anda sudah yang paling ringkas.':`Aturan paling ringkas untuk level ini: ${ringkas.map(kode).join(' + ')}. Syarat yang tidak membedakan serangan dari peristiwa wajar sebaiknya dibuang agar aturan mudah dibaca dan dirawat.`}</p>`:''}
+    <p style="margin:0">${esc(Lv.catatan||'')}</p></div>`;
+}
+function permainanRakit(){
+  const G={lv:0,pilih:new Set(),hasil:null,tJalan:null,percobaan:0,coba:[0,0,0],skor:0,selesai:false,t:0};
+  const fmt=s=>`Skor terbaik: ${s} dari 90`;simpanTerbaik('materi5ks:rakit',0,$('#rakit-terbaik'),fmt);
+  const L=()=>LEVEL_RAKIT[G.lv];
+  function aturan(){const Lv=L();return `alert ${Lv.src} (\n  msg:"${Lv.judul}";\n${[...G.pilih].map(c=>`  ${c};`).join('\n')}${G.pilih.size?'\n':''})`}
+  function tabel(){
+    const Lv=L(),kol=Lv.src==='web'?['src_ip','method','path','query','status_code']:['src_ip','user','service','status','country'];
+    $('#rakit-log').innerHTML=`<table class="log-tabel"><tr>${kol.map(k=>`<th>${k}</th>`).join('')}<th>Label</th><th>Hasil</th></tr>${Lv.ev.map((e,i)=>`<tr${G.hasil&&(G.hasil[i]==='FP'||G.hasil[i]==='FN')?' class="salah"':''}>${kol.map(k=>`<td>${esc(e[k])}</td>`).join('')}<td style="font-family:system-ui">${e.atk?'<b style="color:var(--fn)">serangan</b>':'wajar'}</td><td>${G.hasil?pill(G.hasil[i]):'—'}</td></tr>`).join('')}</table>`;
+  }
+  function render(){
+    const Lv=L();
+    $('#rakit-tugas').innerHTML=`<div class="label">Level ${G.lv+1} dari ${LEVEL_RAKIT.length} · ${esc(Lv.judul)} · sumber <code>${Lv.src}</code></div><p style="margin:4px 0 0">${esc(Lv.tugas)}</p>`;
+    $('#rakit-chip').innerHTML=Lv.chip.map(c=>`<button class="pilih${G.pilih.has(c)?' y':''}" data-c="${esc(c)}" style="font-size:12px;word-break:break-all">${esc(c)}</button>`).join('');
+    $('#rakit-aturan').textContent=aturan();tabel();
+  }
+  $('#rakit-chip').onclick=e=>{
+    const b=e.target.closest('button');if(!b||G.selesai)return;
+    const c=b.dataset.c;G.pilih.has(c)?G.pilih.delete(c):G.pilih.add(c);bunyi('klik');
+    G.hasil=null;G.tJalan=null;$('#rakit-hasil').innerHTML='';render();
+  };
+  $('#rakit-jalan').onclick=()=>{
+    if(G.selesai)return;
+    if(!G.pilih.size){$('#rakit-hasil').innerHTML='<div class="gagal">Pilih sekurang-kurangnya satu syarat. Aturan tanpa syarat akan mencocokkan seluruh peristiwa.</div>';bunyi('salah');return}
+    const Lv=L(),S=[...G.pilih].map(keSyarat);
+    G.hasil=Lv.ev.map(e=>{const a=S.every(c=>cocok1(e,c));return e.atk?(a?'TP':'FN'):(a?'FP':'TN')});
+    G.tJalan=G.t;G.coba[G.lv]++;
+    const n=k=>G.hasil.filter(x=>x===k).length,lulus=n('FP')===0&&n('FN')===0;
+    G.hasil.forEach((h,i)=>{if(h==='TP'||h==='FP')setTimeout(()=>bunyi('ding'),300+i*220)});
+    setTimeout(()=>bunyi(lulus?'menang':'salah'),300+Lv.ev.length*220);
+    let saran='';
+    if(n('FN'))saran+=`Ada ${n('FN')} serangan yang lolos (FN): syarat Anda terlalu ketat atau salah sasaran. `;
+    if(n('FP'))saran+=`Ada ${n('FP')} alarm palsu (FP): syarat Anda terlalu longgar. Tambahkan syarat yang membedakan serangan dari peristiwa wajar.`;
+    if(lulus){
+      const poin=G.coba[G.lv]===1?30:G.coba[G.lv]===2?20:10;G.skor+=poin;
+      const akhir=G.lv===LEVEL_RAKIT.length-1;
+      $('#rakit-hasil').innerHTML=`<div class="ok"><b>✓ Lulus.</b> TP ${n('TP')}, FP 0, FN 0, TN ${n('TN')}. +${poin} poin (percobaan ke-${G.coba[G.lv]}).</div>${penjelasanRakit(Lv,[...G.pilih])}${akhir?'':'<div class="row"><button class="act" id="rakit-lanjut">Level berikutnya →</button></div>'}`;
+      if(akhir){G.selesai=true;$('#rakit-hasil').innerHTML+=`<div class="ok">Ketiga level selesai. Skor <b>${G.skor} dari 90</b>. Syarat yang tepat adalah yang membedakan serangan dari peristiwa wajar, bukan yang sekadar cocok dengan serangan.</div>`;simpanTerbaik('materi5ks:rakit',G.skor,$('#rakit-terbaik'),fmt)}
+      else $('#rakit-lanjut').onclick=()=>{G.lv++;G.pilih.clear();G.hasil=null;G.tJalan=null;$('#rakit-hasil').innerHTML='';render()};
+    }else $('#rakit-hasil').innerHTML=`<div class="gagal"><b>✗ Belum lulus.</b> TP ${n('TP')}, FP ${n('FP')}, FN ${n('FN')}, TN ${n('TN')}. ${saran}</div>`;
+    render();
+  };
+  $('#rakit-ulang').onclick=()=>{Object.assign(G,{lv:0,hasil:null,tJalan:null,coba:[0,0,0],skor:0,selesai:false});G.pilih.clear();$('#rakit-hasil').innerHTML='';render();bunyi('klik')};
+  const bg=latar(256,144,q=>{
+    const a=acakTetap(37);
+    lukisRumput(q,0,0,256,144,a);lukisJalan(q,0,96,256,20,a);kotak(q,0,95,256,1,GB.tanahG);kotak(q,0,116,256,1,GB.rumputG);
+    for(let x=0;x<256;x+=8){kotak(q,x,22,3,12,GB.kayuGG);kotak(q,x+1,23,1,10,GB.kayuT)}kotak(q,0,26,256,2,GB.kayu);
+  });
+  adegan($('#kv-rakit'),(g,t)=>{
+    G.t=t;g.drawImage(bg,0,0);
+    const Lv=L(),u=G.tJalan==null?-1:t-G.tJalan;
+    hud(g,`Level ${G.lv+1}/${LEVEL_RAKIT.length}`,G.skor,0,0);
+    const lulus=G.hasil&&!G.hasil.some(h=>h==='FP'||h==='FN');
+    pamn(g,238,112,G.hasil&&u>.3+Lv.ev.length*.22?(lulus?'sorak':'diam'):'diam');
+    Lv.ev.forEach((e,i)=>{
+      const x=16+i*21,buka=u>=0&&u>.3+i*.22,h=buka?G.hasil[i]:null,goy=h==='FP'||h==='FN'?(GERAK&&u<.3+i*.22+.5?Math.round(Math.sin(t*50)):0):0;
+      if(e.atk)penyusup(g,x,112,'samping',{balik:true,goy});else warga(g,x+goy,112,'samping',{balik:true});
+      if(h){
+        if(h==='TP'||h==='FP')belLoncengMini(g,x-2,66,'#ffd34d','#e0a020');
+        const c=HASIL4[h].c;panel(g,x-9,116,18,11,'#1c2340',c);tulis(g,h,x,117,c,{rata:'tengah',uk:8,tebal:true});
+      }
+    });
+    if(G.selesai&&u>.3+Lv.ev.length*.22+.5)layarJudul(g,'SEMUA LULUS',[`Skor ${G.skor} dari 90`,'Aturan Anda siap dipakai.'],t);
+  });
+  render();
+  return G;
+}
+
+/* ============ PERMAINAN: STEMPEL ALERT ============ */
+const KARTU_ALERT=[
+  {t:'Login SSH ke akun admin gagal 40 kali dalam satu menit dari satu alamat.',s:1},
+  {t:'12 akun berbeda gagal login dari satu alamat dalam lima menit.',s:1},
+  {t:"Query pencarian berisi ' OR '1'='1 dan server menjawab 500.",s:1},
+  {t:'Satu alamat meminta 30 jalur berbeda dalam 20 detik, semuanya 404.',s:1},
+  {t:'Berkas /backup.zip berhasil diunduh oleh alamat dari luar negeri.',s:1},
+  {t:'Akun admin berhasil masuk pukul 03.00 dari luar negeri setelah puluhan kegagalan.',s:1},
+  {t:'Satu alamat meminta /.env lalu /.git/config dalam dua detik.',s:1},
+  {t:'Query berisi UNION SELECT user,pass FROM akun.',s:1},
+  {t:'Karyawan salah mengetik kata sandi VPN sekali, lalu berhasil.',s:0},
+  {t:'Pelanggan membuka tautan /promo-lama dan mendapat 404.',s:0},
+  {t:'Pelanggan mencari ?q=gula+aren di situs toko.',s:0},
+  {t:'Admin masuk SSH dari kantor pada jam kerja, sekali dan berhasil.',s:0},
+  {t:'Karyawan yang bertugas di Singapura berhasil masuk lewat VPN.',s:0},
+  {t:'Pelanggan gagal login dua kali karena tombol Caps Lock, lalu berhasil.',s:0},
+  {t:'Server menjawab 500 sekali saat basis data sedang dicadangkan.',s:0},
+  {t:'Puluhan pelanggan membuka /menu saat promo pagi dimulai.',s:0}
+];
+const PILIHAN_STEMPEL=['TP','FP','FN','TN'];
+function permainanStempelAlert(){
+  const G={status:'awal',skor:0,hati:3,i:0,daftar:[],t:0},N=10,pesan=$('#stempel-pesan'),bMulai=$('#stempel-mulai');
+  const ket={TP:'serangan · lonceng berbunyi',FP:'wajar · lonceng berbunyi',FN:'serangan · lonceng diam',TN:'wajar · lonceng diam'};
+  $('#stempel-tombol').innerHTML=PILIHAN_STEMPEL.map((k,i)=>`<button class="pilih" data-k="${k}">${k}<small>${ket[k]} · tombol ${i+1}</small></button>`).join('');
+  const tombol=$$('#stempel-tombol button');
+  const fmt=s=>`Skor terbaik: ${s}`;simpanTerbaik('materi5ks:stempel',0,$('#stempel-terbaik'),fmt);
+  const aktif=()=>tombol.forEach(b=>b.disabled=G.status!=='jalan');aktif();
+  const benarnya=K=>K.s?(K.a?'TP':'FN'):(K.a?'FP':'TN');
+  function mulai(){
+    const d=acakSalin([...acakSalin(KARTU_ALERT.filter(x=>x.s)).slice(0,5),...acakSalin(KARTU_ALERT.filter(x=>!x.s)).slice(0,5)]);
+    const lc=acakSalin([1,1,1,1,1,0,0,0,0,0]);
+    Object.assign(G,{status:'jalan',skor:0,hati:3,i:0,daftar:d.map((k,i)=>({...k,a:lc[i]})),tKartu:null,stempel:null});
+    pesan.innerHTML='';bMulai.textContent='Mulai ulang';aktif();
+  }
+  function pilih(k,habis){
+    if(G.status!=='jalan')return;
+    const K=G.daftar[G.i],b=benarnya(K),ok=!habis&&k===b;
+    G.status='stempel';G.stempel={t0:G.t,k:habis?null:k,ok};aktif();bunyi('stempel');setTimeout(()=>bunyi(ok?'benar':'salah'),160);
+    if(ok)G.skor+=10;else G.hati--;
+    const alasan=`${K.s?'Peristiwa ini serangan':'Peristiwa ini wajar'} dan lonceng ${K.a?'berbunyi':'diam'}, jadi hasilnya ${b}.`;
+    pesan.innerHTML=habis?`<span style="color:var(--fn)">Waktu habis.</span> ${alasan}`:ok?`<span style="color:var(--tp)">✓ Tepat.</span> ${alasan}`:`<span style="color:var(--fn)">✗ Keliru.</span> ${alasan}`;
+  }
+  tombol.forEach(b=>b.onclick=()=>pilih(b.dataset.k));bMulai.onclick=mulai;
+  G.kunci=k=>{const i='1234'.indexOf(k);if(i>=0)pilih(PILIHAN_STEMPEL[i])};
+  const meja=latar(256,144,q=>{
+    const a=acakTetap(43);
+    kotak(q,0,0,256,144,'#6b4426');for(let y=0;y<144;y+=6)kotak(q,0,y,256,1,'#5a3820');
+    for(let i=0;i<70;i++)kotak(q,Math.floor(a()*256),Math.floor(a()*144),3+Math.floor(a()*6),1,a()<.5?'#7d5233':'#4e301a');
+  });
+  const WARNA_ST={TP:'#2f9e44',FP:'#c27a00',FN:'#c0392b',TN:'#5c6178'};
+  adegan($('#kv-stempel'),(g,t)=>{
+    G.t=t;g.drawImage(meja,0,0);
+    hud(g,G.status==='awal'?'Stempel Alert':`Kartu ${Math.min(G.i+1,N)}/${N}`,G.skor,G.hati);
+    if(G.status==='awal'){layarJudul(g,'STEMPEL ALERT',['Tekan "Mulai main".','Tombol 1-4: TP, FP, FN, TN'],t);return}
+    const K=G.daftar[G.i];let reaksi='diam';
+    if(K&&(G.status==='jalan'||G.status==='stempel')){
+      if(G.tKartu==null)G.tKartu=t;
+      const u=t-G.tKartu,batas=Math.max(14,22-G.i*.6),s=G.stempel,us=s?t-s.t0:0;
+      let cx=lerp(330,136,mulus(u/.35)),cy=22;
+      if(s&&us>.9)cy+=Math.pow(us-.9,2)*900;
+      if(s&&!s.ok&&us>.25&&us<.7)cx+=Math.sin(us*60)*3;
+      if(s&&us>.25&&us<1.2)reaksi=s.ok?'sorak':'kaget';
+      const w=208,baris=bungkus(K.t,w-16),h=26+baris.length*11+40,x=Math.round(cx-w/2);
+      g.globalAlpha=.3;kotak(g,x+3,cy+4,w,h,0);g.globalAlpha=1;
+      kotak(g,x,cy,w,h,'#8a6a3a');kotak(g,x+1,cy+1,w-2,h-2,GB.kertas);kotak(g,x+1,cy+h-5,w-2,4,'#e0cc94');
+      tulis(g,'PERISTIWA',x+8,cy+5,'#8a6a3a',{uk:8,tebal:true});
+      baris.forEach((b,i)=>tulis(g,b,x+8,cy+17+i*11,'#3a2410'));
+      const ly=cy+19+baris.length*11;
+      if(K.a){spr(g,'lonceng',x+8,ly);tulis(g,'LONCENG BERBUNYI',x+22,ly+1,'#a8323f',{tebal:true})}
+      else{belLoncengMini(g,x+10,ly+2,'#8a8fa3','#5c6178');tulis(g,'LONCENG DIAM',x+22,ly+1,'#5c6178',{tebal:true})}
+      if(!s){
+        const sisa=jepit(1-(u-.35)/batas,0,1);
+        kotak(g,38,cy+h+6,180,9,'#5a3a10');kotak(g,39,cy+h+7,178,7,'#1c2340');kotak(g,40,cy+h+8,176*sisa,5,sisa>.5?'#55d36b':sisa>.25?'#ffb84d':'#ff5a5a');kotak(g,40,cy+h+8,176*sisa,1,'#ffffff');
+        if(u-.35>batas)pilih(null,true);
+      }else{
+        const turun=us<.12?us/.12:us<.25?1:Math.max(0,1-(us-.25)/.15),sy=lerp(-40,cy+h-26,turun),teks=s.k||'WAKTU HABIS',c=s.k?WARNA_ST[s.k]:'#7a7f94';
+        if(us>=.12){const tw=lebarTeks(teks,10,true)*(s.k?2:1)+14,th=s.k?20:15,sy0=cy+h-th-8;g.globalAlpha=.88;bingkai(g,x+w-tw-10,sy0,tw,th,c);bingkai(g,x+w-tw-9,sy0+1,tw-2,th-2,c);tulis(g,teks,x+w-10-tw/2,sy0+2,c,{rata:'tengah',tebal:true,skala:s.k?2:1});g.globalAlpha=1}
+        if(turun>0){const sx=x+w-40;kotak(g,sx-5,sy-24,10,14,GB.kayuGG);kotak(g,sx-4,sy-23,8,12,GB.kayu);kotak(g,sx-11,sy-10,22,5,'#5c6178');kotak(g,sx-13,sy-5,26,6,c)}
+        if(us>.3&&us<1.1)tulis(g,s.ok?'+10':'✗',x+w/2,cy-10-(us-.3)*12,s.ok?'#7dff8a':'#ff5a5a',{rata:'tengah',skala:s.ok?1:2,tebal:true,bayang:'#0b0f22'});
+        if(us>1.2){
+          G.i++;G.tKartu=null;G.stempel=null;
+          if(G.hati<=0||G.i>=N){G.status='selesai';bunyi(G.hati>0?'menang':'kalah');simpanTerbaik('materi5ks:stempel',G.skor,$('#stempel-terbaik'),fmt);bMulai.textContent='Main lagi'}
+          else G.status='jalan';
+          aktif();
+        }
+      }
+    }
+    pamn(g,24+(reaksi==='kaget'?Math.round(Math.sin(t*50)):0),140,reaksi==='kaget'?'diam':reaksi);
+    if(G.status==='selesai')layarJudul(g,G.hati>0?'SELESAI':'HATI HABIS',[`Skor ${G.skor} dari 100`,G.skor>=80?'Anda paham keempat hasil.':'Baca lagi tabel di Bab 3.'],t);
+  });
+  return G;
+}
+
+/* ============ LATIHAN: ATUR AMBANG ============ */
+function dataAmbang(){
+  const a=acakTetap(55),ev=[];
+  for(let i=0;i<45;i++){let t=Math.floor(a()*80000);const n=1+Math.floor(a()*4);for(let k=0;k<n;k++){t+=5+Math.floor(a()*50);ev.push({ts:t,ip:'w'+i,atk:0})}}
+  for(let i=0;i<2;i++){let t=Math.floor(a()*80000);for(let k=0;k<8;k++){t+=10+Math.floor(a()*30);ev.push({ts:t,ip:'k'+i,atk:0})}}
+  for(let i=0;i<3;i++){let t=Math.floor(a()*80000);const n=25+Math.floor(a()*36);for(let k=0;k<n;k++){t+=1+Math.floor(a()*4);ev.push({ts:t,ip:'b'+i,atk:1})}}
+  {let t=Math.floor(a()*80000);for(let k=0;k<14;k++){t+=20+Math.floor(a()*21);ev.push({ts:t,ip:'L',atk:1})}}
+  return ev.sort((x,y)=>x.ts-y.ts);
+}
+const TARGET_AMBANG={pr:.95,rc:.85};
+function latihanAmbang(){
+  const ev=dataAmbang(),per={};ev.forEach(e=>(per[e.ip]=per[e.ip]||[]).push(e));
+  function nilai(N,S){
+    let TP=0,FP=0,FN=0,TN=0;
+    for(const ip in per){const L=per[ip];for(let i=0;i<L.length;i++){let c=0;for(let j=i;j>=0&&L[j].ts>L[i].ts-S;j--)c++;const a=c>=N;if(L[i].atk)a?TP++:FN++;else a?FP++:TN++}}
+    const pr=TP+FP?TP/(TP+FP):0,rc=TP+FN?TP/(TP+FN):0;return {TP,FP,FN,TN,pr,rc,f1:pr+rc?2*pr*rc/(pr+rc):0};
+  }
+  const kurva={},ambilKurva=S=>kurva[S]||(kurva[S]=Array.from({length:40},(_,i)=>nilai(i+1,S)));
+  const st={N:3,S:60,capai:false};
+  function perbarui(dariPengguna){
+    st.N=+$('#ambang-n').value;st.S=+$('#ambang-s').value;
+    const h=nilai(st.N,st.S),capai=h.pr>=TARGET_AMBANG.pr&&h.rc>=TARGET_AMBANG.rc;
+    $('#ambang-n-teks').textContent=st.N;
+    $('#ambang-aturan').textContent=`alert auth (\n  msg:"Brute force SSH";\n  service:ssh;\n  status:failed;\n  threshold:count ${st.N}, seconds ${st.S}, track by_src;\n)`;
+    const m=(v,l,c)=>`<div class="m"><b${c?` style="color:${c}"`:''}>${v}</b><span>${l}</span></div>`;
+    $('#ambang-metrik').innerHTML=m(h.TP,'TP','var(--tp)')+m(h.FP,'FP','var(--fp)')+m(h.FN,'FN','var(--fn)')+m(h.TN,'TN')+m(persen(h.pr),'Presisi')+m(persen(h.rc),'Recall')+m(persen(h.f1),'F1');
+    $('#ambang-misi').innerHTML=capai?`<div class="ok"><b>✓ Misi tercapai:</b> presisi ${persen(h.pr)} dan recall ${persen(h.rc)}. Perhatikan bahwa recall tetap tidak 100%: kegagalan pertama sebelum ambang tercapai, dan penyerang lambat yang jarang mencoba, tetap lolos.</div>`
+      :`<div class="hint"><b>Misi:</b> capai presisi sekurang-kurangnya ${persen(TARGET_AMBANG.pr,0)} <b>dan</b> recall sekurang-kurangnya ${persen(TARGET_AMBANG.rc,0)} sekaligus. Sekarang: presisi ${persen(h.pr)}, recall ${persen(h.rc)}.</div>`;
+    if(capai&&!st.capai&&dariPengguna)bunyi('menang');
+    st.capai=capai;st.h=h;
+  }
+  $('#ambang-n').oninput=()=>{perbarui(true);bunyi('klik')};$('#ambang-s').onchange=()=>perbarui(true);
+  perbarui(false);
+  const x0=40,x1=246,y0=24,y1=110,X=n=>x0+(n-1)/39*(x1-x0),Y=v=>y1-v*(y1-y0);
+  adegan($('#kv-ambang'),(g,t)=>{
+    kotak(g,0,0,256,144,'#141a33');
+    const K=ambilKurva(st.S);
+    for(const v of [0,.5,1]){garisPx(g,x0,Y(v),x1,Y(v),'#2b3460');tulis(g,(v*100)+'%',x0-4,Y(v)-4,'#a9b3d6',{rata:'kanan',uk:8})}
+    for(let x=x0;x<x1;x+=4){kotak(g,x,Y(TARGET_AMBANG.pr),2,1,'#8a6a20');kotak(g,x+2,Y(TARGET_AMBANG.rc),2,1,'#2a6a8a')}
+    for(let i=1;i<40;i++){garisPx(g,X(i),Y(K[i-1].pr),X(i+1),Y(K[i].pr),'#ffd34d');garisPx(g,X(i),Y(K[i-1].rc),X(i+1),Y(K[i].rc),'#5cc8ff')}
+    const xn=X(st.N);garisPx(g,xn,y0-4,xn,y1,'#eef2ff');
+    const h=st.h;panel(g,xn-2,Y(h.pr)-2,5,5,'#ffd34d','#0b0f22');panel(g,xn-2,Y(h.rc)-2,5,5,'#5cc8ff','#0b0f22');
+    tulis(g,'PRESISI',x0,4,'#ffd34d',{tebal:true,bayang:'#0b0f22'});tulis(g,'RECALL',x0+48,4,'#5cc8ff',{tebal:true,bayang:'#0b0f22'});
+    tulis(g,'seconds '+st.S,250,4,'#eef2ff',{rata:'kanan',bayang:'#0b0f22'});
+    tulis(g,'1',x0,114,'#a9b3d6',{rata:'tengah',uk:8});tulis(g,'40',x1,114,'#a9b3d6',{rata:'tengah',uk:8});tulis(g,'count = '+st.N,xn,114,'#eef2ff',{rata:'tengah',tebal:true});
+    pamn(g,18,140,st.capai?'sorak':(Math.sin(t*1.5)>.97?'kedip':'diam'));
+    if(st.capai)tulis(g,'✓',30,126,'#55d36b',{tebal:true,skala:2,bayang:'#0b0f22'});
+  });
+}
+
+/* ============ LAJU DASAR ============ */
+const LAJU={t0:0};
+function hitungLaju(){
+  const tot=+$('#laju-tot').value,atk=Math.min(+$('#laju-atk').value,tot),rec=+$('#laju-rec').value/100,fpr=+$('#laju-fpr').value/1000;
+  const norm=tot-atk,TP=Math.round(atk*rec),FN=atk-TP,FP=Math.round(norm*fpr),TN=norm-FP;
+  return {tot,atk,rec,fpr,norm,TP,FN,FP,TN,pr:TP+FP?TP/(TP+FP):0,ak:(TP+TN)/tot,akDiam:norm/tot};
+}
+function kalkulatorLaju(){
+  function perbarui(){
+    const h=hitungLaju();LAJU.t0=performance.now()/1000;
+    $('#laju-atk-t').textContent=h.atk;$('#laju-rec-t').textContent=persen(h.rec,0);$('#laju-fpr-t').textContent=persen(h.fpr,1);
+    const m=(v,l,c)=>`<div class="m"><b${c?` style="color:${c}"`:''}>${v}</b><span>${l}</span></div>`;
+    $('#laju-metrik').innerHTML=m(fmtID(h.TP),'TP','var(--tp)')+m(fmtID(h.FP),'FP','var(--fp)')+m(fmtID(h.FN),'FN','var(--fn)')+m(fmtID(h.TN),'TN')+m(persen(h.pr,2),'Presisi')+m(persen(h.ak,2),'Akurasi');
+    $('#laju-jelas').innerHTML=`<div class="hint">Dari ${fmtID(h.tot)} peristiwa, ${fmtID(h.norm)} adalah aktivitas normal. Laju positif palsu ${persen(h.fpr,1)} berarti sekitar <b>${fmtID(h.FP)} alarm palsu</b> per hari, sedangkan serangan yang tertangkap hanya <b>${fmtID(h.TP)}</b>. Presisinya ${persen(h.pr,2)}: dari setiap 100 alert, hanya sekitar ${(h.pr*100).toLocaleString('id-ID',{maximumFractionDigits:1})} yang benar serangan.<br><br>Akurasinya ${persen(h.ak,2)} terdengar sangat baik. Sebagai pembanding, sistem yang <b>tidak pernah membunyikan lonceng sama sekali</b> pun akurasinya ${persen(h.akDiam,2)}.</div>`;
+  }
+  ['#laju-tot','#laju-atk','#laju-rec','#laju-fpr'].forEach(s=>$(s).addEventListener('input',perbarui));
+  perbarui();
+}
+function adeganLaju(){
+  const bg=latar(256,144,q=>{lukisDindingBatu(q,0,0,256,18);lukisLantaiBatu(q,0,18,256,126,acakTetap(61))});
+  const urut=(()=>{const a=acakTetap(7),u=[...Array(200).keys()];for(let i=199;i>0;i--){const j=Math.floor(a()*(i+1));[u[i],u[j]]=[u[j],u[i]]}return u})();
+  const P=13,ketuk=[];for(let k=0;k<12;k++)ketuk.push([.6+k*.5,'ding']);ketuk.push([6.8,'galat']);
+  const A=adegan($('#kv-laju'),(g,t)=>{
+    const T=GERAK?((t-LAJU.t0)%P+P)%P:9;
+    suaraAdegan(A,T,ketuk);
+    g.drawImage(bg,0,0);obor(g,10,10,t);
+    const h=hitungLaju(),al=h.TP+h.FP,nyata=al?Math.max(h.TP>0?1:0,Math.round(h.TP/al*200)):0,merah=new Set(urut.slice(0,nyata));
+    const isi=Math.floor(jepit((T-.5)/6,0,1)*200);
+    g.globalAlpha=.85;kotak(g,66,22,186,74,'#1c2340');g.globalAlpha=1;bingkai(g,66,22,186,74,'#4b5aa0');
+    for(let i=0;i<200;i++){const x=70+(i%25)*7,y=26+Math.floor(i/25)*8.6;if(i<isi)belLoncengMini(g,x,y,merah.has(i)?'#ff5a5a':'#ffd34d',merah.has(i)?'#a01c2c':'#c08a1a');else kotak(g,x+1,y+2,3,2,'#2b3460')}
+    tulis(g,'ALERT '+ribuanID(al),70,4,'#ffd34d',{tebal:true,bayang:'#0b0f22'});
+    tulis(g,'PENYUSUP '+ribuanID(h.TP),250,4,'#ff5a5a',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+    tulis(g,'1 ikon = '+ribuanID(Math.max(1,Math.round(al/200)))+' alert',159,98,'#eef2ff',{rata:'tengah',uk:8,bayang:'#0b0f22'});
+    const panik=isi>120&&T<7;
+    pamn(g,34+(panik&&GERAK?Math.round(Math.sin(t*40)):0),108,'diam',{skala:2});
+    if(panik){panel(g,48,46,12,14,'#ffffff',GB.garis);tulis(g,'!',54,48,'#ff5a5a',{rata:'tengah',tebal:true})}
+    if(T>7&&T<12.6)kotakDialog(g,6,110,244,31,'PAMN',[`Dari ${ribuanID(al)} lonceng, hanya`,`${ribuanID(h.TP)} yang penyusup sungguhan.`],T-7);
+  });
+}
+
+/* ============ ADEGAN: KORELASI ============ */
+function adeganKorelasi(){
+  const P=15,AU=[['02:10','.45','ayu',0,1],['02:10','.45','budi',0,1],['02:11','.45','sari',0,1],['02:11','.45','made',1,1],['08:30','.21','putu',1,0],['09:02','.77','rina',0,0]];
+  const WE=[['02:12','.45','/login',1],['02:12','.45','/admin',1],['02:13','.45','/ekspor',1],['10:02','.77','/menu',0],['10:05','.80','/cari',0],['11:40','.52','/promo',0]];
+  const titik=[...AU.map((r,i)=>r[4]?['a',i]:null).filter(Boolean),...WE.map((r,i)=>r[3]?['w',i]:null).filter(Boolean)];
+  const mulai=1.2,lama=6.8,seg=titik.length-1,S=[];for(let i=1;i<=seg;i++)S.push([mulai+i*lama/seg,'tulis']);S.push([mulai+lama+.2,'lonceng']);
+  const bg=latar(256,144,q=>{
+    lukisDindingKayu(q,0,0,256,10);lukisLantaiKayu(q,0,10,256,134,acakTetap(71));
+    for(const x of [4,138]){kotak(q,x,6,114,86,'#8a6a3a');kotak(q,x+1,7,112,84,GB.kertas);kotak(q,x+1,87,112,4,'#e0cc94')}
+  });
+  const A=adegan($('#kv-korelasi'),(g,t)=>{
+    const T=GERAK?t%P:12;
+    suaraAdegan(A,T,S);
+    g.drawImage(bg,0,0);
+    tulis(g,'LOG AUTH',10,9,'#8a6a3a',{uk:8,tebal:true});tulis(g,'LOG WEB',144,9,'#8a6a3a',{uk:8,tebal:true});
+    const p=jepit((T-mulai)/lama,0,1)*seg;
+    const sampai=new Set(titik.slice(0,Math.floor(p)+1).map(x=>x.join()));
+    AU.forEach((r,i)=>{const y=22+i*11;if(T>mulai&&sampai.has('a,'+i))kotak(g,6,y-1,110,10,'#ffd0c8');tulis(g,r[0],9,y,'#3a2410',{mono:true});tulis(g,r[1],44,y,'#8a6a3a');tulis(g,r[2],64,y,'#3a2410');tulis(g,r[3]?'✓':'✗',104,y,r[3]?'#2f9e44':'#c0392b',{tebal:true})});
+    WE.forEach((r,i)=>{const y=22+i*11;if(T>mulai&&sampai.has('w,'+i))kotak(g,140,y-1,110,10,'#ffd0c8');tulis(g,r[0],143,y,'#3a2410',{mono:true});tulis(g,r[1],178,y,'#8a6a3a');tulis(g,r[2],198,y,'#3a2410')});
+    const ank=([s,i])=>[s==='a'?114:140,25+i*11];
+    if(T>mulai)for(let i=0;i<seg;i++){const q=jepit(p-i,0,1);if(q<=0)break;const [xa,ya]=ank(titik[i]),[xb,yb]=ank(titik[i+1]);garisPx(g,xa,ya,lerp(xa,xb,q),lerp(ya,yb,q),'#d23c3c')}
+    pamn(g,128,108,T>mulai+lama&&T<mulai+lama+4?'sorak':(Math.sin(t*1.4)>.97?'kedip':'diam'));
+    if(T>9&&T<14.4)kotakDialog(g,6,110,244,31,'PAMN',['Alamat .45 menghubungkan keduanya:','tebak sandi, masuk, lalu ekspor data.'],T-9);
+  });
+}
+
+/* ============ PERMAINAN: BENANG MERAH ============ */
+function kasusKorelasi(){
+  const X=ipPenyerang(),U=pilihSatu(AKUN),c=pilihSatu(['NL','RU','US','SG']);
+  let t=acakInt(0,4)*3600+acakInt(0,2000);
+  const A=[...wajarAuth(t-1500,2)];
+  for(const u of acakSalin(AKUN.filter(x=>x!==U)).slice(0,3)){t+=acakInt(10,30);A.push({w:t,ip:X,u,s:'web',st:'failed',c,j:1})}
+  t+=acakInt(10,30);A.push({w:t,ip:X,u:U,s:'web',st:'success',c,j:1});
+  A.push({w:t-acakInt(200,600),ip:'103.10.'+acakInt(1,9)+'.'+acakInt(2,250),u:pilihSatu(AKUN),s:'vpn',st:'failed',c:'SG'});
+  A.push(...wajarAuth(t+60,1));
+  let tw=t+acakInt(5,20);
+  const W=[...wajarWeb(t-900,2),{w:tw,ip:X,m:'POST',p:'/login',sc:200,j:1}];
+  tw+=acakInt(10,40);W.push({w:tw,ip:X,m:'GET',p:'/admin',sc:200,j:1});
+  W.push({w:tw-acakInt(100,400),ip:ipPenyerang(),m:'GET',p:'/admin',sc:403});
+  tw+=acakInt(10,40);W.push({w:tw,ip:X,m:'GET',p:'/admin/ekspor-pelanggan',sc:200,j:1});
+  W.push(...wajarWeb(tw+30,2));
+  const urut=a=>a.sort((p,q)=>p.w-q.w).map((x,i)=>({...x,id:i}));
+  return {A:urut(A),W:urut(W),X,U};
+}
+function permainanBenang(){
+  const G={status:'awal',skor:0,i:0,N:3,K:null,hasil:[],t:0,tBenar:null},hasil=$('#benang-hasil');
+  const fmt=s=>`Skor terbaik: ${s} dari 30`;simpanTerbaik('materi5ks:benang',0,$('#benang-terbaik'),fmt);
+  function tabel(sumber,periksa){
+    const K=G.K,L=sumber==='a'?K.A:K.W,pil=G.pilih;
+    const kls=x=>{if(!periksa)return pil.has(sumber+x.id)?' class="dipilih"':'';if(x.j)return ' class="jejak"';return pil.has(sumber+x.id)?' class="salah"':''};
+    const cb=x=>`<td><input type="checkbox" data-id="${sumber}${x.id}"${pil.has(sumber+x.id)?' checked':''}${periksa?' disabled':''} aria-label="Pilih baris"></td>`;
+    if(sumber==='a')return `<table class="log-tabel"><tr><th></th><th>Waktu</th><th>src_ip</th><th>user</th><th>service</th><th>status</th><th>country</th></tr>${L.map(x=>`<tr data-id="a${x.id}"${kls(x)}>${cb(x)}<td>${jam(x.w)}</td><td>${x.ip}</td><td>${x.u}</td><td>${x.s}</td><td class="${x.st==='success'?'ok-t':'gagal-t'}">${x.st}</td><td>${x.c}</td></tr>`).join('')}</table>`;
+    return `<table class="log-tabel"><tr><th></th><th>Waktu</th><th>src_ip</th><th>method</th><th>path</th><th>status_code</th></tr>${L.map(x=>`<tr data-id="w${x.id}"${kls(x)}>${cb(x)}<td>${jam(x.w)}</td><td>${x.ip}</td><td>${x.m}</td><td>${esc(x.p)}</td><td>${x.sc}</td></tr>`).join('')}</table>`;
+  }
+  function render(periksa){$('#benang-auth').innerHTML=tabel('a',periksa);$('#benang-web').innerHTML=tabel('w',periksa)}
+  function mulaiKasus(){G.K=kasusKorelasi();G.pilih=new Set();G.status='tanya';hasil.innerHTML='';render(false);$('#benang-periksa').disabled=false}
+  function mulai(){Object.assign(G,{skor:0,i:0,hasil:[],tBenar:null});mulaiKasus();$('#benang-mulai').textContent='Mulai ulang'}
+  const klik=e=>{
+    if(G.status!=='tanya')return;
+    const tr=e.target.closest('tr[data-id]');if(!tr)return;
+    const id=tr.dataset.id;G.pilih.has(id)?G.pilih.delete(id):G.pilih.add(id);bunyi('klik');render(false);
+  };
+  $('#benang-auth').onclick=klik;$('#benang-web').onclick=klik;
+  $('#benang-periksa').onclick=()=>{
+    if(G.status!=='tanya')return;
+    const K=G.K,rantai=new Set([...K.A.filter(x=>x.j).map(x=>'a'+x.id),...K.W.filter(x=>x.j).map(x=>'w'+x.id)]);
+    const lebih=[...G.pilih].filter(x=>!rantai.has(x)).length,kurang=[...rantai].filter(x=>!G.pilih.has(x)).length,ok=!lebih&&!kurang;
+    G.hasil[G.i]=ok;if(ok){G.skor+=10;G.tBenar=G.t}G.status='periksa';render(true);$('#benang-periksa').disabled=true;
+    bunyi(ok?'benar':'salah');if(ok)setTimeout(()=>bunyi('lonceng'),250);
+    const akhir=G.i>=G.N-1;
+    hasil.innerHTML=`<div class="${ok?'ok':'gagal'}"><b>${ok?'✓ Tepat.':'✗ Belum tepat.'}</b> ${ok?'':`${kurang?`${kurang} peristiwa rangkaian terlewat. `:''}${lebih?`${lebih} peristiwa yang dicentang bukan bagian rangkaian. `:''}`}Kuncinya alamat <code>${K.X}</code>: tiga akun gagal, lalu akun <code>${K.U}</code> berhasil masuk, kemudian alamat yang sama login di situs, membuka <code>/admin</code>, dan mengekspor data pelanggan. Login berhasil dan kunjungan ke /admin tampak wajar bila dilihat terpisah; bersama-sama keduanya membentuk pembobolan. Alamat lain yang ditolak di /admin hanyalah pemindai yang gagal.</div>
+      <div class="row">${akhir?'':'<button class="act" id="benang-lanjut">Kasus berikutnya →</button>'}</div>`;
+    if(akhir){G.status='selesai';setTimeout(()=>bunyi(G.skor>=20?'menang':'selesai'),500);hasil.innerHTML+=`<div class="${G.skor>=20?'ok':'hint'}">Permainan selesai. Skor <b>${G.skor} dari 30</b>.</div>`;simpanTerbaik('materi5ks:benang',G.skor,$('#benang-terbaik'),fmt);$('#benang-mulai').textContent='Main lagi'}
+    else $('#benang-lanjut').onclick=()=>{G.i++;mulaiKasus()};
+  };
+  $('#benang-mulai').onclick=mulai;$('#benang-periksa').disabled=true;
+  $('#benang-auth').innerHTML='<p style="margin:8px;font-size:12.5px">Tekan "Mulai main" untuk menampilkan kasus.</p>';$('#benang-web').innerHTML='';
+  const bg=latar(256,96,q=>{lukisDindingKayu(q,0,0,256,26);lukisLantaiKayu(q,0,26,256,70,acakTetap(73))});
+  adegan($('#kv-benang'),(g,t)=>{
+    G.t=t;g.drawImage(bg,0,0);
+    spr(g,'buku',30,48,2);spr(g,'buku',202,48,2);
+    tulis(g,'AUTH',42,36,'#ffffff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});tulis(g,'WEB',214,36,'#ffffff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+    const u=G.tBenar==null?9:t-G.tBenar;
+    if(G.hasil[G.i]&&G.status!=='tanya'||u<1.2){const q=jepit(u/.8,0,1);for(let k=0;k<=40*q;k++){const s=k/40;kotak(g,lerp(56,200,s),70-Math.sin(s*Math.PI)*22,2,2,'#d23c3c')}}
+    pamn(g,128,92,G.status==='periksa'&&G.hasil[G.i]?'sorak':(Math.sin(t*1.4)>.97?'kedip':'diam'),{skala:2});
+    for(let k=0;k<G.N;k++){const x=106+k*16,h=G.hasil[k],c=h===true?'#55d36b':h===false?'#ff5a5a':'#3a3f5a';kotak(g,x+2,4,6,10,GB.garis);kotak(g,x,6,10,6,GB.garis);kotak(g,x+3,5,4,8,c);kotak(g,x+1,7,8,4,c)}
+    tulis(g,String(G.skor),250,4,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+    if(G.status==='awal')tulis(g,'BENANG MERAH',128,22,'#ffd34d',{rata:'tengah',skala:2,tebal:true,bayang:'#0b0f22'});
+  });
+  return G;
+}
+
+/* ============ KUIS ============ */
+const KUIS=[
+  {q:'IDS yang mendeteksi serangan akan …',o:['Memunculkan alert, lalu analis memutuskan tindakan','Langsung memblokir alamat penyerang','Menghapus log serangan','Mematikan server'],w:'IDS hanya memantau dan memberi peringatan. Yang langsung memblokir adalah IPS.'},
+  {q:'Akibat false positive pada IPS adalah …',o:['Pengguna sah ikut terblokir','Serangan lolos tanpa alert','Log menjadi kosong','Presisi naik'],w:'IPS bertindak langsung, sehingga alarm palsu berarti pengguna sah tertolak.'},
+  {q:'Satu alamat mencoba 15 akun berbeda, masing-masing gagal sekali. Pola ini disebut …',o:['Password spraying','Brute force','Injeksi SQL','Pemindaian direktori'],w:'Banyak akun, sedikit percobaan per akun: ciri password spraying.'},
+  {q:'Satu alamat mencoba akun root ratusan kali dalam beberapa menit. Pola ini disebut …',o:['Brute force','Password spraying','Pemindaian direktori','Aktivitas wajar'],w:'Satu akun, banyak percobaan beruntun: ciri brute force.'},
+  {q:'Satu alamat meminta /.env, /backup.zip, /admin, dan /db.sql dalam sepuluh detik, semuanya 404. Pola ini disebut …',o:['Pemindaian direktori','Password spraying','Injeksi SQL','Aktivitas wajar'],w:'Banyak jalur berbeda yang tidak ada, dalam waktu singkat, dari satu alamat.'},
+  {q:"Query ?id=7' OR '1'='1 menandakan …",o:['Injeksi SQL','Brute force','Pencarian biasa','Pemindaian direktori'],w:'Potongan perintah basis data di dalam query adalah ciri injeksi SQL.'},
+  {q:'Lonceng berbunyi untuk pelanggan biasa. Hasil ini disebut …',o:['False positive (FP)','True positive (TP)','False negative (FN)','True negative (TN)'],w:'Lonceng berbunyi (positive), tetapi keliru (false).'},
+  {q:'Penyusup masuk dan tidak ada alert. Hasil ini disebut …',o:['False negative (FN)','False positive (FP)','True negative (TN)','True positive (TP)'],w:'Lonceng diam (negative), padahal seharusnya berbunyi (false).'},
+  {q:'Presisi menjawab pertanyaan …',o:['Dari semua alert, berapa yang benar serangan?','Dari semua serangan, berapa yang tertangkap?','Berapa persen log yang terbaca?','Berapa cepat aturan dijalankan?'],w:'Presisi = TP ÷ (TP + FP).'},
+  {q:'Recall menjawab pertanyaan …',o:['Dari semua serangan, berapa yang tertangkap?','Dari semua alert, berapa yang benar serangan?','Berapa banyak aturan yang ditulis?','Berapa persen peristiwa yang normal?'],w:'Recall = TP ÷ (TP + FN).'},
+  {q:'Aturan diperlonggar sehingga hampir semua kegagalan login memicu alert. Yang biasanya terjadi adalah …',o:['Recall naik, presisi turun','Presisi naik, recall turun','Keduanya naik','Keduanya turun'],w:'Lebih banyak serangan tertangkap, tetapi alarm palsu juga bertambah.'},
+  {q:'Dengan threshold:count 10, seconds 60, track by_src; percobaan ke-1 sampai ke-9 dari penyerang tercatat sebagai …',o:['FN, karena belum memicu alert','TP','FP','TN'],w:'Alert baru muncul pada kejadian ke-10. Kejadian sebelumnya adalah serangan yang tidak memicu alert.'},
+  {q:'Dalam aturan, dua syarat service:ssh; dan status:failed; digabung dengan …',o:['DAN: peristiwa harus memenuhi keduanya','ATAU: cukup salah satu','Tidak digabung','Urutan: syarat kedua diperiksa esok hari'],w:'Semua syarat dalam satu aturan harus terpenuhi bersamaan.'},
+  {q:'Syarat country:!ID; berarti …',o:['Negara asal bukan Indonesia','Negara asal Indonesia','Semua negara','Negara tidak diketahui'],w:'Tanda ! berarti tidak sama dengan.'},
+  {q:'Syarat query:*UNION*; berarti …',o:['query mengandung kata UNION','query persis sama dengan UNION','query diawali UNION','query tidak mengandung UNION'],w:'Tanda bintang di kedua sisi berarti mengandung.'},
+  {q:'Mengapa akurasi kurang tepat untuk menilai aturan deteksi?',o:['Serangan sangat jarang, sehingga aturan yang tidak berguna pun tampak sangat akurat','Akurasi sulit dihitung','Akurasi selalu 50%','Akurasi tidak memakai TN'],w:'Sistem yang tidak pernah membunyikan lonceng tetap akurat hampir 100%.'},
+  {q:'Sistem dengan laju positif palsu 2% memeriksa 500.000 peristiwa normal per hari. Kira-kira berapa alarm palsunya?',o:['10.000','1.000','100','2'],w:'2% × 500.000 = 10.000 alarm palsu per hari.'},
+  {q:'Korelasi lintas sumber dilakukan dengan …',o:['Menghubungkan peristiwa dari log berbeda melalui kunci yang sama, misalnya alamat IP','Menghapus log yang tidak penting','Menggabungkan semua aturan menjadi satu','Menaikkan ambang batas'],w:'Alamat, akun, dan kedekatan waktu adalah kunci penghubung yang umum.'},
+  {q:'Pengguna gagal login dua kali lalu berhasil, dari Indonesia pada jam kerja. Sebaiknya peristiwa ini …',o:['Dianggap wajar; aturan yang baik tidak membunyikan lonceng','Dianggap brute force','Dianggap injeksi SQL','Diblokir permanen'],w:'Sedikit kegagalan lalu berhasil adalah ciri pengguna yang salah ketik.'}
+];
+function kuis(){
+  const wadah=$('#kuis'),hasil=$('#kuis-hasil'),KS={hasil:[],tSelesai:null,selesai:false};let benar=0,dijawab=0,soal=[];
+  const fmt=s=>`Skor terbaik: ${s} dari 10`;simpanTerbaik('materi5ks:kuis',0,$('#kuis-terbaik'),fmt);
+  function baru(){
+    benar=0;dijawab=0;hasil.innerHTML='';KS.hasil=[];KS.selesai=false;KS.tSelesai=null;
+    soal=acakSalin(KUIS).slice(0,10).map(s=>({...s,urut:acakSalin(s.o.map((_,i)=>i))}));
+    wadah.innerHTML=soal.map((s,n)=>`<div class="soal-kuis" data-n="${n}"><div class="tanya">${n+1}. ${esc(s.q)}</div>
+      <div class="opsi">${s.urut.map(i=>`<button data-i="${i}">${esc(s.o[i])}</button>`).join('')}</div><div class="jelas"></div></div>`).join('');
+  }
+  wadah.onclick=e=>{
+    const b=e.target.closest('button');if(!b||b.disabled)return;
+    const box=b.closest('.soal-kuis'),s=soal[+box.dataset.n],ok=b.dataset.i==='0';
+    $$('button',box).forEach(x=>{x.disabled=true;if(x.dataset.i==='0')x.classList.add('y')});
+    if(!ok)b.classList.add('n');
+    box.querySelector('.jelas').innerHTML=(ok?'<span style="color:var(--tp)">✓ Tepat.</span> ':'<span style="color:var(--fn)">✗ Belum tepat.</span> ')+esc(s.w);
+    dijawab++;if(ok)benar++;bunyi(ok?'benar':'salah');KS.hasil[+box.dataset.n]=ok;
+    if(dijawab===soal.length){
+      setTimeout(()=>bunyi(benar>=8?'menang':'selesai'),350);
+      hasil.innerHTML=`<div class="${benar>=8?'ok':'hint'}" style="display:flex;gap:14px;align-items:center">${benar>=8?`<img class="ikon" src="${ikonURL('pialaG',4)}" alt="">`:''}<div><b>Skor Anda: ${benar} dari 10.</b> ${benar>=8?'Anda siap mengerjakan Praktikum Pertemuan 5.':'Baca kembali bab yang soalnya masih keliru, lalu coba soal baru.'}</div></div>`;
+      simpanTerbaik('materi5ks:kuis',benar,$('#kuis-terbaik'),fmt);KS.selesai=true;
+    }
+  };
+  const latarKuis=latar(256,96,q=>{lukisDindingBatu(q,0,0,256,30);lukisLantaiBatu(q,0,30,256,66,acakTetap(41))});
+  adegan($('#kv-kuis'),(g,t)=>{
+    g.drawImage(latarKuis,0,0);
+    obor(g,16,14,t);obor(g,240,14,t);
+    g.globalAlpha=.85;kotak(g,40,4,176,18,'#1c2340');g.globalAlpha=1;bingkai(g,40,4,176,18,'#4b5aa0');
+    for(let k=0;k<10;k++){const x=48+k*16,h=KS.hasil[k],c=h===true?'#55d36b':h===false?'#ff5a5a':'#3a3f5a',l=h===true?'#b8ffc4':h===false?'#ffb3b3':'#5c6178';
+      kotak(g,x+2,8,6,10,GB.garis);kotak(g,x,10,10,6,GB.garis);kotak(g,x+3,9,4,8,c);kotak(g,x+1,11,8,4,c);kotak(g,x+3,10,2,2,l)}
+    if(KS.selesai&&KS.tSelesai==null)KS.tSelesai=t;
+    const u=KS.tSelesai==null?0:t-KS.tSelesai,lulus=benar>=8;
+    petiHarta(g,150,52,48,32,'int',{kilau:KS.selesai&&lulus&&Math.floor(u*4)%2===0});
+    if(KS.selesai&&lulus){const q=mulus(u/.8);spr(g,'pialaG',162,lerp(56,26,q),2);for(let k=0;k<6;k++){const a=t*3+k;kotak(g,174+Math.cos(a)*18,38+Math.sin(a)*12,1,1,'#fff7b0')}}
+    pamn(g,90,88,KS.selesai?(lulus?'sorak':'diam'):(Math.sin(t*1.6)>.97?'kedip':'diam'),{skala:2});
+    lonceng(g,60,40,t,KS.selesai&&lulus&&u<2);
+    const tx=`${benar}/${dijawab||0}`;tulis(g,tx,250,60,'#ffd34d',{rata:'kanan',tebal:true,bayang:'#0b0f22'});
+    if(KS.selesai&&!lulus)tulis(g,'Coba lagi!',128,76,'#ffffff',{rata:'tengah',tebal:true,bayang:'#0b0f22'});
+  });
+  $('#kuis-ulang').onclick=baru;baru();
+}
+
+/* ============ NAVIGASI, TEMA, AWAL ============ */
+const PETA=[['b1','buku','1 · Log & Pola Serangan','Membaca log autentikasi dan log web; empat pola serangan dan kembarannya yang wajar.','Pembaca Jejak'],
+  ['b2','lonceng','2 · IDS, IPS & Aturan','Lonceng atau gerbang, deteksi berbasis aturan, dan anatomi aturan bergaya Suricata.','Rakit Aturan'],
+  ['b3','pamnD','3 · Empat Hasil Deteksi','True positive, false positive, false negative, dan true negative.','Stempel Alert'],
+  ['b4','kepeng','4 · Presisi, Recall & Ambang','Mengukur aturan dan pertukaran antara alarm palsu dan serangan yang lolos.','Atur Ambang'],
+  ['b5','hatiG','5 · Laju Dasar','Mengapa akurasi tinggi tetap bisa berarti ribuan alarm palsu.','Kalkulator Laju Dasar'],
+  ['b6','gulungan','6 · Korelasi','Menghubungkan peristiwa dari beberapa sumber log.','Benang Merah'],
+  ['kuis','pialaG','Kuis & Rangkuman','Lembar contekan dan sepuluh soal acak.','']];
+function goTab(t){
+  $$('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  $$('.tab').forEach(x=>x.classList.toggle('on',x.id==='t-'+t));
+  const on=$('nav button.on');if(on)on.parentElement.scrollLeft=on.offsetLeft-on.parentElement.offsetWidth/2+on.offsetWidth/2;
+  window.scrollTo(0,0);
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+}
+function labelTema(){$('#btn-tema').textContent=document.documentElement.dataset.theme==='light'?'☾ Mode gelap':'☀ Mode terang'}
+let JEJAK=null,STEMPEL=null,RAKIT=null,BENANG=null;
+(function awal(){
+  $$('nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.t));
+  document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)goTab(g.dataset.go)});
+  $('#btn-tema').onclick=()=>{const t=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=t;try{localStorage.setItem('tema',t)}catch(e){}labelTema()};
+  labelTema();
+  const labelSuara=()=>{$('#btn-suara').textContent=SUARA.aktif?'🔊 Suara aktif':'🔇 Suara mati'};
+  $('#btn-suara').onclick=()=>{SUARA.aktif=!SUARA.aktif;lsSimpan('materi5ks:suara',SUARA.aktif);labelSuara();bunyi('benar')};
+  labelSuara();
+  $$('#jejak-mulai,#stempel-mulai,#benang-mulai,#kuis-ulang').forEach(b=>b.addEventListener('click',()=>bunyi('klik')));
+  $('#peta').innerHTML=PETA.map(([id,ik,j,d,m])=>`<div class="kartu"><div class="judul"><img class="ikon" src="${ikonURL(ik,ik==='pamnD'?2:['kepeng','hatiG','lonceng'].includes(ik)?4:3)}" alt="">${esc(j)}</div><p>${esc(d)}</p>${m?`<p style="font-size:11.5px">Permainan: <b>${esc(m)}</b></p>`:''}<button class="sec" data-go="${id}">Buka →</button></div>`).join('');
+  $$('img[data-ikon]').forEach(im=>im.src=ikonURL(im.dataset.ikon,+im.dataset.skala||3));
+  adeganGerbang();adeganLog();adeganIDS();adeganEmpat();adeganLaju();adeganKorelasi();
+  JEJAK=permainanJejak();RAKIT=permainanRakit();STEMPEL=permainanStempelAlert();latihanAmbang();kalkulatorLaju();BENANG=permainanBenang();kuis();
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select'))return;
+    const tab=($('.tab.on')||{}).id,k=e.key.toLowerCase();
+    const G=tab==='t-b1'?JEJAK:tab==='t-b3'?STEMPEL:null;
+    if(G&&G.kunci)G.kunci(k);
+  });
+  const awalTab=location.hash.slice(1);if(awalTab&&$('#t-'+awalTab))goTab(awalTab);
+  requestAnimationFrame(putar);
+})();
+</script>
+</body>
+</html>
